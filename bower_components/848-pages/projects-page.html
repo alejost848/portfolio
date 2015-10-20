@@ -1,0 +1,58 @@
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-styles/default-theme.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../project-info/project-info.html">
+
+<dom-module id="projects-page">
+  <style>
+
+    .section_container{
+      margin-top: 20px;
+      display: -webkit-flex;
+      -webkit-flex-wrap: wrap;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 850px) {
+      .section_container{
+        width: 100%;
+      }
+    }
+
+  </style>
+
+  <template>
+    <div class="section_container layout horizontal">
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+      <project-info title="Title" subtitle="Motion Graphics" image="images/pic4.jpg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, ex, neque aliquam non qui repudiandae error tenetur. Rem officiis voluptates laudantium quidem laboriosam. Animi eveniet modi, nisi a culpa earum.</project-info>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'projects-page',
+
+    properties: {
+      title: {
+        type: String
+      },
+      subtitle: {
+        type: String
+      },
+      image: {
+        type: String
+      }
+    }
+  });
+</script>

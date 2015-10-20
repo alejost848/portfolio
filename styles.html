@@ -1,0 +1,127 @@
+<style is="custom-style">
+
+	:root {
+	  --main-bg-color: #ddd;
+	  --accent-color: #FF1744;
+	}
+	
+	html{
+		background-color: var(--main-bg-color);
+		overflow-y: scroll;
+	}
+
+	body {
+		font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+
+	#app_wrapper{
+		width: 70%;
+		margin: 0 auto;
+	}
+
+	.full_width{
+		width: 100%;
+	}
+
+	/*Default typography styles*/
+    .paper-font-display4 {@apply(--paper-font-display4);}
+    .paper-font-display3 {@apply(--paper-font-display3);}
+    .paper-font-display2 {@apply(--paper-font-display2);}
+    .paper-font-display1 {@apply(--paper-font-display1);}
+    .paper-font-headline {@apply(--paper-font-headline);}
+    .paper-font-title {@apply(--paper-font-title);}
+    .paper-font-subhead {@apply(--paper-font-subhead);}
+    .paper-font-body2 {@apply(--paper-font-body1);}
+    .paper-font-body1 {@apply(--paper-font-body1);}
+    .paper-font-caption {@apply(--paper-font-caption);}
+    .paper-font-menu {@apply(--paper-font-menu);}
+    .paper-font-button {@apply(--paper-font-button);}
+
+	#header_logo{
+		--iron-icon-width: 70px;
+		--iron-icon-height: 70px;
+		margin-bottom: 20px;
+		margin-top: 20px;
+		color: #aaa;
+	}
+
+    .light_text{
+		font-weight: 200;
+	}
+
+	.bold_text{
+		font-weight: 400;
+	}
+
+	#menu_button{
+		display: none;
+	}
+
+	#logo{
+		width: 50px;
+		height: 50px;
+	}
+
+	#app_title{
+		font-weight: 300;
+		color: #555;
+	}
+
+	paper-toolbar{
+		background-color: transparent;
+		font-size: 30px;
+		font-weight: 200;
+		margin-top: 70px;
+	}
+
+	paper-tabs{
+		width: 200px;
+		margin-top: 20px;
+		--paper-tabs-selection-bar-color: var(--accent-color);
+		color: #777;
+	}
+
+	footer{
+		height: 200px;
+	}
+
+	#footer_logo{
+		--iron-icon-width: 50px;
+		--iron-icon-height: 50px;
+		color: #ccc;
+	}
+
+
+	@media (max-width: 850px) {
+
+		.toolbar_container{
+			height: 85px;
+		}
+
+		#menu_button{
+			display: inline;
+		}
+
+		#app_wrapper{
+			width: 100%;
+		}
+
+		paper-toolbar{
+			font-size: 20px;
+		}
+
+		#logo{
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.toolbar_container{
+			height: 76px;
+		}
+	}
+</style>

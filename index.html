@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>alejost848</title>
+	<meta name="description" content="">
+	<meta name="generator" content="Hoy es Diseño">
+
+	<!-- No zooming! -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+	<!-- Chrome for Android theme color -->
+	<meta id="bar" name="theme-color" content="#161527">
+
+	<!-- Web Application Manifest -->
+	<link rel="manifest" href="manifest.json">
+
+	<!-- Add to homescreen for Chrome on Android -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="Alejandro Sanclemente">
+	<link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
+	<!-- Add to homescreen for Safari on iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="Alejandro Sanclemente">
+	<link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+
+	<!-- Tile icon for Win8 (144x144 + tile color) -->
+	<meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+	<meta name="msapplication-TileColor" content="#fa3f7e">
+
+	<!-- Web Components -->
+	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+	<link rel="import" href="elements.html">
+	<script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body unresolved>
+	<div id="app_wrapper" class="layout vertical center">
+		<paper-toolbar class="medium-tall">
+			<div class="layout vertical center">
+				<iron-icon id="header_logo" icon="848-icons:8bit"></iron-icon>				
+				<div id="app_title" class="layout vertical center">
+					<div class="light_text">Alejandro</div>
+					<div class="bold_text">Sanclemente</div>
+				</div>
+			</div>
+		</paper-toolbar>
+		<more-route-selector>
+			<paper-tabs selected="{{selected}}" noink align-bottom>
+				<paper-tab class="paper-font-subhead" route="home">Home</paper-tab>
+				<paper-tab class="paper-font-subhead" route="portfolio">Portfolio</paper-tab>
+				<paper-tab class="paper-font-subhead" route="contact">Contact</paper-tab>
+			</paper-tabs>
+		</more-route-selector> 
+		<more-route-selector>
+			<iron-pages>
+				<home-page route="home"></home-page>
+				<projects-page route="portfolio"></projects-page>
+				<contact-page route="contact"></contact-page>
+			</iron-pages>
+		</more-route-selector>
+		<footer class="layout horizontal center-center">
+			<iron-icon id="footer_logo" icon="848-icons:logo"></iron-icon>
+		</footer>
+	</div>
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
