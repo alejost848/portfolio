@@ -1,0 +1,159 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/av-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../google-youtube/google-youtube.html">
+
+<dom-module id="dialog-project">
+  <style>
+    /*Default typography styles*/
+    .paper-font-display4 {@apply(--paper-font-display4);}
+    .paper-font-display3 {@apply(--paper-font-display3);}
+    .paper-font-display2 {@apply(--paper-font-display2);}
+    .paper-font-display1 {@apply(--paper-font-display1);}
+    .paper-font-headline {@apply(--paper-font-headline);}
+    .paper-font-title {@apply(--paper-font-title);}
+    .paper-font-subhead {@apply(--paper-font-subhead);}
+    .paper-font-body2 {@apply(--paper-font-body2);}
+    .paper-font-body1 {@apply(--paper-font-body1);}
+    .paper-font-caption {@apply(--paper-font-caption);}
+    .paper-font-menu {@apply(--paper-font-menu);}
+    .paper-font-button {@apply(--paper-font-button);}
+    
+    #video{     
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #video_wrapper{
+      margin: 0;
+      padding: 0;
+    }
+
+    #dialog{
+      width: 600px;     
+    }
+
+    #signup_toolbar{
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      background-color: transparent;
+      z-index: 1;
+    }
+
+    .day_title{
+      padding: 15px 25px 0px 25px;
+      margin: 0px;
+    }
+
+    #more_info{
+      margin-top: 0px;
+    }
+
+    h4{
+      margin: 0px;
+      color: #656565;
+    }
+
+    @media (max-width: 850px) {
+      #dialog{
+        width: 100%;
+        height: 100%;  
+        margin: 0;
+        left:0;
+      }
+
+    }
+
+    @media (max-width: 500px) {
+      #fab_icon{
+        right: 20px;
+      }
+
+    }
+
+  </style>
+  <template>    
+    <paper-dialog id="dialog" entry-animation="slide-up-animation" exit-animation="fade-out-animation" with-backdrop on-iron-overlay-opened="_playVideo" on-iron-overlay-closed="_pauseVideo">
+      <paper-toolbar id="signup_toolbar">
+        <paper-icon-button icon="arrow-back" dialog-dismiss></paper-icon-button>
+      </paper-toolbar>
+      <div id="video_wrapper">
+        <google-youtube id="video" video-id="{{src}}" fluid autoplay="0" chromeless rel="0" ivloadpolicy="3"></google-youtube>
+      </div>   
+
+      <h3 class="day_title paper-font-headline">[[title]]</h3>
+
+      <div id="more_info" class="layout horizontal">
+        <h4 class="paper-font-subhead">[[subtitle]]</h4>
+      </div>      
+      
+      <div>[[content]]</div>
+    </paper-dialog>
+
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'dialog-project',
+
+    properties: {
+
+      content: {
+        type: String
+      },
+
+      subtitle: {
+        type: String
+      },
+
+      year: {
+        type: String
+      },
+
+      title: {
+        type: String
+      },
+
+      src: {
+        type: String
+      }
+    },
+
+    openDialog: function() {
+      var dialog = document.getElementById("dialog");
+      if (dialog) {
+        dialog.open();
+      }
+    },
+
+    _playVideo: function() {
+      this.$.video.play();
+      $('body').addClass('lock_scroll');
+    },
+
+    _pauseVideo: function() {
+      this.$.video.pause();
+      $('body').removeClass('lock_scroll');
+    }
+  });
+</script>

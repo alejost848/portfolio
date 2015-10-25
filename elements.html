@@ -1,6 +1,7 @@
-<link href='https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'> -->
 
 <!-- Paper and Iron elements -->
+<link rel="import" href="bower_components/font-roboto/roboto.html">
 <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="bower_components/iron-iconset-svg/iron-iconset-svg.html">
@@ -22,7 +23,7 @@
 <link rel="import" href="bower_components/iron-image/iron-image.html">
 <link rel="import" href="bower_components/iron-icons/image-icons.html">
 <link rel="import" href="bower_components/iron-icons/hardware-icons.html">
-<link rel="import" href="bower_components/iron-icons/social-icons.html">
+<link rel="import" href="bower_components/iron-icons/av-icons.html">
 <link rel="import" href="bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="bower_components/google-youtube/google-youtube.html">
@@ -32,6 +33,7 @@
 <link rel="import" href="bower_components/platinum-sw/platinum-sw-register.html">
 <link rel="import" href="bower_components/platinum-sw/platinum-sw-register.html">
 <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="bower_components/iron-a11y-keys/iron-a11y-keys.html">
 
 <link rel="import" href="bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="bower_components/neon-animation/neon-animations.html">
@@ -45,6 +47,9 @@
 <link rel="import" href="bower_components/848-pages/home-page.html">
 <link rel="import" href="bower_components/848-pages/projects-page.html">
 <link rel="import" href="bower_components/848-pages/contact-page.html">
+
+<link rel="import" href="bower_components/dialog-project/dialog-project.html">
+<link rel="import" href="bower_components/848-piano/the-keys.html">
 
 <iron-iconset-svg name="848-icons" size="40">
 	<svg>
@@ -74,6 +79,25 @@
 					v-5.276H18.022v-1.319h-7.914V9.385H8.789v7.914H7.47v5.276h1.319v2.638h2.638v2.638h2.638v1.319h2.638V31.807z M24.616,17.298
 					h2.638h1.319v5.276h-3.957V17.298z M15.384,22.574h-3.957v-1.319v-3.957h1.319h2.638V22.574z"/>
 			</g>
+		</g>
+
+		<g id="youtube">
+			<g>
+				<path d="M37.453,12.879c0,0-0.348-2.455-1.416-3.535c-1.354-1.419-2.873-1.426-3.569-1.509c-4.984-0.36-12.461-0.36-12.461-0.36 h-0.016c0,0-7.476,0-12.461,0.36c-0.696,0.083-2.214,0.09-3.569,1.509c-1.068,1.081-1.415,3.535-1.415,3.535 s-0.356,2.882-0.356,5.765v2.702c0,2.882,0.356,5.765,0.356,5.765s0.348,2.455,1.415,3.535c1.355,1.419,3.135,1.374,3.927,1.522 C10.739,32.441,20,32.526,20,32.526s7.484-0.011,12.469-0.372c0.696-0.083,2.214-0.09,3.569-1.509 c1.068-1.081,1.416-3.535,1.416-3.535s0.356-2.882,0.356-5.765v-2.702C37.809,15.761,37.453,12.879,37.453,12.879z M16.323,24.62 l-0.002-10.008l9.624,5.021L16.323,24.62z"/>
+			</g>
+		</g>
+
+		<g id="tumblr">
+			<path display="inline" d="M28.79,30.975c-0.683,0.325-1.99,0.609-2.964,0.634c-2.941,0.079-3.51-2.065-3.536-3.622V16.552h7.377
+				V10.99h-7.35V1.632c0,0-5.293,0-5.382,0c-0.088,0-0.243,0.078-0.264,0.275c-0.315,2.864-1.656,7.891-7.228,9.9v4.745h3.717v12.003
+				c0,4.109,3.032,9.947,11.035,9.811c2.7-0.047,5.698-1.177,6.361-2.152L28.79,30.975z"/>
+		</g>
+
+		<g id="twitter">
+			<path display="inline" d="M37.75,8.99c-1.306,0.579-2.71,0.971-4.183,1.147c1.504-0.901,2.659-2.329,3.202-4.029 c-1.407,0.835-2.966,1.441-4.625,1.767c-1.328-1.415-3.221-2.3-5.316-2.3c-4.022,0-7.283,3.261-7.283,7.283 c0,0.571,0.064,1.127,0.189,1.66c-6.053-0.304-11.42-3.203-15.012-7.61C4.095,7.984,3.735,9.235,3.735,10.57 c0,2.527,1.286,4.756,3.24,6.062c-1.194-0.038-2.317-0.365-3.299-0.911c-0.001,0.03-0.001,0.061-0.001,0.092 c0,3.529,2.511,6.472,5.842,7.142c-0.611,0.166-1.255,0.255-1.919,0.255c-0.469,0-0.926-0.046-1.37-0.131 c0.927,2.893,3.617,4.999,6.804,5.058C10.54,30.09,7.4,31.255,3.987,31.255c-0.588,0-1.168-0.034-1.737-0.102 c3.223,2.067,7.052,3.272,11.165,3.272c13.396,0,20.722-11.098,20.722-20.723c0-0.316-0.007-0.63-0.021-0.942 C35.539,11.733,36.774,10.451,37.75,8.99z"/>
+		</g>
+		<g id="fb">
+			<path id="White_2_" display="inline" d="M36.211,1.778H3.789c-1.111,0-2.011,0.9-2.011,2.011v32.421c0,1.111,0.9,2.011,2.011,2.011 h17.455V24.109h-4.749v-5.5h4.749v-4.056c0-4.707,2.875-7.27,7.074-7.27c2.011,0,3.74,0.15,4.244,0.217v4.919L29.65,12.42 c-2.284,0-2.726,1.085-2.726,2.678v3.512h5.446l-0.709,5.5h-4.737v14.113h9.287c1.111,0,2.011-0.901,2.011-2.011V3.789 C38.222,2.678,37.321,1.778,36.211,1.778z"/>
 		</g>
 	</svg>
 </iron-iconset-svg>

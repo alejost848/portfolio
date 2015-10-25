@@ -1,0 +1,139 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-behaviors/paper-button-behavior.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+
+<dom-module id="the-keys">
+
+  <style>
+
+    :host {
+      display: inline-block;
+      position: relative;
+      width: 130px;
+      height: 130px;
+
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+
+      border-radius: 50%;
+      background-color: rgba(0,0,0,0.04);
+    }
+
+    iron-icon{
+      width: 130px;
+      height: 130px;
+      color: #ccc;
+    }
+
+    div{
+      position: absolute;
+      top:57px;
+      left:61px;
+    }
+
+  </style>
+
+  <template>
+    <paper-ripple id="ripple" class="circle" center></paper-ripple>
+    
+    <div>[[id]]</div>
+  </template>
+
+  <script>
+  
+    Polymer({
+
+      is: 'the-keys',
+
+      listeners: {
+        'tap': 'regularTap'
+      },
+
+      properties: {
+        id: {
+          type: String
+        },
+        icon: {
+          type: String
+        }
+      },
+
+      regularTap: function() {
+        switch(this.id){
+          case "q":
+            this.$.ripple.simulatedRipple();
+            piano.play('C', 3, 3);
+            break;
+          case "w":
+            this.$.ripple.simulatedRipple();
+            piano.play('D', 3, 3);
+            break;
+          case "e":
+            this.$.ripple.simulatedRipple();
+            piano.play('E', 3, 3);
+            break;
+          case "r":
+            this.$.ripple.simulatedRipple();
+            piano.play('F', 3, 3);
+            break;
+          case "t":
+            this.$.ripple.simulatedRipple();
+            piano.play('G', 3, 3);
+            break;
+          case "y":
+            this.$.ripple.simulatedRipple();
+            piano.play('A', 3, 3);
+            break;
+          case "u":
+            this.$.ripple.simulatedRipple();
+            piano.play('B', 3, 3);
+            break;
+
+          case "a":
+            this.$.ripple.simulatedRipple();
+            piano.play('C', 2, 2);
+            break;
+          case "s":
+            this.$.ripple.simulatedRipple();
+            piano.play('D', 2, 2);
+            break;
+          case "d":
+            this.$.ripple.simulatedRipple();
+            piano.play('E', 2, 2);
+            break;
+          case "f":
+            this.$.ripple.simulatedRipple();
+            piano.play('F', 2, 2);
+            break;
+          case "g":
+            this.$.ripple.simulatedRipple();
+            piano.play('G', 2, 2);
+            break;
+          case "h":
+            this.$.ripple.simulatedRipple();
+            piano.play('A', 2, 2);
+            break;
+          case "j":
+            this.$.ripple.simulatedRipple();
+            piano.play('B', 2, 2);
+            break;
+        }
+      }
+
+    });
+
+  </script>
+
+  <script>
+    
+  </script>
+
+</dom-module>

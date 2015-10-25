@@ -4,6 +4,7 @@
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../paper-styles/default-theme.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="../project-info/project-info.html">
 
@@ -30,6 +31,11 @@
 
     #home_wrapper{
       margin-top: 20px;
+      text-align: center;
+    }
+
+    .keys{
+      margin-top: 40px;
     }
 
     @media (max-width: 850px) {
@@ -43,6 +49,27 @@
       <div class="paper-font-subhead">Hello, my name is Alejandro.</div>
       <div class="paper-font-subhead">I'm an Interactive Media Designer from Cali, Colombia.</div>
       <div class="paper-font-subhead">I do motion graphics, web design and interaction design.</div>
+      <div class="keys">
+        <div class="key_row layout horizontal">
+          <the-keys id="q"></the-keys>
+          <the-keys id="w"></the-keys>
+          <the-keys id="e"></the-keys>
+          <the-keys id="r"></the-keys>
+          <the-keys id="t"></the-keys>
+          <the-keys id="y"></the-keys>
+          <the-keys id="u"></the-keys>
+        </div>
+        <div class="key_row layout horizontal">
+          <the-keys id="a"></the-keys>
+          <the-keys id="s"></the-keys>
+          <the-keys id="d"></the-keys>
+          <the-keys id="f"></the-keys>
+          <the-keys id="g"></the-keys>
+          <the-keys id="h"></the-keys>
+          <the-keys id="j"></the-keys>
+        </div>
+      </div>
+      <iron-a11y-keys keys="q w e r t y u a s d f g h j" target="[[target]]" on-keys-pressed="_updatePressed"></iron-a11y-keys>
     </div>
   </template>
 </dom-module>
@@ -50,21 +77,64 @@
   Polymer({
     is: 'home-page',
 
-    behaviors: [Polymer.NeonAnimatableBehavior],
-
     properties: {
-      animationConfig: {
-        value: function (){
-          return{
-            'entry':{
-              name: "slide-from-right-animation",
-              node: this
-            },
-            'exit':{
-              name: "slide-right-animation",
-              node: this
-            }
-          }
+      target: {
+        type: Object,
+        value: function() {
+          return document.body;
+        }
+      },
+      enabled: {
+        type: Boolean,
+        value: true
+      }
+    },
+    _updatePressed: function(event) {
+      if(this.enabled){
+        switch(event.detail.combo){
+          case "q":
+            document.getElementById("q").regularTap();
+            break;
+          case "w":
+            document.getElementById("w").regularTap();
+            break;
+          case "e":
+            document.getElementById("e").regularTap();
+            break;
+          case "r":
+            document.getElementById("r").regularTap();
+            break;
+          case "t":
+            document.getElementById("t").regularTap();
+            break;
+          case "y":
+            document.getElementById("y").regularTap();
+            break;
+          case "u":
+            document.getElementById("u").regularTap();
+            break;
+
+          case "a":
+            document.getElementById("a").regularTap();
+            break;
+          case "s":
+            document.getElementById("s").regularTap();
+            break;
+          case "d":
+            document.getElementById("d").regularTap();
+            break;
+          case "f":
+            document.getElementById("f").regularTap();
+            break;
+          case "g":
+            document.getElementById("g").regularTap();
+            break;
+          case "h":
+            document.getElementById("h").regularTap();
+            break;
+          case "j":
+            document.getElementById("j").regularTap();
+            break;
         }
       }
     }

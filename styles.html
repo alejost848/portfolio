@@ -4,14 +4,25 @@
 	  --main-bg-color: #ddd;
 	  --accent-color: #FF1744;
 	}
+
+	*{
+	    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	}
 	
 	html{
 		background-color: var(--main-bg-color);
-		overflow-y: scroll;
 	}
 
 	body {
 		font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		overflow-y:scroll;
+	}
+
+	.lock_scroll{
+		position: fixed;
+	    overflow-y:scroll;
+	    left:0;
+	    right: 0;
 	}
 
 	#app_wrapper{
@@ -81,16 +92,34 @@
 		color: #777;
 	}
 
+    .social_logo{
+      --iron-icon-width: 27px;
+      --iron-icon-height: 27px;
+      color: #aaa;
+    }
+
 	footer{
-		height: 200px;
+		height: 250px;
 	}
 
 	#footer_logo{
 		--iron-icon-width: 50px;
 		--iron-icon-height: 50px;
 		color: #ccc;
+		margin-bottom: 10px;
 	}
 
+	.copyright_notice{
+		color: #999;
+		line-height: 16px;
+		font-weight: 300;
+	}
+
+	#polymer_link{
+		text-decoration: none;
+		color: var(--accent-color);
+		font-weight: 500;
+	}
 
 	@media (max-width: 850px) {
 

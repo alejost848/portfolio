@@ -36,8 +36,12 @@
     }
 
     .input_width{
-      width: 200px;
+      width: 300px;
       --paper-input-container-focus-color: var(--accent-color);
+    }
+
+    #formPost{
+      width: 300px;
     }
 
     #submit_form{
@@ -45,18 +49,24 @@
     }
 
     #submit_button{
+      margin: 0;
       margin-top: 40px;
-      width: 200px;
+      width: 300px;
       background-color: #ccc;
+      height: 40px;
+      padding: 0;
     }
 
-    #social_logos_wrapper{
-      margin-top: 60px;
+    #submit_label{
+      display: inline;
     }
 
-    .social_logo{
-      --iron-icon-width: 27px;
-      --iron-icon-height: 27px;
+    #spinner{
+      display: none;
+      --paper-spinner-layer-1-color: #aaa;
+      --paper-spinner-layer-2-color: #aaa;
+      --paper-spinner-layer-3-color: #aaa;
+      --paper-spinner-layer-4-color: #aaa;
     }
 
     @media (max-width: 850px) {
@@ -67,18 +77,21 @@
 
   <template>
     <div id="submit_form" class="layout vertical center">
-      <paper-input class="input_width" label="Name"></paper-input>
-      <paper-input class="input_width" label="Email"></paper-input>
-      <paper-input class="input_width" label="Message Subject"></paper-input>
-      <paper-textarea class="input_width" label="Message"></paper-textarea>
-      <paper-button id="submit_button">Submit</paper-button>
+      <form is="iron-form" id="formPost" method="post" action="/">
+        <paper-input id="name" required class="input_width" label="Name" error-message="Enter your name."></paper-input>
+        <paper-input id="email" type="email" required class="input_width" label="Email" error-message="Enter a valid email."></paper-input>
+        <paper-input id="subject" required class="input_width" label="Subject" error-message="Enter a subject."></paper-input>
+        <paper-textarea id="message" required class="input_width" label="Message" error-message="Enter a message."></paper-textarea>
+        <paper-button id="submit_button" onclick="clickHandler(event)" class="layout horizontal center-center">
+            <div id="submit_label">Submit</div>
+            <paper-spinner id="spinner" alt="Sending email" active></paper-spinner>
+   
+        </paper-button>
+      </form>
     </div>
-    <div id="social_logos_wrapper" class="layout horizontal center-center">
-      <paper-icon-button class="social_logo" icon="848-icons:logo"></paper-icon-button>
-      <paper-icon-button class="social_logo" icon="848-icons:logo"></paper-icon-button>
-      <paper-icon-button class="social_logo" icon="848-icons:logo"></paper-icon-button>
-      <paper-icon-button class="social_logo" icon="848-icons:logo"></paper-icon-button>
-    </div>
+    
+    <paper-toast id="msgSent" duration="3000" text="Message sent."></paper-toast>
+    <paper-toast id="msgNotSent" duration="5000" text="Can't send your message. Try again."></paper-toast>
   </template>
 </dom-module>
 <script>
@@ -97,4 +110,70 @@
       }
     }
   });
+</script>
+
+<script>
+  function clickHandler(event) {
+
+  document.getElementById('email').validate();
+  document.getElementById('name').validate(); 
+  document.getElementById('subject').validate();
+  document.getElementById('message').validate();
+
+  if (document.getElementById('email').validate() && document.getElementById('name').validate() && document.getElementById('subject').validate() && document.getElementById('message').validate()) {
+    document.getElementById('formPost').submit();
+    deliverIt();
+  }
+}
+
+
+function deliverIt() {
+
+  $("#submit_label").css("display","none");
+  $("#spinner").css("display","inline");
+  
+  var email = $("#email").val();
+  var name = $("#name").val();
+  var subject = $("#subject").val();
+  var msg = $("#message").val();
+  $.ajax(
+  {
+    type: "POST",
+    url: "https://mandrillapp.com/api/1.0/messages/send.json",
+    data: {
+      'key': 'iRNUZYUYNNXJbqb1YhlkfA',
+      'message': {
+        'from_email': email,
+        'from_name': name,
+        'headers': {
+          'Reply-To': email
+        },
+        'subject': subject,
+        'text': msg,
+        'to': [
+        {
+          'email': 'alejost848@gmail.com',
+          'name': 'Alejandro Sanclemente',
+          'type': 'to'
+        }]
+      }
+    }
+  })
+  .done(function(response) {
+    document.querySelector('#msgSent').show(); // show success message
+    $("#name").val('');
+    $("#email").val('');
+    $("#subject").val('');
+    $("#message").val('');
+
+    $("#submit_label").css("display","inline");
+    $("#spinner").css("display","none");
+  })
+  .fail(function(response) {
+    document.querySelector('#msgNotSent').show(); // show fail message
+    $("#submit_label").css("display","inline");
+    $("#spinner").css("display","none");
+  });
+  return false; // prevent page refresh
+}
 </script>
