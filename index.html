@@ -71,22 +71,6 @@
 		<dialog-project id="dialogProject" title="{{dialogTitle}}" subtitle="{{dialogSubtitle}}" content="{{dialogContent}}" year="{{dialogYear}}" src="{{dialogSrc}}"></dialog-project>
 	</template>
 
-	<script>
-		var piano = Synth.createInstrument('piano');
-
-		checkHash();
-		$(window).on('hashchange', function(e){
-		   checkHash();
-		});
-		function checkHash (){
-			var currentHash = window.location.hash;
-			if (currentHash==""||currentHash=="#!/") {
-				document.querySelector("home-page").enabled = true;
-			}else{
-				document.querySelector("home-page").enabled = false;
-				document.getElementsByTagName('html')[0].style.backgroundColor = "#eee";
-			}
-		}
-	</script>
+	<script src="app.js"></script>
 </body>
 </html>
