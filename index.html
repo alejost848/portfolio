@@ -3,11 +3,26 @@
 <head>
 	<meta charset="utf-8">
 	<title>Alejandro Sanclemente</title>
-	<meta name="description" content="Interactive Media Designer from Cali, Colombia.">
+	<meta name="description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
 	<meta name="generator" content="Alejandro Sanclemente">
 
 	<!-- No zooming! --> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> <!-- Chrome for Android theme color --> <meta id="bar" name="theme-color" content="#ccc"> <!-- Web Application Manifest --> <link rel="manifest" href="manifest.json"> <!-- Add to homescreen for Chrome on Android --> <meta name="mobile-web-app-capable" content="yes"> <meta name="application-name" content="Alejandro Sanclemente"> <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png"> <!-- Add to homescreen for Safari on iOS --> <meta name="apple-mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black"> <meta name="apple-mobile-web-app-title" content="Alejandro Sanclemente"> <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png"> <!-- Tile icon for Win8 (144x144 + tile color) --> <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png"> <meta name="msapplication-TileColor" content="#fa3f7e">
-	
+
+	<!-- Twitter card -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@alejost848">
+	<meta name="twitter:creator" content="@alejost848">
+	<meta name="twitter:title" content="Alejandro Sanclemente">
+	<meta name="twitter:description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
+	<meta name="twitter:image" content="http://geninteractivelab.net/portafolios/asanclemente/images/share.png">
+
+	<!-- Facebook card -->
+	<meta property="og:title" content="Alejandro Sanclemente">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="http://geninteractivelab.net/portafolios/asanclemente/">
+	<meta property="og:description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
+	<meta property="og:image" content="http://geninteractivelab.net/portafolios/asanclemente/images/share.png">
+
 	<!-- Web Components -->
 	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 	<link rel="import" href="elements.html">
@@ -18,7 +33,7 @@
 	<div id="app_wrapper" class="layout vertical center">
 		<paper-toolbar class="medium-tall">
 			<div class="layout vertical center">
-				<iron-icon id="header_logo" icon="848-icons:8bit"></iron-icon>				
+				<iron-icon id="header_logo" icon="848-icons:8bit"></iron-icon>
 				<div id="app_title" class="layout vertical center">
 					<div class="light_text">Alejandro</div>
 					<div class="bold_text">Sanclemente</div>
@@ -31,7 +46,7 @@
 				<paper-tab class="paper-font-subhead" route="portfolio">Portfolio</paper-tab>
 				<paper-tab class="paper-font-subhead" route="contact">Contact</paper-tab>
 			</paper-tabs>
-		</more-route-selector> 
+		</more-route-selector>
 		<more-route-selector>
 			<iron-pages>
 				<home-page route="home"></home-page>
@@ -51,11 +66,27 @@
 		    </div>
 		</footer>
 	</div>
-	
+
 	<template is="dom-bind" id="app">
 		<dialog-project id="dialogProject" title="{{dialogTitle}}" subtitle="{{dialogSubtitle}}" content="{{dialogContent}}" year="{{dialogYear}}" src="{{dialogSrc}}"></dialog-project>
 	</template>
 
-	<script type="text/javascript" src="app.js"></script>
+	<script>
+		var piano = Synth.createInstrument('piano');
+
+		checkHash();
+		$(window).on('hashchange', function(e){
+		   checkHash();
+		});
+		function checkHash (){
+			var currentHash = window.location.hash;
+			if (currentHash==""||currentHash=="#!/") {
+				document.querySelector("home-page").enabled = true;
+			}else{
+				document.querySelector("home-page").enabled = false;
+				document.getElementsByTagName('html')[0].style.backgroundColor = "#eee";
+			}
+		}
+	</script>
 </body>
 </html>

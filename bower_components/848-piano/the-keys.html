@@ -12,8 +12,8 @@
     :host {
       display: inline-block;
       position: relative;
-      width: 130px;
-      height: 130px;
+      width: 100px;
+      height: 100px;
 
       -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -24,31 +24,39 @@
 
 
       border-radius: 50%;
-      background-color: rgba(0,0,0,0.04);
+      background-color: rgba(0,0,0,0.02);
+
+      -webkit-box-shadow: inset 0px 0px 3px -1px rgba(0,0,0,0.2);
+      -moz-box-shadow: inset 0px 0px 3px -1px rgba(0,0,0,0.2);
+      box-shadow: inset 0px 0px 3px -1px rgba(0,0,0,0.2);
+
+      margin: 2px;
+
+      cursor: pointer;
     }
 
-    iron-icon{
-      width: 130px;
-      height: 130px;
-      color: #ccc;
+    #ripple{
+      opacity: 0.5;
     }
 
     div{
       position: absolute;
-      top:57px;
-      left:61px;
+      top:43px;
+      left:45px;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.4);
     }
 
   </style>
 
   <template>
     <paper-ripple id="ripple" class="circle" center></paper-ripple>
-    
+
     <div>[[id]]</div>
   </template>
 
   <script>
-  
+
     Polymer({
 
       is: 'the-keys',
@@ -71,59 +79,73 @@
           case "q":
             this.$.ripple.simulatedRipple();
             piano.play('C', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#d81b60";
             break;
           case "w":
             this.$.ripple.simulatedRipple();
             piano.play('D', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#651fff";
             break;
           case "e":
             this.$.ripple.simulatedRipple();
             piano.play('E', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#2979ff";
             break;
           case "r":
             this.$.ripple.simulatedRipple();
             piano.play('F', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#00b0ff";
             break;
           case "t":
             this.$.ripple.simulatedRipple();
             piano.play('G', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#1de9b6";
             break;
           case "y":
             this.$.ripple.simulatedRipple();
             piano.play('A', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#76ff03";
             break;
           case "u":
             this.$.ripple.simulatedRipple();
             piano.play('B', 3, 3);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ff9100";
             break;
 
           case "a":
             this.$.ripple.simulatedRipple();
             piano.play('C', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ad1457";
             break;
           case "s":
             this.$.ripple.simulatedRipple();
             piano.play('D', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#5e35b1";
             break;
           case "d":
             this.$.ripple.simulatedRipple();
             piano.play('E', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#1976d2";
             break;
           case "f":
             this.$.ripple.simulatedRipple();
             piano.play('F', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#0288d1";
             break;
           case "g":
             this.$.ripple.simulatedRipple();
             piano.play('G', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#00796b";
             break;
           case "h":
             this.$.ripple.simulatedRipple();
             piano.play('A', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#689f38";
             break;
           case "j":
             this.$.ripple.simulatedRipple();
             piano.play('B', 2, 2);
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#f57f17";
             break;
         }
       }
@@ -133,7 +155,7 @@
   </script>
 
   <script>
-    
+
   </script>
 
 </dom-module>
