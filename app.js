@@ -1,7 +1,7 @@
 var piano = Synth.createInstrument('piano');
 
 //Dialogs
-function openDialog (element){	
+function openDialog (element){
 	var itemTitle = element.title;
 	var itemCategory = element.subtitle;
 	var itemContent = element.content;
@@ -9,15 +9,15 @@ function openDialog (element){
 	var itemSrc = element.video;
 
 	var app = document.querySelector("#app");
- 	
+
  	app.dialogTitle = itemTitle;
  	app.dialogSubtitle = itemCategory;
  	app.dialogContent = itemContent;
- 	app.dialogYear = itemYear; 
- 	app.dialogSrc = itemSrc; 
+ 	app.dialogYear = itemYear;
+ 	app.dialogSrc = itemSrc;
 
  	var dialogProject = document.getElementById("dialogProject");
- 	dialogProject.openDialog(); 	
+ 	dialogProject.openDialog();
 }
 
 checkHash();
@@ -25,10 +25,11 @@ $(window).on('hashchange', function(e){
    checkHash();
 });
 function checkHash (){
-	var currentHash = window.location.hash;	
-	if (currentHash==""||currentHash=="#!/") {	
-		document.querySelector("home-page").enabled = true;	
+	var currentHash = window.location.hash;
+	if (currentHash==""||currentHash=="#!/") {
+		document.querySelector("home-page").enabled = true;
 	}else{
 		document.querySelector("home-page").enabled = false;
+		document.getElementsByTagName('html')[0].style.backgroundColor = "#ddd";
 	}
 }
