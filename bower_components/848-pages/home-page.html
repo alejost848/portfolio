@@ -35,7 +35,8 @@
     }
 
     .keys{
-      margin-top: 40px;
+      margin-top: 20px;
+      color: rgba(0, 0, 0, 0.3);
     }
 
     .key_row{
@@ -45,17 +46,32 @@
       flex-wrap: wrap;
     }
 
-    @media (max-width: 850px) {
+    .light_text {
+  		font-weight: 300;
+      font-size: 16px;
+       color: rgba(0, 0, 0, 0.6);
+  	}
 
+    .divider{
+      height: 20px;
+    }
+
+    @media (max-width: 850px) {
+      .keys{
+        display: none;
+      }
     }
 
   </style>
 
   <template>
     <div id="home_wrapper" class="layout vertical center">
-      <div class="paper-font-subhead">Hello, my name is Alejandro.</div>
-      <div class="paper-font-subhead">I'm an Interactive Media Designer from Cali, Colombia.</div>
-      <div class="paper-font-subhead">I do motion graphics, web design and interaction design.</div>
+      <div class="light_text">Hey, I'm <strong>Alejandro</strong></div>
+      <div class="light_text">an <strong>Interactive Media Designer</strong></div>
+      <div class="light_text">from Cali, Colombia</div>
+      <div class="divider"></div>
+      <div class="light_text">I do <strong>Motion</strong> / <strong>Web</strong> / <strong>Interaction</strong> design</div>
+
       <div class="keys">
         <div class="key_row layout horizontal center-center">
           <the-keys id="q"></the-keys>
@@ -75,6 +91,8 @@
           <the-keys id="h"></the-keys>
           <the-keys id="j"></the-keys>
         </div>
+        <div class="divider"></div>
+        <div class="paper-font-caption">And this? Just a piano</div>
       </div>
       <iron-a11y-keys keys="q w e r t y u a s d f g h j" target="[[target]]" on-keys-pressed="_updatePressed"></iron-a11y-keys>
     </div>

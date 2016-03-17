@@ -16,7 +16,7 @@
 
 <dom-module id="contact-page">
   <style>
-  
+
     /*Default typography styles*/
     .paper-font-display4 {@apply(--paper-font-display4);}
     .paper-font-display3 {@apply(--paper-font-display3);}
@@ -38,6 +38,7 @@
     .input_width{
       width: 300px;
       --paper-input-container-focus-color: var(--accent-color);
+      --paper-input-container-color: #999;
     }
 
     #formPost{
@@ -70,7 +71,7 @@
     }
 
     @media (max-width: 850px) {
-     
+
     }
 
   </style>
@@ -85,11 +86,11 @@
         <paper-button id="submit_button" onclick="clickHandler(event)" class="layout horizontal center-center">
             <div id="submit_label">Submit</div>
             <paper-spinner id="spinner" alt="Sending email" active></paper-spinner>
-   
+
         </paper-button>
       </form>
     </div>
-    
+
     <paper-toast id="msgSent" duration="3000" text="Message sent."></paper-toast>
     <paper-toast id="msgNotSent" duration="5000" text="Can't send your message. Try again."></paper-toast>
   </template>
@@ -116,7 +117,7 @@
   function clickHandler(event) {
 
   document.getElementById('email').validate();
-  document.getElementById('name').validate(); 
+  document.getElementById('name').validate();
   document.getElementById('subject').validate();
   document.getElementById('message').validate();
 
@@ -131,7 +132,7 @@ function deliverIt() {
 
   $("#submit_label").css("display","none");
   $("#spinner").css("display","inline");
-  
+
   var email = $("#email").val();
   var name = $("#name").val();
   var subject = $("#subject").val();

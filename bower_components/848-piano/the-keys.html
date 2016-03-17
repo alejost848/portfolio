@@ -47,6 +47,17 @@
       color: rgba(0,0,0,0.4);
     }
 
+    @media (max-width: 1200px) {
+      :host {
+        width: 80px;
+        height: 80px;
+      }
+      div{
+        top:33px;
+        left:34px;
+      }
+    }
+
   </style>
 
   <template>
@@ -79,73 +90,73 @@
           case "q":
             this.$.ripple.simulatedRipple();
             piano.play('C', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#d81b60";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ff5252";
             break;
           case "w":
             this.$.ripple.simulatedRipple();
             piano.play('D', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#651fff";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#e040fb";
             break;
           case "e":
             this.$.ripple.simulatedRipple();
             piano.play('E', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#2979ff";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#536dfe";
             break;
           case "r":
             this.$.ripple.simulatedRipple();
             piano.play('F', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#00b0ff";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#40c4ff";
             break;
           case "t":
             this.$.ripple.simulatedRipple();
             piano.play('G', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#1de9b6";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#64ffda";
             break;
           case "y":
             this.$.ripple.simulatedRipple();
             piano.play('A', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#76ff03";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#b2ff59";
             break;
           case "u":
             this.$.ripple.simulatedRipple();
             piano.play('B', 3, 3);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#ff9100";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ffd740";
             break;
 
           case "a":
             this.$.ripple.simulatedRipple();
             piano.play('C', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#ad1457";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ff4081";
             break;
           case "s":
             this.$.ripple.simulatedRipple();
             piano.play('D', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#5e35b1";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#7c4dff";
             break;
           case "d":
             this.$.ripple.simulatedRipple();
             piano.play('E', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#1976d2";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#448aff";
             break;
           case "f":
             this.$.ripple.simulatedRipple();
             piano.play('F', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#0288d1";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#18ffff";
             break;
           case "g":
             this.$.ripple.simulatedRipple();
             piano.play('G', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#00796b";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#69f0ae";
             break;
           case "h":
             this.$.ripple.simulatedRipple();
             piano.play('A', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#689f38";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#eeff41";
             break;
           case "j":
             this.$.ripple.simulatedRipple();
             piano.play('B', 2, 2);
-            document.getElementsByTagName('html')[0].style.backgroundColor = "#f57f17";
+            document.getElementsByTagName('html')[0].style.backgroundColor = "#ffab40";
             break;
         }
       }
