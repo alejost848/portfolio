@@ -1,122 +1,92 @@
-<!DOCTYPE html>
-<html>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 
-<head>
-	<meta charset="utf-8">
-	<title>Alejandro Sanclemente</title>
-	<meta name="description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
-	<meta name="generator" content="Alejandro Sanclemente">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Polymer Starter Kit">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-	<!-- No zooming! -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>My App</title>
+    <meta name="description" content="My App description">
 
-	<!-- Chrome for Android theme color -->
-	<meta id="bar" name="theme-color" content="#303030">
+    <!--
+      If deploying to a non-root path, replace href="/" with the full path to the project root.
+      For example: href="/polymer-starter-kit/relative-path-example/"
+    -->
+    <base href="/">
 
-	<!-- Web Application Manifest -->
-	<link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/favicon.ico">
 
-	<!-- Add to homescreen for Chrome on Android -->
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="application-name" content="Alejandro Sanclemente">
-	<link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="manifest.json">
 
-	<!-- Add to homescreen for Safari on iOS -->
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<meta name="apple-mobile-web-app-title" content="Alejandro Sanclemente">
-	<link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+    <!-- See https://goo.gl/qRE0vM -->
+    <meta name="theme-color" content="#3f51b5">
 
-	<!-- Tile icon for Win8 (144x144 + tile color) -->
-	<meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-	<meta name="msapplication-TileColor" content="#fa3f7e">
+    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="My App">
 
-	<!-- Twitter card -->
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="@alejost848">
-	<meta name="twitter:creator" content="@alejost848">
-	<meta name="twitter:title" content="Alejandro Sanclemente">
-	<meta name="twitter:description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
-	<meta name="twitter:image" content="http://alejost848.github.io/alejost848/images/share.png">
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My App">
 
-	<!-- Facebook card -->
-	<meta property="og:title" content="Alejandro Sanclemente">
-	<meta property="og:type" content="website">
-	<meta property="og:url" content="http://alejost848.github.io/alejost848">
-	<meta property="og:description" content="Interactive Media Designer from Cali, Colombia that likes making videos and stuff.">
-	<meta property="og:image" content="http://alejost848.github.io/alejost848/images/share.png">
+    <!-- Homescreen icons -->
+    <link rel="apple-touch-icon" href="images/manifest/icon-48x48.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/manifest/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="images/manifest/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/manifest/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="images/manifest/icon-192x192.png">
 
-	<!-- Web Components -->
-	<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-	<link rel="import" href="elements.html">
-	<script type="text/javascript" src="jquery.min.js"></script>
-	<script src="audiosynth.js"></script>
+    <!-- Tile icon for Windows 8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/manifest/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#3f51b5">
+    <meta name="msapplication-tap-highlight" content="no">
 
-	<script>
-		(function(i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r;
-			i[r] = i[r] || function() {
-				(i[r].q = i[r].q || []).push(arguments)
-			}, i[r].l = 1 * new Date();
-			a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0];
-			a.async = 1;
-			a.src = g;
-			m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    <script>
+      // Register the base URL
+      const baseUrl = document.querySelector('base').href;
 
-		ga('create', 'UA-17479526-5', 'auto');
-		ga('send', 'pageview');
-	</script>
-</head>
+      // Load and register pre-caching Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register(baseUrl + 'service-worker.js');
+        });
+      }
+    </script>
 
-<body unresolved class="fullbleed">
-	<div id="app_wrapper" class="layout vertical center">
-		<paper-toolbar class="medium-tall">
-			<div class="layout vertical center">
-				<iron-icon id="header_logo" icon="848-icons:8bit"></iron-icon>
-				<div id="app_title" class="layout vertical center">
-					<div class="light_text">Alejandro</div>
-					<div class="bold_text">Sanclemente</div>
-				</div>
-			</div>
-		</paper-toolbar>
-		<more-route-selector>
-			<paper-tabs noink align-bottom>
-				<paper-tab class="paper-font-subhead" route="home">Home</paper-tab>
-				<paper-tab class="paper-font-subhead" route="portfolio">Portfolio</paper-tab>
-				<paper-tab class="paper-font-subhead" route="contact">Contact</paper-tab>
-			</paper-tabs>
-		</more-route-selector>
-		<more-route-selector>
-			<iron-pages>
-				<home-page route="home"></home-page>
-				<projects-page route="portfolio"></projects-page>
-				<contact-page route="contact"></contact-page>
-			</iron-pages>
-		</more-route-selector>
-		<footer class="layout vertical center-center">
-			<iron-icon id="footer_logo" icon="848-icons:logo"></iron-icon>
-			<div class="paper-font-menu copyright_notice">Built with <a id="polymer_link" href="https://www.polymer-project.org" target="_blank">Polymer</a></div>
-			<div class="paper-font-menu copyright_notice">
-				©2016. Alejandro Sanclemente
-				<br>
-				<br> Find me on the internets
-			</div>
-			<div id="social_logos_wrapper" class="layout horizontal center-center">
-				<paper-icon-button class="social_logo" icon="848-icons:youtube" title="YouTube" onclick="window.open('http://youtube.com/alejost848','_blank');"></paper-icon-button>
-				<paper-icon-button class="social_logo" icon="848-icons:tumblr" title="Tumblr" onclick="window.open('http://alejost848.tumblr.com','_blank');"></paper-icon-button>
-				<paper-icon-button class="social_logo" icon="848-icons:behance" title="Behance" onclick="window.open('http://be.net/alejost848','_blank');"></paper-icon-button>
-				<paper-icon-button class="social_logo" icon="848-icons:fb" title="Facebook" onclick="window.open('http://fb.me/alejost848','_blank');"></paper-icon-button>
-			</div>
-		</footer>
-	</div>
+    <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
+    <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
-	<template is="dom-bind" id="app">
-		<dialog-project id="dialogProject" title="{{dialogTitle}}" subtitle="{{dialogSubtitle}}" content="{{dialogContent}}" year="{{dialogYear}}" src="{{dialogSrc}}"></dialog-project>
-	</template>
+    <!-- Load your application shell -->
+    <link rel="import" href="src/my-app.html">
 
-	<script src="app.js"></script>
-</body>
-
+    <!-- Add any global styles for body, document, etc. -->
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        line-height: 1.5;
+        min-height: 100vh;
+        background-color: #eeeeee;
+      }
+    </style>
+  </head>
+  <body>
+    <my-app></my-app>
+    <noscript>
+      Please enable JavaScript to view this website.
+    </noscript>
+    <!-- Built with love using Polymer Starter Kit -->
+  </body>
 </html>

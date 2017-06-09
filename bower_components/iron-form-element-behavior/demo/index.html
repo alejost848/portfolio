@@ -19,7 +19,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="stylesheet" href="../../paper-styles/paper-styles.html">
     <link rel="import" href="../../paper-styles/demo-pages.html">
     <link rel="import" href="simple-form.html">
     <link rel="import" href="simple-element.html">
@@ -51,6 +50,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
       function update() {
+        if (Polymer.Element) {
+          console.warn('IronFormElementBehavior is deprecated in Polymer 2.0');
+          return;
+        }
         var output = document.getElementById('output');
         var elements = document.getElementById('form').formElements;
         document.getElementById('output').innerHTML = '';
