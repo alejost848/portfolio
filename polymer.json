@@ -1,11 +1,12 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/portfolio-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/home-view.html",
+    "src/tutorials-view.html",
+    "src/projects-view.html",
+    "src/contact-view.html",
+    "src/error-view.html"
   ],
   "sources": [
     "src/**/*",
