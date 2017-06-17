@@ -9,6 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="tutorials-view">
@@ -16,22 +21,76 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
-        padding: 10px;
       }
     </style>
 
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>View Two</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+    <firebase-query
+      id="doc"
+      app-name="alejost848"
+      path="/tutorials"
+      order-by-child="publishedDate"
+      data="{{tutorials}}">
+    </firebase-query>
+    
+
+    <div id="content">
+
+      <div class="module">
+        <div class="layout horizontal center">
+          <div class="module_info">
+            <div class="module_title paper-font-headline">After Effects Series</div>
+            <div class="module_subtitle paper-font-subhead">Animation tutorials for AE and C4D</div>
+          </div>
+          <span class="flex"></span>
+          <a href="/tutorials" class="link">
+            <paper-button class="module_button" noink>Watch all</paper-button>
+          </a>
+        </div>
+        <template is="dom-if" if="[[!tutorialsLoaded]]">
+          <template is="dom-repeat" items="[[_createDummyArray(4)]]">
+            <div class="video_card layout vertical center-center">
+              <iron-icon icon="my-icons:logo"></iron-icon>
+            </div>
+          </template>
+        </template>
+        <template is="dom-if" if="[[tutorialsLoaded]]">
+          <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+            <a href="/tutorial/[[tutorial.$key]]" class="link">
+              <div class="video_card">
+                <iron-image src="[[tutorial.thumbnail]]" preload fade sizing="cover"></iron-image>
+              </div>
+            </a>
+          </template>
+        </template>
+      </div>
     </div>
   </template>
 
   <script>
     class TutorialsView extends Polymer.Element {
       static get is() { return 'tutorials-view'; }
+
+      static get observers() {
+        return [
+          '_computeTutorials(tutorials.splices)'
+        ];
+      }
+
+      ready() {
+        super.ready();
+        this.tutorialsLoaded = false;
+      }
+
+      _createDummyArray(number) {
+        return new Array(number);
+      }
+
+      _computeTutorials(data) {
+        if (data){
+          var tutorialsData = data.indexSplices[0].object;
+          this.tutorialsLoaded = true;
+        }
+      }
     }
 
     window.customElements.define(TutorialsView.is, TutorialsView);
