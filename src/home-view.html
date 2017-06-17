@@ -23,23 +23,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       :host {
         display: block;
-      }
-
-      #animated_comment{
-        height: 24px;
-      }
-
-      #content{
-        padding: 30px 20px;
+        @apply --layout-vertical;
+        @apply --layout-center;
       }
 
     </style>
-
-    <firebase-document
-      app-name="alejost848"
-      path="/headerMessages"
-      on-data-changed="_handleHeaderMessages">
-    </firebase-document>
 
     <firebase-query
       app-name="alejost848"
@@ -49,25 +37,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{tutorials}}">
     </firebase-query>
 
-    <div id="header">
-      <div class="layout horizontal">
-        <span class="flex"></span>
-        <paper-icon-button icon="my-icons:videogame-asset"></paper-icon-button>
-        <paper-icon-button icon="info-outline"></paper-icon-button>
-      </div>
-      <div>
-        <iron-icon id="section_icon" icon="my-icons:logo-color"></iron-icon>
-        <div class="paper-font-display1">Alejandro Sanclemente</div>
-        <div id="section_subtitle" class="layout horizontal paper-font-headline">
-          <div id="animated_comment"></div>
-        </div>
-      </div>
-    </div>
 
     <div id="content">
-
       <div class="module">
-        <div class="layout horizontal center">
+        <div class="module_header layout horizontal center">
           <div class="module_info">
             <div class="module_title paper-font-headline">Latest tutorials</div>
             <div class="module_subtitle paper-font-subhead">From my YouTube channel</div>
@@ -78,23 +51,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </a>
         </div>
         <template is="dom-if" if="[[!tutorialsLoaded]]">
-          <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-            <div class="video_card layout vertical center-center">
-              <iron-icon icon="my-icons:logo"></iron-icon>
-            </div>
-          </template>
+          <div class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[_createDummyArray(4)]]">
+              <div class="video_card layout vertical center-center">
+                <iron-image src="/images/card_placeholder.png"></iron-image>
+              </div>
+            </template>
+          </div>
         </template>
         <template is="dom-if" if="[[tutorialsLoaded]]">
-          <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-            <div class="video_card">
-              <iron-image src="[[tutorial.thumbnail]]" preload fade sizing="cover"></iron-image>
-            </div>
-          </template>
+          <div class="layout horizontal wrap center-justified">
+            <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+              <a href="/tutorial/[[tutorial.$key]]" class="link video_card">
+                <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
+              </a>
+            </template>
+          </div>
         </template>
       </div>
 
       <div class="module">
-        <div class="layout horizontal center">
+        <div class="module_header layout horizontal center">
           <div class="module_info">
             <div class="module_title paper-font-headline">Latest projects</div>
             <div class="module_subtitle paper-font-subhead">See what I've been up to</div>
@@ -103,16 +80,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-button class="module_button" noink>More</paper-button>
         </div>
         <div class="layout horizontal wrap">
-          <div class="video_card">
-            <div class="circle">1</div>
-            <h1>View One</h1>
-            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-          </div>
-          <div class="video_card">
-            <div class="circle">1</div>
-            <h1>View One</h1>
-            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-          </div>
+          <template is="dom-repeat" items="[[_createDummyArray(4)]]">
+            <div class="video_card layout vertical center-center">
+              <iron-image src="/images/card_placeholder.png"></iron-image>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -127,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get observers() {
         return [
-          '_orderTutorialData(tutorials.splices)'
+          '_computeTutorials(tutorials.splices)'
         ];
       }
 
@@ -140,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return new Array(number);
       }
 
-      _orderTutorialData(data) {
+      _computeTutorials(data) {
         if (data){
           var tutorialsData = data.indexSplices[0].object;
           if (tutorialsData.length == 4) {
@@ -148,74 +120,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return tutorialsData.reverse();
           }
         }
-      }
-
-      Typer (element, options, scenes) {
-      	var defaultOptions = { erase: 35, type: 55, break: 1500 };
-        var config = {};
-        if (Array.isArray(options)) {
-        	scenes = options;
-          options = {};
-        }
-        for (var key in defaultOptions) {
-        	if (!defaultOptions.hasOwnProperty(key)) continue;
-          if (options[key] != null) {
-          	config[key] = options[key];
-          } else {
-          	config[key] = defaultOptions[key];
-          }
-        }
-        var status = 'ready';
-        var state = '';
-        var currentSceneIndex = 0
-        function type () {
-        	if (status !== 'playing') {
-          	return;
-          }
-          if (scenes) {
-            var scene = scenes[currentSceneIndex];
-            if (state === scene) {
-              return setTimeout(erase, config.break);
-            }
-            state = scene.substr(0, state.length + 1);
-            element.textContent = state;
-            setTimeout(type, config.type);
-          }
-        }
-        function erase () {
-          if (status !== 'playing') {
-          	return;
-          }
-        	if (state === '') {
-          	currentSceneIndex++;
-            if (currentSceneIndex === scenes.length) {
-            	currentSceneIndex = 0;
-            }
-            return type();
-          }
-        	state = state.substr(0, state.length - 1);
-          element.textContent = state;
-          setTimeout(erase, config.erase);
-        }
-
-        function stop () {
-        	status = 'ready';
-        }
-
-        function play () {
-        	if (status === 'ready') {
-          	status = 'playing';
-          	type();
-          }
-        }
-        play();
-        return { play: play, stop: stop };
-      }
-
-      _handleHeaderMessages(e) {
-        const headerMessages = e.detail.value;
-        var vader = this.$.animated_comment;
-        var player = this.Typer(vader, headerMessages);
       }
     }
 

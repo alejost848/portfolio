@@ -42,36 +42,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .paper-font-menu { @apply --paper-font-menu; }
       .paper-font-button { @apply --paper-font-button; }
 
-      /*Header*/
-      #header{
-        padding-left: 20px;
-        padding-right: 10px;
-        padding-top: 10px;
-        padding-bottom: 20px;
-        background: var(--app-primary-color);
-        color: white;
-        --paper-icon-button-ink-color: white;
-      }
-      #section_icon{
-        width: 70px;
-        height: 70px;
-        margin-bottom: 10px;
-        margin-left: -8px;
-      }
-      #section_subtitle{
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.6);
+
+      /*Content*/
+      #content{
+        width: 100%;
+        max-width: 1400px;
+        padding: 22px 0;
+        box-sizing: border-box;
       }
 
       /*Cards*/
       .video_card {
-        margin: 8px 0;
-        width: 100%;
-        height: 200px;
+        margin: 4px;
+        width: calc(25% - 8px);
         border-radius: 4px;
         background-color: var(--app-primary-color);
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        line-height: 0;
       }
       .video_card iron-icon {
         width: 70px;
@@ -80,7 +68,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .video_card iron-image{
         width: 100%;
-        height: 100%;
+      --iron-image-width: 100%;
+      --iron-image-height: 100%;
         background-color: var(--app-primary-color);
       }
 
@@ -111,10 +100,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /*Module styles*/
       .module{
-        margin-bottom: 24px;
+        margin-top: 32px;
       }
-      .module_info{
-        margin: 12px 0;
+      .module_header{
+        margin: 0 8px;
+        margin-bottom: 16px;
       }
       .module_title{
         color: #222;
@@ -128,6 +118,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-right: -8px;
         font-size: 16px;
         color: var(--app-accent-color);
+      }
+
+      @media (max-width: 1400px) {
+        #content{
+          padding: 22px 10px;
+        }
+        .video_card {
+          width: calc(50% - 8px);
+        }
+      }
+
+      @media (max-width: 600px) {
+        #header_wrapper{
+          height: 212px;
+        }
+        #header_tabs{
+          display: none;
+        }
+        #bottom_nav{
+          display: block;
+        }
+        .video_card {
+          margin: 4px 0;
+          width: 100%;
+        }
       }
     </style>
   </template>

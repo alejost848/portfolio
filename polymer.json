@@ -5,6 +5,7 @@
     "src/home-view.html",
     "src/tutorials-view.html",
     "src/projects-view.html",
+    "src/tutorial-view.html",
     "src/contact-view.html",
     "src/error-view.html"
   ],

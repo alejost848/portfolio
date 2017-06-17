@@ -37,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="home-view.html">
 <link rel="lazy-import" href="tutorials-view.html">
 <link rel="lazy-import" href="projects-view.html">
+<link rel="lazy-import" href="tutorial-view.html">
 <link rel="lazy-import" href="contact-view.html">
 <link rel="lazy-import" href="error-view.html">
 
@@ -55,17 +56,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
+      #header{
+        background: var(--app-primary-color);
+        color: white;
+        --paper-icon-button-ink-color: white;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      #header_wrapper{
+        position: relative;
+        width: 100%;
+        height: 280px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      #header_actions {
+        padding: 10px;
+        position: absolute;
+        width: 100%;
+        box-sizing: border-box;
+      }
       #header_logo{
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+      #header_content{
+        padding: 10px 20px;
+      }
+      #header_tabs{
+        margin-top: 20px;
+        width: 100%;
+        max-width: 600px;
+        --paper-tabs-selection-bar-color: var(--app-accent-color);
+      }
+      #animated_comment{
+        height: 32px;
+      }
+      #section_icon{
+        width: 70px;
+        height: 70px;
+        margin-bottom: 10px;
+        margin-left: -8px;
+      }
+      #section_subtitle{
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.6);
       }
 
-      iron-pages * {
+      #main_pages * {
         padding-bottom: 56px;
       }
 
       /*Bottom nav*/
       #bottom_nav{
+        display: none;
         background-color: white;
         position: fixed;
         bottom: 0;
@@ -94,6 +140,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-vertical;
         @apply --layout-center-center;
       }
+
+      @media (max-width: 600px) {
+        #header_wrapper{
+          height: 212px;
+        }
+        #header_tabs{
+          display: none;
+        }
+        #bottom_nav{
+          display: block;
+        }
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -108,13 +166,71 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       messaging-sender-id="776617594441">
     </firebase-app>
 
+    <firebase-document
+      app-name="alejost848"
+      path="/headerMessages"
+      on-data-changed="_handleHeaderMessages">
+    </firebase-document>
+
     <!-- Main content -->
     <app-header-layout fullbleed>
 
-      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
+      <app-header id="header" slot="header">
+        <div id="header_wrapper" class="layout vertical">
+          <div id="header_actions" class="layout horizontal center">
+            <a href="/" class="link">              
+              <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
+            </a>
+            <span class="flex"></span>
+            <paper-icon-button icon="my-icons:videogame-asset"></paper-icon-button>
+            <paper-icon-button icon="my-icons:notifications-off"></paper-icon-button>
+            <paper-icon-button icon="info-outline"></paper-icon-button>
+          </div>
+          <div id="header_content" class="layout vertical end-justified flex">
+            <iron-pages selected="[[page]]" attr-for-selected="name">
+              <section name="home">
+                <iron-icon id="section_icon" icon="my-icons:logo-color"></iron-icon>
+                <div class="paper-font-display1">Alejandro Sanclemente</div>
+                <div id="section_subtitle" class="layout horizontal paper-font-headline">
+                  <div id="animated_comment"></div>
+                </div>
+              </section>
+              <section name="tutorials">
+                <div class="paper-font-display1">Tutorials</div>
+                <div id="section_subtitle" class="layout horizontal paper-font-headline">
+                  New videos premiere every other Thursday at 8 PM (UTC-5)
+                </div>
+              </section>
+              <section name="projects">
+
+              </section>
+              <section name="contact">
+
+              </section>
+            </iron-pages>
+          </div>
+          <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name">
+            <paper-tab name="home" link>
+              <a class="link" href="/">Home</a>
+            </paper-tab>
+            <paper-tab name="tutorials" link>
+              <a class="link" href="tutorials">Tutorials</a>
+            </paper-tab>
+            <paper-tab name="projects" link>
+              <a class="link" href="projects">Projects</a>
+            </paper-tab>
+            <paper-tab name="contact" link>
+              <a class="link" href="contact">Contact</a>
+            </paper-tab>
+          </paper-tabs>
+        </div>
+      </app-header>
+
+      <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
         <home-view name="home"></home-view>
         <tutorials-view name="tutorials"></tutorials-view>
         <projects-view name="projects"></projects-view>
+        <tutorial-view name="tutorial" route="[[subroute]]"></tutorial-view>
         <contact-view name="contact"></contact-view>
         <error-view name="error"></error-view>
       </iron-pages>
@@ -147,7 +263,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-tab>
         </paper-tabs>
       </div>
-
 
     </app-header-layout>
   </template>
@@ -208,6 +323,77 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'error';
+      }
+
+
+      Typer (element, options, scenes) {
+      	var defaultOptions = { erase: 35, type: 55, break: 1500 };
+        var config = {};
+        if (Array.isArray(options)) {
+        	scenes = options;
+          options = {};
+        }
+        for (var key in defaultOptions) {
+        	if (!defaultOptions.hasOwnProperty(key)) continue;
+          if (options[key] != null) {
+          	config[key] = options[key];
+          } else {
+          	config[key] = defaultOptions[key];
+          }
+        }
+        var status = 'ready';
+        var state = '';
+        var currentSceneIndex = 0
+        function type () {
+        	if (status !== 'playing') {
+          	return;
+          }
+          if (scenes) {
+            var scene = scenes[currentSceneIndex];
+            if (state === scene) {
+              return setTimeout(erase, config.break);
+            }
+            state = scene.substr(0, state.length + 1);
+            element.textContent = state;
+            setTimeout(type, config.type);
+          }
+        }
+        function erase () {
+          if (status !== 'playing') {
+          	return;
+          }
+        	if (state === '') {
+          	currentSceneIndex++;
+            if (currentSceneIndex === scenes.length) {
+            	currentSceneIndex = 0;
+            }
+            return type();
+          }
+          if (currentSceneIndex < scenes.length - 1) {
+            state = state.substr(0, state.length - 1);
+            element.textContent = state;
+            setTimeout(erase, config.erase);
+          }
+        }
+
+        function stop () {
+        	status = 'ready';
+        }
+
+        function play () {
+        	if (status === 'ready') {
+          	status = 'playing';
+          	type();
+          }
+        }
+        play();
+        return { play: play, stop: stop };
+      }
+
+      _handleHeaderMessages(e) {
+        const headerMessages = e.detail.value;
+        var vader = this.$.animated_comment;
+        var player = this.Typer(vader, headerMessages);
       }
     }
 
