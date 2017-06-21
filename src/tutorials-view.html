@@ -21,6 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
+        @apply --layout-vertical;
+        @apply --layout-center;
       }
     </style>
 
@@ -31,36 +33,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       order-by-child="publishedDate"
       data="{{tutorials}}">
     </firebase-query>
-    
+
 
     <div id="content">
-
       <div class="module">
-        <div class="layout horizontal center">
+        <div class="module_header layout horizontal center">
           <div class="module_info">
             <div class="module_title paper-font-headline">After Effects Series</div>
             <div class="module_subtitle paper-font-subhead">Animation tutorials for AE and C4D</div>
           </div>
-          <span class="flex"></span>
-          <a href="/tutorials" class="link">
-            <paper-button class="module_button" noink>Watch all</paper-button>
-          </a>
         </div>
         <template is="dom-if" if="[[!tutorialsLoaded]]">
-          <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-            <div class="video_card layout vertical center-center">
-              <iron-icon icon="my-icons:logo"></iron-icon>
-            </div>
-          </template>
+          <div class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[_createDummyArray(4)]]">
+              <div class="video_card layout vertical center-center">
+                <iron-image src="/images/card_placeholder.png"></iron-image>
+              </div>
+            </template>
+          </div>
         </template>
         <template is="dom-if" if="[[tutorialsLoaded]]">
-          <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-            <a href="/tutorial/[[tutorial.$key]]" class="link">
-              <div class="video_card">
-                <iron-image src="[[tutorial.thumbnail]]" preload fade sizing="cover"></iron-image>
-              </div>
-            </a>
-          </template>
+          <div class="layout horizontal wrap">
+            <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+              <a href="/tutorial/[[tutorial.$key]]" class="link video_card">
+                <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
+              </a>
+            </template>
+          </div>
         </template>
       </div>
     </div>
