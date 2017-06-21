@@ -14,15 +14,96 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="shared-styles.html">
 
+<script src="../bower_components/moment/min/moment.min.js"></script>
+
 <dom-module id="tutorial-view">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
+        @apply --layout-vertical;
+        @apply --layout-center;
       }
-      google-youtube{
+
+      #header{
         width: 100%;
-        height: 100%;
+        height: 280px;
+        background-color: var(--app-primary-color);
+        position: relative;
+      }
+
+      #header_actions {
+        padding: 10px;
+        position: absolute;
+        box-sizing: border-box;
+        color: white;
+        z-index: 2;
+      }
+
+      #content{
+        max-width: 960px;
+        padding: 0;
+        background-color: white;
+        border-radius: 4px;
+        overflow: hidden;
+        @apply --shadow-elevation-8dp;
+        margin-top: -200px;
+        z-index: 1;
+      }
+      #title_header{
+        position: relative;
+        min-height: 116px;
+        box-sizing: border-box;
+        padding: 30px;
+        background-color: var(--app-primary-color);
+      }
+      #episode_number{
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 500;
+      }
+      #episode_duration{
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 20px;
+        min-width: 80px;
+        margin-left: 20px;
+        text-align: right;
+      }
+      .module_title{
+        color: white;
+      }
+      #description {
+        padding: 30px;
+        color: #555;
+      }
+
+      /*Fab*/
+      #share_fab{
+        position: absolute;
+        bottom: -28px;
+        right: 5%;
+        --paper-fab-background: var(--app-fab-color);
+        --paper-fab-keyboard-focus-background: var(--app-fab-focus-color);
+      }
+
+      @media (max-width: 1400px) {
+        #share_fab{
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          z-index: 4;
+        }
+      }
+
+      @media (max-width: 960px) {
+        #content{
+          margin-top: -280px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        #share_fab{
+          bottom: 80px;
+        }
       }
     </style>
 
@@ -37,24 +118,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="header" class="layout vertical">
       <div id="header_actions" class="layout horizontal center">
         <paper-icon-button icon="my-icons:arrow-back" on-tap="_goBack"></paper-icon-button>
-        <span class="flex"></span>
       </div>
-      <google-youtube
-        video-id="[[tutorial.videoId]]"
-        height="100%"
-        width="100%"
-        showinfo="0">
-      </google-youtube>
+      <div>
+        <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
+        <paper-tooltip for="share_fab">Share</paper-tooltip>
+      </div>
     </div>
 
     <div id="content">
-      <div class="layout horizontal paper-font-subhead">
-        <div>[[_computeEpisodeNumber(tutorial.title)]]</div>
+      <google-youtube
+        id="video"
+        fluid
+        autoplay="1"
+        video-id="[[tutorial.videoId]]"
+        showinfo="0"
+        rel="0"
+        modestbranding="1">
+      </google-youtube>
+      <div id="title_header" class="layout horizontal center" style="background-color: #[[tutorial.mainColor]]">
+        <div>
+          <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
+          <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+        </div>
         <span class="flex"></span>
-        <div>[[tutorial.duration]]</div>
+        <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
       </div>
-      <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
-      <div class="paper-font-subhead">[[tutorial.description]]</div>
+      <div id="description" class="module_subtitle paper-font-subhead" style="white-space: pre-wrap">[[tutorial.description]]</div>
     </div>
   </template>
 
@@ -62,8 +151,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class TutorialView extends Polymer.Element {
       static get is() { return 'tutorial-view'; }
 
+      static get properties() {
+        return {
+          playing: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_videoStateChanged',
+          }
+        };
+      }
+
       _goBack() {
-        
+        window.history.back();
+      }
+
+      resumePlayback() {
+        this.$.video.play();
+      }
+
+      stopPlayback() {
+        this.$.video.pause();
+      }
+
+      _videoStateChanged(playing) {
+        if (playing) {
+          this.resumePlayback();
+        } else {
+          this.stopPlayback();
+        }
       }
 
       _computeEpisodeNumber(title) {
@@ -76,6 +191,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (title) {
           return title.split(" | ")[0];
         }
+      }
+
+      _computeDuration(duration) {
+        let durationData = moment.duration(duration)._data;
+        return (durationData.hours ? durationData.hours + " h " : "") + durationData.minutes + " min";
       }
     }
 
