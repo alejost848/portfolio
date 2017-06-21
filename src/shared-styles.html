@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-styles/shadow.html">
 
 <!-- shared styles for all views -->
 <dom-module id="shared-styles">
@@ -21,8 +22,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </custom-style>
     <style>
       :host {
-        --app-primary-color: #212121;
+        --app-primary-color: #141414;
         --app-accent-color: #32b6ef;
+        --app-fab-color: var(--app-accent-color);
+        --app-fab-focus-color: var(--paper-blue-600);
       }
 
       * {
@@ -47,19 +50,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #content{
         width: 100%;
         max-width: 1400px;
-        padding: 22px 0;
+        padding: 40px 0;
         box-sizing: border-box;
+      }
+
+      /*Modules*/
+      .module{
+        margin-top: 50px;
+      }
+      .module_header{
+        margin: 0 8px;
+        margin-bottom: 16px;
+      }
+      .module_title{
+        color: #eee;
+        font-weight: 400;
+        font-size: 26px;
+      }
+      .module_subtitle{
+        color: #777;
+      }
+      .module_button{
+        margin-right: -8px;
+        font-size: 16px;
+        color: var(--app-accent-color);
       }
 
       /*Cards*/
       .video_card {
         margin: 4px;
         width: calc(25% - 8px);
+        min-height: 192px;
         border-radius: 4px;
-        background-color: var(--app-primary-color);
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        background-color: #212121;
+        @apply --shadow-transition;
+        @apply --shadow-elevation-4dp;
         overflow: hidden;
         line-height: 0;
+      }
+      .video_card:hover{
+        @apply --shadow-elevation-12dp;
       }
       .video_card iron-icon {
         width: 70px;
@@ -97,27 +127,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #212121;
         font-size: 22px;
       }
-
-      /*Module styles*/
-      .module{
-        margin-top: 32px;
-      }
-      .module_header{
-        margin: 0 8px;
-        margin-bottom: 16px;
-      }
-      .module_title{
-        color: #222;
-        font-weight: 500;
-        font-size: 26px;
-      }
-      .module_subtitle{
-        color: #555;
-      }
-      .module_button{
-        margin-right: -8px;
-        font-size: 16px;
-        color: var(--app-accent-color);
+      paper-tooltip{
+        text-align: center;
+        --paper-tooltip:{
+          font-size: 12px;
+        }
       }
 
       @media (max-width: 1400px) {
@@ -126,6 +140,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         .video_card {
           width: calc(50% - 8px);
+        }
+      }
+
+      @media (max-width: 750px) {
+        .video_card {
+          min-height: 150px;
         }
       }
 
@@ -142,6 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .video_card {
           margin: 4px 0;
           width: 100%;
+          min-height: 150px;
         }
       }
     </style>
