@@ -22,7 +22,11 @@
     "iron-image": "PolymerElements/iron-image#^2.1.1",
     "google-youtube": "GoogleWebComponents/google-youtube#2.0-preview",
     "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.0",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "paper-progress": "PolymerElements/paper-progress#^2.0.1",
+    "vibrant": "*",
+    "paper-menu-button": "PolymerElements/paper-menu-button#^2.0.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0-rc.3"
