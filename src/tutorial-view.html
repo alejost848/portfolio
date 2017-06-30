@@ -10,11 +10,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
 
 <link rel="import" href="shared-styles.html">
 
 <script src="../bower_components/moment/min/moment.min.js"></script>
+<script src="../bower_components/vibrant/dist/Vibrant.min.js"></script>
 
 <dom-module id="tutorial-view">
   <template>
@@ -55,7 +58,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 116px;
         box-sizing: border-box;
         padding: 30px;
-        background-color: var(--app-primary-color);
       }
       #episode_number{
         color: rgba(0, 0, 0, 0.5);
@@ -71,9 +73,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .module_title{
         color: white;
       }
+      #publishedDate{
+        padding: 0 30px;
+        padding-top: 20px;
+        color: #444;
+      }
       #description {
         padding: 30px;
+        padding-top: 20px;
         color: #555;
+      }
+      #video_info{
+        position: relative;
+        background-color: #ccc;
+        transition: background-color 0.5s ease-in;
+      }
+      #video_progress{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        --paper-progress-height: 100%;
+        --paper-progress-active-color: rgba(0, 0, 0, 0.1);
+        --paper-progress-container-color: transparent;
       }
 
       /*Fab*/
@@ -132,18 +155,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         autoplay="1"
         video-id="[[tutorial.videoId]]"
         showinfo="0"
+        currenttime="{{videoCurrentTime}}"
+        duration="{{videoDuration}}"
         rel="0"
         modestbranding="1">
       </google-youtube>
-      <div id="title_header" class="layout horizontal center" style="background-color: #[[tutorial.mainColor]]">
-        <div>
-          <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
-          <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+
+      <!-- Hidden image for getting the main color -->
+      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+
+      <div id="video_info" style="background-color: #[[mainColor]]">
+        <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
+        <div id="title_header" class="layout horizontal center">
+          <div>
+            <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
+            <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+          </div>
+          <span class="flex"></span>
+          <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
         </div>
-        <span class="flex"></span>
-        <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
       </div>
-      <div id="description" class="module_subtitle paper-font-subhead" style="white-space: pre-wrap">[[tutorial.description]]</div>
+
+      <div id="publishedDate" class="paper-font-body2">Published [[_computeTimeAgo(tutorial.publishedDate)]]</div>
+      <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
     </div>
   </template>
 
@@ -196,6 +230,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _computeDuration(duration) {
         let durationData = moment.duration(duration)._data;
         return (durationData.hours ? durationData.hours + " h " : "") + durationData.minutes + " min";
+      }
+
+      _computeTimeAgo(publishedDate) {
+        return moment(publishedDate).fromNow();
+      }
+
+      componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+
+      rgbToHex(r, g, b) {
+          return this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+      }
+
+      _getMainColor(e){
+        var vibrant = new Vibrant(e.target, 5, 5);
+        var swatches = vibrant.swatches();
+        this.mainColor = swatches["Vibrant"].getHex().substring(1);
+        return this.mainColor;
       }
     }
 
