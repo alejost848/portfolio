@@ -9,8 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -55,68 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
 
-      /*Header*/
-      app-header {
-        color: #fff;
-        background-color: var(--app-primary-color);
-      }
-      app-header paper-icon-button {
-        --paper-icon-button-ink-color: white;
-      }
-      #header{
-        background-color: var(--app-primary-color);
-        color: white;
-        --paper-icon-button-ink-color: white;
-        width: 100%;
-        box-sizing: border-box;
-        position: relative;
-      }
-      #header_wrapper{
-        position: relative;
-        width: 100%;
-        height: 280px;
-        max-width: 1400px;
-        margin: 0 auto;
-        pointer-events: none;
-      }
-      #header_actions {
-        padding: 10px;
-        position: absolute;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      #header_logo{
-        width: 35px;
-        height: 35px;
-        margin-left: 10px;
-        margin-right: 20px;
-        pointer-events: all;
-      }
-      #header_content{
-        padding: 10px 20px;
-      }
-      #header_tabs{
-        margin-top: 20px;
-        width: 100%;
-        max-width: 600px;
-        --paper-tabs-selection-bar-color: var(--app-accent-color);
-        --paper-tab-ink: var(--app-accent-color);
-        pointer-events: all;
-      }
-      #animated_comment{
-        height: 32px;
-      }
-      #section_icon{
-        width: 70px;
-        height: 70px;
-        margin-bottom: 10px;
-        margin-left: -8px;
-      }
-      #section_subtitle{
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
+      /*Cover*/
       #cover{
         position: absolute;
         width: 100%;
@@ -124,9 +61,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border: 0;
       }
 
+      /*Header*/
+      app-header {
+        color: #fff;
+        --app-header-background-rear-layer: {
+          background-color: var(--app-primary-color);
+        };
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+      app-toolbar{
+        width: 100%;
+        max-width: 1200px;
+        height: 74px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        padding: 0;
+      }
+      #header_logo{
+        width: 46px;
+        height: 46px;
+        margin-left: 10px;
+        margin-right: 20px;
+      }
+      #header_tabs{
+        width: 100%;
+        max-width: 480px;
+        --paper-tabs-selection-bar-color: var(--app-accent-color);
+        --paper-tab-ink: var(--app-accent-color);
+        text-transform: uppercase;
+      }
+      #header_name{
+        line-height: 20px;
+        font-size: 22px;
+      }
+      #animated_comment{
+        font-size: 18px;
+        line-height: 28px;
+        height: 22px;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
       /*Notifications*/
       #notifications_button{
-        pointer-events: all;
+
       }
       #notifications_dialog{
         width: 350px;
@@ -165,10 +145,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: white;
       }
 
-      #info_button{
-        pointer-events: all;
-      }
-
       /*Fab*/
       #experiment_fab{
         position: absolute;
@@ -176,7 +152,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         right: 32px;
         --paper-fab-background: var(--app-fab-color);
         --paper-fab-keyboard-focus-background: var(--app-fab-focus-color);
-        pointer-events: all;
       }
 
       /*Content*/
@@ -273,70 +248,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-messaging>
 
     <!-- Main content -->
-    <app-header-layout fullbleed>
+    <iframe id="cover" src="../src/experiment/experiment.html"></iframe>
 
-      <div id="header" hidden$="[[_shouldHideHeader(page)]]">
-        <iframe id="cover" src="../src/experiment/experiment.html"></iframe>
-        <div id="header_wrapper" class="layout vertical">
-          <div id="header_actions" class="layout horizontal center">
-            <a href="/" class="link" hidden$="[[_shouldHideHeaderLogo(page)]]">
-              <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
-            </a>
-            <span class="flex"></span>
-            <paper-menu-button id="notifications_button" no-animations="[[!largeScreen]]" vertical-align="top" horizontal-align="right" vertical-offset="6" horizontal-offset="6">
-              <div slot="dropdown-trigger">
-                <paper-icon-button icon="my-icons:notifications-off"></paper-icon-button>
-                <paper-tooltip>Notifications</paper-tooltip>
-              </div>
-              <div id="notifications_dialog" slot="dropdown-content" class="layout vertical">
-                <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
-                <template is="dom-if" if="{{!largeScreen}}">
-                  <paper-icon-button id="notifications_close" icon="my-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
-                </template>
+    <app-header-layout>
 
-                <div id="notifications_content" class="flex">
-                  <div class="paper-font-headline">Notifications</div>
-                  <paper-checkbox>I want to receive notifications</paper-checkbox>
-                  <div class="paper-font-body1">
-                    If this option is selected, I will be notified when:
-                    <ul>
-                      <li>
-                        <span>Tutorials or projects are uploaded</span>
-                        <span>(usually twice per month)</span>
-                      </li>
-                      <li>A significant change occurs in the web app (probably never)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </paper-menu-button>
-            <div>
-              <paper-icon-button id="info_button" icon="info-outline"></paper-icon-button>
-              <paper-tooltip>About</paper-tooltip>
-            </div>
-          </div>
-          <div id="header_content" class="layout vertical end-justified flex">
-            <iron-pages selected="[[page]]" attr-for-selected="name">
-              <section name="home">
-                <iron-icon id="section_icon" icon="my-icons:logo-color"></iron-icon>
-                <div class="paper-font-display1">Alejandro Sanclemente</div>
-                <div id="section_subtitle" class="layout horizontal paper-font-headline">
-                  <div id="animated_comment"></div>
-                </div>
-              </section>
-              <section name="tutorials">
-                <div class="paper-font-display1">Tutorials</div>
-                <div id="section_subtitle" class="layout horizontal paper-font-headline">
-                  New videos premiere every other Thursday at 8 PM (UTC-5)
-                </div>
-              </section>
-              <section name="projects">
-
-              </section>
-              <section name="contact">
-
-              </section>
-            </iron-pages>
+      <app-header reveals condenses slot="header" effects="blend-background">
+        <app-toolbar></app-toolbar>
+        <app-toolbar sticky>
+          <a href="/" class="link">
+            <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
+          </a>
+          <div main-title class="flex">
+            <div id="header_name">Alejandro Sanclemente</div>
+            <div id="animated_comment"></div>
           </div>
           <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation">
             <paper-tab name="home" link>
@@ -352,12 +276,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a class="link" href="contact">Contact</a>
             </paper-tab>
           </paper-tabs>
-          <div>
-            <paper-fab id="experiment_fab" icon="my-icons:videogame-asset"></paper-fab>
-            <paper-tooltip for="experiment_fab" position="top">Play experiment</paper-tooltip>
-          </div>
-        </div>
-      </div>
+
+
+          <paper-menu-button id="notifications_button" vertical-align="top" horizontal-align="right" vertical-offset="6" horizontal-offset="6">
+            <div slot="dropdown-trigger">
+              <paper-icon-button icon="my-icons:notifications-off"></paper-icon-button>
+              <paper-tooltip>Notifications</paper-tooltip>
+            </div>
+            <div id="notifications_dialog" slot="dropdown-content" class="layout vertical">
+              <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
+              <template is="dom-if" if="{{!largeScreen}}">
+                <paper-icon-button id="notifications_close" icon="my-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
+              </template>
+
+              <div id="notifications_content" class="flex">
+                <div class="paper-font-headline">Notifications</div>
+                <paper-checkbox>I want to receive notifications</paper-checkbox>
+                <div class="paper-font-body1">
+                  If this option is selected, I will be notified when:
+                  <ul>
+                    <li>
+                      <span>Tutorials or projects are uploaded</span>
+                      <span>(usually twice per month)</span>
+                    </li>
+                    <li>A significant change occurs in the web app (probably never)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </paper-menu-button>
+        </app-toolbar>
+      </app-header>
 
       <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
         <home-view name="home"></home-view>

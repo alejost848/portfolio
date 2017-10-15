@@ -1,14 +1,14 @@
 var horizontalCount;
-var verticalCount = 5;
+var verticalCount = 8;
 
 var speed = 0.5;
-var initialSpacing = 5;
-var waveSize = 10;
+var initialSpacing = 20;
+var waveSize = 0;
 var lineLength = 10;
-var spacing = 50;
+var spacing = 80;
 
 function setup() {
-  createCanvas(windowWidth, 280);
+  createCanvas(windowWidth, 456);
   horizontalCount = round(width / spacing);
 }
 
@@ -31,11 +31,17 @@ function draw() {
       var r = atan2(dy, dx);
 
       translate(i*spacing + initialSpacing, j*spacing + initialSpacing);
-      rotate(radians(frameCount * speed + i * 10 + j * 10) + r);
+      rotate(radians(frameCount * speed + i * 10 + j * 10));
+      // rotate(radians(frameCount * speed + i * 10 + j * 10) + r);
       translate(-i*spacing - initialSpacing, -j*spacing - initialSpacing);
 
       line(lineX - lineLength + waveSize, lineY, lineX + lineLength + waveSize, lineY);
       pop();
     }
   }
+}
+
+function windowResized() {
+  horizontalCount = round(width / spacing);
+  resizeCanvas(windowWidth, height);
 }
