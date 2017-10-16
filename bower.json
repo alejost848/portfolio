@@ -26,7 +26,8 @@
     "paper-progress": "PolymerElements/paper-progress#^2.0.1",
     "vibrant": "*",
     "paper-menu-button": "PolymerElements/paper-menu-button#^2.0.0",
-    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.0"
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.0",
+    "sliding-pages": "alex-saunders/sliding-pages#^0.0.3"
   },
   "resolutions": {
     "polymer": "^2.0.0-rc.3"

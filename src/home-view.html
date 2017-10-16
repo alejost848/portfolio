@@ -11,8 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/sliding-pages/sliding-pages.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -24,6 +26,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
         @apply --layout-vertical;
         @apply --layout-center;
+      }
+
+      #slider_container{
+        position: relative;
+      }
+      sliding-pages{
+        height: 540px;
+        border-radius: 4px;
+      }
+      sliding-pages > div {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        cursor: pointer;
+      }
+      sliding-pages div:nth-of-type(1) {
+          --page-background-color: var(--paper-red-500);
+      }
+      sliding-pages div:nth-of-type(2) {
+          --page-background-color: var(--paper-blue-500);
+      }
+      sliding-pages div:nth-of-type(3) {
+          --page-background-color: var(--paper-green-500);
+      }
+      sliding-pages div:nth-of-type(4) {
+          --page-background-color: var(--paper-yellow-500);
+      }
+      sliding-pages div:nth-of-type(5) {
+          --page-background-color: var(--paper-purple-500);
+      }
+      #carousel_dots{
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        right: 0;
+        width: 80px;
+        margin: 0 auto;
+        z-index: 999;
+      }
+      .carousel_dot{
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.1);
+        transition: all 0.5s;
+        cursor: pointer;
+      }
+      .carousel_dot + .carousel_dot{
+        margin-left: 5px;
+      }
+      .carousel_dot.iron-selected{
+        background-color: rgba(255,255,255,0.9);
       }
 
     </style>
@@ -38,6 +95,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     <div id="content">
+      <div id="slider_container">
+        <sliding-pages active-index="{{carouselSlide}}">
+          <div>
+            <h1>
+              Page 1
+            </h1>
+            <div>
+              Child div
+            </div>
+          </div>
+
+          <div>
+            <h1>
+              Page 2
+            </h1>
+          </div>
+
+          <div>
+            <h1>
+              Page 3
+            </h1>
+          </div>
+
+          <div>
+            <h1>
+              Page 4
+            </h1>
+          </div>
+
+          <div>
+            <h1>
+              Page 5
+            </h1>
+          </div>
+        </sliding-pages>
+        <iron-selector id="carousel_dots" selected="{{carouselSlide}}" class="layout horizontal center-justified">
+          <div class="carousel_dot"></div>
+          <div class="carousel_dot"></div>
+          <div class="carousel_dot"></div>
+          <div class="carousel_dot"></div>
+          <div class="carousel_dot"></div>
+        </iron-selector>
+      </div>
+
       <div class="module">
         <div class="module_header layout horizontal center">
           <div class="module_info">
@@ -105,6 +206,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       constructor() {
         super();
         this.tutorialsLoaded = false;
+
+        this.carouselSlide = -1;
+        this.changeCarousel();
+        // document.getElementById('carousel_dots').addEventListener("iron-select", function () {
+        //   clearTimeout(this.handle);
+        //   this.changeCarousel()
+        // });
+      }
+
+      changeCarousel() {
+        //Resets the async timeout
+        if (typeof this.carouselTimeout != 'undefined'){
+          clearTimeout(this.carouselTimeout);
+        }
+
+        this.carouselTimeout = setTimeout(() => this.changeCarousel(), 6000);
+
+        this.carouselSlide = this.carouselSlide === 4 ? 0 : (this.carouselSlide + 1);
       }
 
       _createDummyArray(number) {
