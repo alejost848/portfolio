@@ -74,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-toolbar{
         width: 100%;
         max-width: 1200px;
-        height: 74px;
+        height: 62px;
         margin: 0 auto;
         box-sizing: border-box;
         padding: 0;
@@ -82,12 +82,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #header_logo{
         width: 46px;
         height: 46px;
-        margin-left: 10px;
         margin-right: 20px;
+        transition: all 1s ease;
+      }
+      #header_logo.headerRevealed{
+        width: 32px;
+        height: 32px;
       }
       #header_tabs{
         width: 100%;
         max-width: 480px;
+        height: 100%;
         --paper-tabs-selection-bar-color: var(--app-accent-color);
         --paper-tab-ink: var(--app-accent-color);
         text-transform: uppercase;
@@ -95,6 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #header_name{
         line-height: 20px;
         font-size: 22px;
+        transition: all 1s ease;
       }
       #animated_comment{
         font-size: 18px;
@@ -102,6 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 22px;
         font-weight: 300;
         color: rgba(255, 255, 255, 0.6);
+        transition: all 1s ease;
       }
 
       /*Notifications*/
@@ -193,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center-center;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 960px) {
         #header_wrapper{
           height: 212px;
         }
@@ -252,11 +259,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-header-layout>
 
-      <app-header reveals condenses slot="header" effects="blend-background">
-        <app-toolbar></app-toolbar>
+      <app-header id="header" reveals condenses slot="header" effects="blend-background resize-snapped-title" threshold="130">
+        <app-toolbar>
+          <div condensed-title></div>
+        </app-toolbar>
         <app-toolbar sticky>
           <a href="/" class="link">
-            <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
+            <iron-icon id="header_logo" icon="my-icons:logo"></iron-icon>
           </a>
           <div main-title class="flex">
             <div id="header_name">Alejandro Sanclemente</div>
@@ -383,6 +392,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
+
+        //Animate header
+        this.headerRevealed = false;
+        this.$.header.addEventListener('threshold-triggered-changed', e => {
+          let headerRevealed = e.detail.value;
+          if (headerRevealed) {
+            this.$.header_logo.classList.add("headerRevealed");
+          } else {
+            this.$.header_logo.classList.remove("headerRevealed");
+          }
+        });
+
         this.$.auth.signInAnonymously()
           .then(function(response) { // optionally handle a successful login
             console.log("login successful");
