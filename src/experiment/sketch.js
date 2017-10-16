@@ -42,6 +42,6 @@ function draw() {
 }
 
 function windowResized() {
-  horizontalCount = round(width / spacing);
+  horizontalCount = round(windowWidth / spacing);
   resizeCanvas(windowWidth, height);
 }
