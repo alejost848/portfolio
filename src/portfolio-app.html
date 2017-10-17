@@ -20,12 +20,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<!-- HACK: Stop scrolling in dialogs hack -->
+<link rel="import" href="../bower_components/iron-dropdown/iron-dropdown-scroll-manager.html">
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
-<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
@@ -112,14 +115,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Notifications*/
-      #notifications_button{
-
-      }
       #notifications_dialog{
+        position: fixed;
         width: 350px;
+        height: 480px;
         box-sizing: border-box;
         color: #222;
         background-color: white;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      #notifications_dialog > * {
+        margin-top: 0;
+        padding: 0;
       }
       #notifications_image{
         width: 100%;
@@ -127,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: #eee;
       }
       #notifications_content{
-        padding: 16px;
+        padding: 16px !important;
       }
       #notifications_content paper-checkbox{
         --paper-checkbox-label-spacing: 12px;
@@ -147,6 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #notifications_close{
         position: absolute;
+        padding: 8px !important;
         top: 4px;
         left: 4px;
         color: white;
@@ -212,16 +221,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #notifications_dialog{
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
+          margin: 0;
           box-sizing: border-box;
         }
       }
     </style>
 
-    <iron-media-query query="min-width: 600px" query-matches="{{largeScreen}}"></iron-media-query>
+    <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}"></iron-media-query>
 
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="[[rootPattern]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
@@ -248,11 +260,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       on-data-changed="_handleHeaderMessages">
     </firebase-document>
 
+    <!-- Firebase notifications -->
     <firebase-messaging
       id="messaging"
+      app-name="alejost848"
       token="{{token}}"
-      on-message="handleMessage">
+      push-supported="{{pushSupported}}"
+      on-last-message-changed="handleMessage">
     </firebase-messaging>
+
+    <firebase-document
+      app-name="alejost848"
+      path="/users/[[user.uid]]/token"
+      data="[[token]]">
+    </firebase-document>
+
+    <firebase-document
+      app-name="alejost848"
+      path="/users/[[user.uid]]/subscribed"
+      data="[[userSubscribed]]"
+      on-data-changed="handleSubscription">
+    </firebase-document>
 
     <!-- Main content -->
     <iframe id="cover" src="../src/experiment/experiment.html"></iframe>
@@ -286,34 +314,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-tab>
           </paper-tabs>
 
-
-          <paper-menu-button id="notifications_button" vertical-align="top" horizontal-align="right" vertical-offset="6" horizontal-offset="6">
-            <div slot="dropdown-trigger">
-              <paper-icon-button icon="my-icons:notifications-off"></paper-icon-button>
+          <!-- Show the notifications button if the browser supports push notifications -->
+          <template is="dom-if" if="[[pushSupported]]">
+            <div>
+              <paper-icon-button icon="my-icons:[[subscriptionIcon]]" on-tap="_openNotificationsDialog"></paper-icon-button>
               <paper-tooltip>Notifications</paper-tooltip>
             </div>
-            <div id="notifications_dialog" slot="dropdown-content" class="layout vertical">
-              <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
-              <template is="dom-if" if="{{!largeScreen}}">
-                <paper-icon-button id="notifications_close" icon="my-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
-              </template>
-
-              <div id="notifications_content" class="flex">
-                <div class="paper-font-headline">Notifications</div>
-                <paper-checkbox>I want to receive notifications</paper-checkbox>
-                <div class="paper-font-body1">
-                  If this option is selected, I will be notified when:
-                  <ul>
-                    <li>
-                      <span>Tutorials or projects are uploaded</span>
-                      <span>(usually twice per month)</span>
-                    </li>
-                    <li>A significant change occurs in the web app (probably never)</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </paper-menu-button>
+          </template>
         </app-toolbar>
       </app-header>
 
@@ -356,6 +363,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
 
     </app-header-layout>
+
+    <paper-dialog
+      id="notifications_dialog"
+      with-backdrop
+      horizontal-align="right"
+      vertical-align="top"
+      horizontal-offset="-40"
+      vertical-offset="30"
+      entry-animation="fade-in-animation"
+      exit-animation="fade-out-animation"
+      on-iron-overlay-opened="_disableDocumentScrolling"
+      on-iron-overlay-closed="_restoreDocumentScrolling">
+
+      <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
+      <template is="dom-if" if="{{!largeScreen}}">
+        <paper-icon-button id="notifications_close" icon="my-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
+      </template>
+
+      <div id="notifications_content">
+        <div class="paper-font-headline">Notifications</div>
+        <paper-checkbox id="notifications_checkbox" on-tap="toggleSubscription" checked="[[hasSubscription]]">I want to receive notifications</paper-checkbox>
+        <div class="paper-font-body1">
+          If this option is selected, I will be notified when:
+          <ul>
+            <li>
+              <span>Tutorials or projects are uploaded</span>
+              <span>(maybe twice per month)</span>
+            </li>
+            <li>A significant change occurs in the web app (perhaps someday)</li>
+          </ul>
+        </div>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -534,8 +575,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      toggleSubscription(){
+        var self = this;
+        var notifications_checkbox = this.$.notifications_checkbox;
+        if (notifications_checkbox.checked) {
+          this.userSubscribed = false;
+          this.subscriptionIcon = "notifications-none";
+          console.log("Notifications deactivated");
+        } else {
+          this.$.messaging.requestPermission().then(function() {
+            self.userSubscribed = true;
+            self.subscriptionIcon = "notifications-active";
+            console.log("Notifications activated");
+          }, function(err) {
+            console.log("Notifications dismissed. Reload and try again.");
+            notifications_checkbox.checked = false;
+          });
+        }
+      }
+      handleSubscription(e){
+        this.hasSubscription = e.detail.value;
+        this.$.notifications_checkbox.checked = this.hasSubscription;
+
+        //Show an icon corresponding to the actual subscription
+        if (Object.keys(this.hasSubscription).length === 0 && this.hasSubscription.constructor === Object) { //While Firebase data loads
+          this.hasSubscription = false;
+          this.subscriptionIcon = "notifications-none";
+        } else if (this.hasSubscription) { //If the subscription is active
+          this.subscriptionIcon = "notifications-active";
+        } else{ //If the subscription is not active
+          this.subscriptionIcon = "notifications-none";
+        }
+      }
+
+      handleMessage(e){
+        if (e.detail.value) {
+          console.log('message received:', e.detail.value.notification);
+        }
+      }
+
+      _openNotificationsDialog(e){
+        this.$.notifications_dialog.positionTarget = e.target;
+        this.$.notifications_dialog.open();
+      }
       _closeNotificationsDialog(){
-        this.$.notifications_button.close();
+        this.$.notifications_dialog.close();
+      }
+
+      // HACK: Stop scrolling in dialogs hack
+      _disableDocumentScrolling(e) {
+        Polymer.IronDropdownScrollManager.pushScrollLock(e.target);
+      }
+      _restoreDocumentScrolling(e) {
+        Polymer.IronDropdownScrollManager.removeScrollLock(e.target);
       }
     }
 
