@@ -47,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="tutorials-view.html">
 <link rel="lazy-import" href="projects-view.html">
 <link rel="lazy-import" href="tutorial-view.html">
-<link rel="lazy-import" href="contact-view.html">
+<link rel="lazy-import" href="about-view.html">
 <link rel="lazy-import" href="error-view.html">
 
 <dom-module id="portfolio-app">
@@ -83,7 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-sizing: border-box;
         padding: 0;
       }
-      #header_link{        
+      #header_link{
         margin-right: 20px;
       }
       #header_logo{
@@ -312,8 +312,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-tab name="projects" link>
               <a class="link" href="projects">Projects</a>
             </paper-tab>
-            <paper-tab name="contact" link>
-              <a class="link" href="contact">Contact</a>
+            <paper-tab name="about" link>
+              <a class="link" href="about">About</a>
             </paper-tab>
           </paper-tabs>
 
@@ -332,7 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <tutorials-view name="tutorials"></tutorials-view>
         <projects-view name="projects"></projects-view>
         <tutorial-view name="tutorial" route="[[subroute]]" playing="{{_tutorialPlaying}}"></tutorial-view>
-        <contact-view name="contact"></contact-view>
+        <about-view name="about"></about-view>
         <error-view name="error"></error-view>
       </iron-pages>
 
@@ -356,8 +356,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div>Projects</div>
             </a>
           </paper-tab>
-          <paper-tab name="contact" link>
-            <a class="link" href="contact">
+          <paper-tab name="about" link>
+            <a class="link" href="about">
               <iron-icon icon="mail"></iron-icon>
               <div>Contact</div>
             </a>
