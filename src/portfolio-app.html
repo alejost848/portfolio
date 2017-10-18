@@ -30,6 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
 
@@ -82,10 +83,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-sizing: border-box;
         padding: 0;
       }
+      #header_link{        
+        margin-right: 20px;
+      }
       #header_logo{
         width: 46px;
         height: 46px;
-        margin-right: 20px;
         transition: all 1s ease;
       }
       #header_logo.headerRevealed{
@@ -292,7 +295,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div condensed-title></div>
         </app-toolbar>
         <app-toolbar sticky>
-          <a href="/" class="link">
+          <a href="/" id="header_link" class="link">
             <iron-icon id="header_logo" icon="my-icons:logo"></iron-icon>
           </a>
           <div main-title class="flex">
@@ -396,6 +399,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </div>
     </paper-dialog>
+
+    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]"></paper-toast>
 
   </template>
 
@@ -559,37 +564,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var player = this.Typer(vader, headerMessages);
       }
 
-      _shouldHideHeader(page) {
-        if (page == "tutorial") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
-      _shouldHideHeaderLogo(page){
-        if (page == "home") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
       toggleSubscription(){
         var self = this;
         var notifications_checkbox = this.$.notifications_checkbox;
         if (notifications_checkbox.checked) {
           this.userSubscribed = false;
           this.subscriptionIcon = "notifications-none";
-          console.log("Notifications deactivated");
+
+          this.toastText = "You won't receive notifications again";
+          this.$.toast.show();
         } else {
           this.$.messaging.requestPermission().then(function() {
             self.userSubscribed = true;
             self.subscriptionIcon = "notifications-active";
-            console.log("Notifications activated");
+
+            self.toastText = "Thanks for subscribing!";
+            self.$.toast.show();
           }, function(err) {
-            console.log("Notifications dismissed. Reload and try again.");
             notifications_checkbox.checked = false;
+
+            self.toastText = "To subscribe, allow the notifications permission.";
+            self.$.toast.show();
           });
         }
       }
