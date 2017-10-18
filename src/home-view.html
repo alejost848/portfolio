@@ -130,7 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </h1>
           </div>
         </sliding-pages>
-        <iron-selector id="carousel_dots" selected="{{carouselSlide}}" class="layout horizontal center-justified">
+        <iron-selector id="carousel_dots" selected="{{carouselSlide}}" on-iron-select="changeCarousel" class="layout horizontal center-justified">
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
@@ -207,23 +207,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super();
         this.tutorialsLoaded = false;
 
-        this.carouselSlide = -1;
+        this.carouselSlide = 0;
         this.changeCarousel();
-        // document.getElementById('carousel_dots').addEventListener("iron-select", function () {
-        //   clearTimeout(this.handle);
-        //   this.changeCarousel()
-        // });
       }
 
       changeCarousel() {
-        //Resets the async timeout
-        if (typeof this.carouselTimeout != 'undefined'){
-          clearTimeout(this.carouselTimeout);
-        }
+        //Resets the timeout
+        clearTimeout(this.carouselTimeout);
 
-        this.carouselTimeout = setTimeout(() => this.changeCarousel(), 6000);
-
-        this.carouselSlide = this.carouselSlide === 4 ? 0 : (this.carouselSlide + 1);
+        this.carouselTimeout = setTimeout(() => {
+          this.carouselSlide = this.carouselSlide === 4 ? 0 : (this.carouselSlide + 1);
+          this.changeCarousel();
+        }, 6000);
       }
 
       _createDummyArray(number) {
