@@ -236,15 +236,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return moment(publishedDate).fromNow();
       }
 
-      componentToHex(c) {
-        var hex = c.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-      }
-
-      rgbToHex(r, g, b) {
-          return this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
-      }
-
       _getMainColor(e){
         var vibrant = new Vibrant(e.target, 5, 5);
         var swatches = vibrant.swatches();
