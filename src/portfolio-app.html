@@ -40,6 +40,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 
+<link rel="import" href="elements/p5js-experiment.html">
+
 <link rel="import" href="my-icons.html">
 <link rel="import" href="shared-styles.html">
 
@@ -55,14 +57,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-      }
-
-      /*Cover*/
-      #cover{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border: 0;
       }
 
       /*Header*/
@@ -286,7 +280,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-document>
 
     <!-- Main content -->
-    <iframe id="cover" src="../src/experiment/experiment.html"></iframe>
+    <p5js-experiment bg-color="#141414"></p5js-experiment>
 
     <app-header-layout>
 
