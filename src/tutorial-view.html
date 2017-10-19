@@ -28,21 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center;
       }
 
-      #header{
-        width: 100%;
-        height: 280px;
-        background-color: var(--app-primary-color);
-        position: relative;
-      }
-
-      #header_actions {
-        padding: 10px;
-        position: absolute;
-        box-sizing: border-box;
-        color: white;
-        z-index: 2;
-      }
-
       #content{
         max-width: 960px;
         padding: 0;
@@ -50,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-radius: 4px;
         overflow: hidden;
         @apply --shadow-elevation-8dp;
-        margin-top: -200px;
+        margin-top: 50px;
         z-index: 1;
       }
       #title_header{
@@ -130,54 +115,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-route route="{{route}}" pattern="/:key" data="{{routeData}}"></app-route>
+    <app-route route="{{route}}" pattern="/:slug" data="{{routeData}}"></app-route>
 
-    <firebase-document
+    <firebase-query
       app-name="alejost848"
-      path="/tutorials/[[routeData.key]]"
-      data="{{tutorial}}">
-    </firebase-document>
+      path="/tutorials"
+      order-by-child="slug"
+      equal-to="[[routeData.slug]]"
+      data="{{queryResults}}">
+    </firebase-query>
 
-    <div id="header" class="layout vertical">
-      <div id="header_actions" class="layout horizontal center">
-        <paper-icon-button icon="my-icons:arrow-back" on-tap="_goBack"></paper-icon-button>
-      </div>
-      <div>
-        <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
-        <paper-tooltip for="share_fab">Share</paper-tooltip>
-      </div>
+    <div>
+      <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
+      <paper-tooltip for="share_fab">Share</paper-tooltip>
     </div>
 
     <div id="content">
-      <google-youtube
-        id="video"
-        fluid
-        autoplay="1"
-        video-id="[[tutorial.videoId]]"
-        showinfo="0"
-        currenttime="{{videoCurrentTime}}"
-        duration="{{videoDuration}}"
-        rel="0"
-        modestbranding="1">
-      </google-youtube>
+      <template id="dom_repeat" is="dom-repeat" items="[[queryResults]]" as="tutorial">
 
-      <!-- Hidden image for getting the main color -->
-      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+        <google-youtube
+          id="video"
+          fluid
+          autoplay="1"
+          video-id="[[tutorial.videoId]]"
+          showinfo="0"
+          currenttime="{{videoCurrentTime}}"
+          duration="{{videoDuration}}"
+          rel="0"
+          modestbranding="1">
+        </google-youtube>
 
-      <div id="video_info" style="background-color: #[[mainColor]]">
-        <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
-        <div id="title_header" class="layout horizontal center">
-          <div>
-            <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
-            <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+        <!-- Hidden image for getting the main color -->
+        <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+
+        <div id="video_info" style="background-color: #[[mainColor]]">
+          <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
+          <div id="title_header" class="layout horizontal center">
+            <div>
+              <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
+              <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+            </div>
+            <span class="flex"></span>
+            <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
           </div>
-          <span class="flex"></span>
-          <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
         </div>
-      </div>
 
-      <div id="publishedDate" class="paper-font-body2">Published [[_computeTimeAgo(tutorial.publishedDate)]]</div>
-      <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+        <div id="publishedDate" class="paper-font-body2">Published [[_computeTimeAgo(tutorial.publishedDate)]]</div>
+        <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+      </template>
     </div>
   </template>
 
@@ -200,11 +185,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       resumePlayback() {
-        this.$.video.play();
+        if (this.shadowRoot.querySelector("#video")) {
+          this.shadowRoot.querySelector("#video").play();
+        }
       }
 
       stopPlayback() {
-        this.$.video.pause();
+        this.shadowRoot.querySelector("#video").pause();
       }
 
       _videoStateChanged(playing) {
@@ -240,7 +227,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var vibrant = new Vibrant(e.target, 5, 5);
         var swatches = vibrant.swatches();
         this.mainColor = swatches["Vibrant"].getHex().substring(1);
-        return this.mainColor;
       }
     }
 

@@ -55,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[tutorialsLoaded]]">
           <div class="layout horizontal wrap">
             <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-              <a href="/tutorial/[[tutorial.$key]]" class="link video_card">
+              <a href="/tutorial/[[tutorial.slug]]" class="link video_card">
                 <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
               </a>
             </template>
