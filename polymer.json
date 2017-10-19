@@ -16,8 +16,16 @@
   ],
   "extraDependencies": [
     "manifest.json",
-    "bower_components/webcomponentsjs/*.js"
+    "bower_components/webcomponentsjs/*.js",
+    "firebase-messaging-sw.js"
   ],
+  "builds": [{
+    "addServiceWorker": true,
+    "insertPrefetchLinks": true,
+    "js": {"minify": false},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }],
   "lint": {
     "rules": ["polymer-2"]
   }
