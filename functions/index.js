@@ -3,10 +3,12 @@ const slugify = require('slugify');
 
 exports.createTutorialSlug = functions.database
   .ref('/tutorials/{tutorialKey}')
-  .onCreate(event => { //Trigger an event when a new tutorial is added
+  .onCreate(event => {
+    //Generate slug when a new tutorial is added
+    let titleAndEpisode = event.data.val().title;
+    let title = titleAndEpisode.split(" | ")[0];
+    let episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
 
-    console.log("I'm here!");
-    console.log(event.data.val());
-
-    // return event.data.ref.update({mainColor: "test"});
+    let slug = slugify(episodeNumber + "-" + title, {lower: true});
+    return event.data.ref.update({slug: slug});
   });
