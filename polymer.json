@@ -6,7 +6,7 @@
     "src/tutorials-view.html",
     "src/projects-view.html",
     "src/tutorial-view.html",
-    "src/contact-view.html",
+    "src/about-view.html",
     "src/error-view.html"
   ],
   "sources": [
