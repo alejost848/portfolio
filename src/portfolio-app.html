@@ -79,11 +79,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #header_link{
         margin-right: 20px;
+        transition: all 0.7s ease;
       }
       #header_logo{
         width: 46px;
         height: 46px;
-        transition: all 1s ease;
+        transition: all 0.7s ease;
       }
       #header_logo.headerRevealed{
         width: 32px;
@@ -100,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #header_name{
         line-height: 20px;
         font-size: 22px;
-        transition: all 1s ease;
+        transition: all 0.7s ease;
       }
       #animated_comment{
         font-size: 18px;
@@ -108,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 22px;
         font-weight: 300;
         color: rgba(255, 255, 255, 0.6);
-        transition: all 1s ease;
+        transition: all 0.7s ease;
       }
 
       /*Notifications*/
@@ -206,12 +207,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center-center;
       }
 
+      @media (max-width: 1200px) {
+        app-toolbar{
+          padding: 0px 10px;
+        }
+        #condensed_toolbar{
+          height: 42px;
+        }
+      }
+
       @media (max-width: 960px) {
         #header_wrapper{
           height: 212px;
         }
         #header_tabs{
           display: none;
+        }
+        #header_link{
+          margin-right: 12px;
+        }
+        #header_name{
+          font-size: 18px;
+          line-height: 20px;
+        }
+        #animated_comment{
+          font-size: 16px;
+          line-height: 22px;
         }
         #bottom_nav{
           display: block;
@@ -226,6 +247,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           max-height: 100% !important;
           margin: 0;
           box-sizing: border-box;
+        }
+      }
+
+      @media (max-width: 400px) {
+        #condensed_toolbar{
+          display: none;
+        }
+        #header_logo{
+          width: 32px;
+          height: 32px;
+        }
+        #header_name{
+          display: none;
+        }
+        #animated_comment{
+          display: none;
         }
       }
     </style>
@@ -285,7 +322,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-header-layout>
 
       <app-header id="header" reveals condenses slot="header" effects="blend-background resize-snapped-title" threshold="130">
-        <app-toolbar>
+        <app-toolbar id="condensed_toolbar">
           <div condensed-title></div>
         </app-toolbar>
         <app-toolbar sticky>
@@ -352,8 +389,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-tab>
           <paper-tab name="about" link>
             <a class="link" href="about">
-              <iron-icon icon="mail"></iron-icon>
-              <div>Contact</div>
+              <iron-icon icon="info"></iron-icon>
+              <div>About</div>
             </a>
           </paper-tab>
         </paper-tabs>
@@ -565,7 +602,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.userSubscribed = false;
           this.subscriptionIcon = "notifications-none";
 
-          this.toastText = "You won't receive notifications again";
+          this.toastText = "You won't receive any notifications";
           this.$.toast.show();
         } else {
           this.$.messaging.requestPermission().then(function() {
@@ -577,7 +614,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }, function(err) {
             notifications_checkbox.checked = false;
 
-            self.toastText = "To subscribe, allow the notifications permission.";
+            self.toastText = "To subscribe, reload and allow notifications";
             self.$.toast.show();
           });
         }
