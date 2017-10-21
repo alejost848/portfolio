@@ -1,5 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 
 <script src="../../bower_components/p5.js/lib/p5.min.js"></script>
 
@@ -12,6 +11,7 @@
         padding: 0;
         margin: 0;
         overflow: hidden;
+        background-color: var(--app-accent-color, transparent);
       }
     </style>
 
@@ -49,10 +49,12 @@
           sketch.setup = function() {
             sketch.createCanvas(sketch.windowWidth, 456);
             horizontalCount = sketch.round(sketch.width / spacing);
+            // HACK: Make the sketch visible in Chrome
+            self.$.container.querySelector('#defaultCanvas0').style.visibility = "visible";
           };
 
           sketch.draw = function() {
-            sketch.background(self.bgColor);
+            sketch.clear();
             sketch.strokeWeight(2);
             for (var i = 0; i <= horizontalCount; i += 1) {
               for (var j = 0; j <= verticalCount; j += 1) {
