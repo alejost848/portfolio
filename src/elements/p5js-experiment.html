@@ -23,12 +23,6 @@
     class P5jsExperiment extends Polymer.Element {
       static get is() { return 'p5js-experiment'; }
 
-      static get properties() {
-        return {
-          bgColor: String
-        };
-      }
-
       ready(){
         super.ready();
         var p5_experiment = new p5(this.createSketch(), this.$.container);
