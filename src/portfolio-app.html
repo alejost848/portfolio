@@ -26,7 +26,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
@@ -57,17 +56,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
+        background-color: var(--app-background-color);
       }
 
       /*Header*/
       app-header {
         color: #fff;
         --app-header-background-rear-layer: {
-          background-color: var(--app-background-color);
+          background: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
         };
-      }
-      app-header paper-icon-button {
-        --paper-icon-button-ink-color: white;
       }
       app-toolbar{
         width: 100%;
@@ -94,9 +91,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 100%;
         max-width: 480px;
         height: 100%;
-        --paper-tabs-selection-bar-color: var(--app-accent-color);
-        --paper-tab-ink: var(--app-accent-color);
         text-transform: uppercase;
+        --paper-tabs-selection-bar-color: white;
+        --paper-tab-ink: var(--app-accent-color);
+        --paper-tab-content:{
+          color: white;
+          font-weight: 600;
+        }
+        --paper-tab-content-unselected:{
+          color: rgba(20,20,20,0.5);
+        }
       }
       #header_name{
         line-height: 20px;
@@ -107,12 +111,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-size: 18px;
         line-height: 28px;
         height: 22px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(20,20,20,0.5);
         transition: all 0.7s ease;
       }
 
       /*Notifications*/
+      #notifications_button{
+        color: rgba(20,20,20,0.5);
+      }
       #notifications_dialog{
         position: fixed;
         width: 350px;
@@ -157,16 +163,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         top: 4px;
         left: 4px;
         color: white;
-      }
-
-      /*Fab*/
-      #experiment_fab{
-        position: absolute;
-        bottom: -28px;
-        right: 32px;
-        --paper-fab-background: var(--app-fab-color);
-        --paper-fab-keyboard-focus-background: var(--app-fab-focus-color);
-      }
+      }    
 
       /*Content*/
 
@@ -194,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-tab-content:{
           transition: all 0.1s cubic-bezier(0.4, 0.0, 1, 1);
           font-size: 14px;
-          color: #32b6ef;
+          color: var(--app-accent-color);
         }
         --paper-tab-content-unselected:{
           font-size: 12px;
@@ -321,7 +318,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-header-layout>
 
-      <app-header id="header" reveals condenses slot="header" effects="blend-background resize-snapped-title" threshold="130">
+      <app-header id="header" reveals condenses slot="header" effects="waterfall blend-background resize-snapped-title" threshold="130">
         <app-toolbar id="condensed_toolbar">
           <div condensed-title></div>
         </app-toolbar>
@@ -351,7 +348,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <!-- Show the notifications button if the browser supports push notifications -->
           <template is="dom-if" if="[[pushSupported]]">
             <div>
-              <paper-icon-button icon="my-icons:[[subscriptionIcon]]" on-tap="_openNotificationsDialog"></paper-icon-button>
+              <paper-icon-button id="notifications_button" icon="my-icons:[[subscriptionIcon]]" on-tap="_openNotificationsDialog"></paper-icon-button>
               <paper-tooltip>Notifications</paper-tooltip>
             </div>
           </template>

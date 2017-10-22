@@ -11,7 +11,7 @@
         padding: 0;
         margin: 0;
         overflow: hidden;
-        background-color: var(--app-accent-color, transparent);
+        background: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
       }
     </style>
 
@@ -35,7 +35,7 @@
           var verticalCount = 8;
 
           var speed = 0.5;
-          var initialSpacing = 20;
+          var initialSpacing = 30;
           var waveSize = 0;
           var lineLength = 10;
           var spacing = 80;
@@ -49,13 +49,13 @@
 
           sketch.draw = function() {
             sketch.clear();
-            sketch.strokeWeight(2);
+            sketch.strokeWeight(3);
             for (var i = 0; i <= horizontalCount; i += 1) {
               for (var j = 0; j <= verticalCount; j += 1) {
                 sketch.push();
 
-                var inter = sketch.map(i, 0, sketch.width, 0, spacing);
-                var c = sketch.lerpColor(sketch.color("rgba(50, 182, 239, 0.3)"), sketch.color("rgba(50, 239, 213, 0.3)"), inter);
+                var inter = sketch.map(j, 0, sketch.height, 0, spacing);
+                var c = sketch.lerpColor(sketch.color("rgba(0, 0, 0, 0.05)"), sketch.color("rgba(0, 0, 0, 0.02)"), inter);
                 sketch.stroke(c);
 
                 var lineX = i*spacing + initialSpacing;

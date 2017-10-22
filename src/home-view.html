@@ -34,6 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       sliding-pages{
         height: 540px;
         border-radius: 4px;
+        @apply --shadow-elevation-4dp;
       }
       sliding-pages > div {
         color: white;
@@ -44,20 +45,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         user-select: none;
         cursor: pointer;
       }
-      sliding-pages div:nth-of-type(1) {
-          --page-background-color: var(--paper-red-500);
-      }
-      sliding-pages div:nth-of-type(2) {
-          --page-background-color: var(--paper-blue-500);
-      }
-      sliding-pages div:nth-of-type(3) {
-          --page-background-color: var(--paper-green-500);
-      }
-      sliding-pages div:nth-of-type(4) {
-          --page-background-color: var(--paper-yellow-500);
-      }
-      sliding-pages div:nth-of-type(5) {
-          --page-background-color: var(--paper-purple-500);
+      sliding-pages div {
+        --page-background-color: #141414;
+        color: white;
       }
       #carousel_dots{
         position: absolute;
@@ -98,36 +88,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="slider_container">
         <sliding-pages active-index="{{carouselSlide}}">
           <div>
-            <h1>
+            <div class="paper-font-headline">
               Page 1
-            </h1>
+            </div>
             <div>
               Child div
             </div>
           </div>
 
           <div>
-            <h1>
+            <div class="paper-font-headline">
               Page 2
-            </h1>
+            </div>
           </div>
 
           <div>
-            <h1>
+            <div class="paper-font-headline">
               Page 3
-            </h1>
+            </div>
           </div>
 
           <div>
-            <h1>
+            <div class="paper-font-headline">
               Page 4
-            </h1>
+            </div>
           </div>
 
           <div>
-            <h1>
+            <div class="paper-font-headline">
               Page 5
-            </h1>
+            </div>
           </div>
         </sliding-pages>
         <iron-selector id="carousel_dots" selected="{{carouselSlide}}" on-iron-select="changeCarousel" class="layout horizontal center-justified">
