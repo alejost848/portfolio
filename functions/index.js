@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const slugify = require('slugify');
+const request = require("request");
 
 exports.createTutorialSlug = functions.database
   .ref('/tutorials/{tutorialKey}')
@@ -16,5 +17,33 @@ exports.createTutorialSlug = functions.database
 exports.handleSubscription = functions.database
   .ref('/users/{userKey}/subscribed')
   .onUpdate(event => {
-    console.log("subscribed", event.data.val());
+    let subscribed = event.data.val();
+    let userToken = event.data.ref.parent.child('token');
+    console.log("userToken", userToken);
+    let requestUrl;
+
+    if (subscribed) {
+      requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
+    } else {
+      requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
+    }
+
+    var options = {
+      method: 'POST',
+      url: requestUrl,
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'key=AAAAtNIEDkk:APA91bFpY2GxbM1gyStOUD4E3Dll_L4INgDolt7QkKleCNQzDbWNFj2oreTX9nJMzLPlsBXog3EimR_xudvCymx1zMB2xDEEo1FkQPSXO74Vrl8GvMB2Mafd0NapkFFW87VwkY_1zAxh'
+      },
+      body: {
+        to: '/topics/all',
+        registration_tokens: [userToken]
+      },
+      json: true
+    };
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+
+      console.log("body", body);
+    });
   });
