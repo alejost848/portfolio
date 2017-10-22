@@ -12,3 +12,9 @@ exports.createTutorialSlug = functions.database
     let slug = slugify(episodeNumber + "-" + title, {lower: true});
     return event.data.ref.update({slug: slug});
   });
+
+exports.handleSubscription = functions.database
+  .ref('/users/{userKey}/subscribed')
+  .onUpdate(event => {
+    console.log("subscribed", event.data.val());
+  });
