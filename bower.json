@@ -29,7 +29,8 @@
     "sliding-pages": "alex-saunders/sliding-pages#^0.0.3",
     "paper-dialog": "PolymerElements/paper-dialog#^2.0.0",
     "p5.js": "p5js#^0.5.13",
-    "paper-toast": "PolymerElements/paper-toast#^2.0.0"
+    "paper-toast": "PolymerElements/paper-toast#^2.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0-rc.3"

@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
@@ -121,8 +121,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #notifications_dialog{
         position: fixed;
-        width: 350px;
-        height: 480px;
+        width: 330px;
+        height: 440px;
         box-sizing: border-box;
         color: #222;
         background-color: white;
@@ -141,12 +141,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #notifications_content{
         padding: 16px !important;
       }
-      #notifications_content paper-checkbox{
-        --paper-checkbox-label-spacing: 12px;
-        --paper-checkbox-checked-color: var(--app-accent-color);
-        --paper-checkbox-checked-ink-color: var(--app-accent-color);
-        margin: 20px 8px;
-        font-weight: 500;
+      #notifications_content_header{
+        margin-bottom: 24px;
+      }
+      #notifications_content paper-toggle-button{
+        --paper-toggle-button-checked-bar-color:  var(--app-accent-color);
+        --paper-toggle-button-checked-button-color: var(--app-accent-color);
+        --paper-toggle-button-checked-ink-color: var(--app-accent-color);
+        cursor: pointer;
       }
       #notifications_content ul{
         padding-left: 20px;
@@ -163,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         top: 4px;
         left: 4px;
         color: white;
-      }    
+      }
 
       /*Content*/
 
@@ -346,12 +348,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-tabs>
 
           <!-- Show the notifications button if the browser supports push notifications -->
-          <template is="dom-if" if="[[pushSupported]]">
-            <div>
-              <paper-icon-button id="notifications_button" icon="my-icons:[[subscriptionIcon]]" on-tap="_openNotificationsDialog"></paper-icon-button>
-              <paper-tooltip>Notifications</paper-tooltip>
-            </div>
-          </template>
+          <div>
+            <template is="dom-if" if="[[pushSupported]]">
+              <template is="dom-if" if="[[userSubscribed]]">
+                <paper-icon-button id="notifications_button" icon="my-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
+                <paper-tooltip>Notifications active</paper-tooltip>
+              </template>
+              <template is="dom-if" if="[[!userSubscribed]]">
+                <paper-icon-button id="notifications_button" icon="my-icons:notifications-none" on-tap="_openNotificationsDialog"></paper-icon-button>
+                <paper-tooltip>Notifications inactive</paper-tooltip>
+              </template>
+            </template>
+            <template is="dom-if" if="[[!pushSupported]]">
+              <paper-icon-button id="notifications_button" icon="my-icons:notifications-off" disabled></paper-icon-button>
+              <paper-tooltip>Notifications unsupported</paper-tooltip>
+            </template>
+          </div>
         </app-toolbar>
       </app-header>
 
@@ -413,16 +425,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
 
       <div id="notifications_content">
-        <div class="paper-font-headline">Notifications</div>
-        <paper-checkbox id="notifications_checkbox" on-tap="toggleSubscription" checked="[[hasSubscription]]">I want to receive notifications</paper-checkbox>
+        <div id="notifications_content_header" class="layout horizontal center">
+          <div class="paper-font-headline">Notifications</div>
+          <span class="flex"></span>
+          <paper-toggle-button on-tap="toggleSubscription" checked="{{userSubscribed}}"></paper-toggle-button>
+        </div>
         <div class="paper-font-body1">
           If this option is selected, I will be notified when:
           <ul>
             <li>
               <span>Tutorials or projects are uploaded</span>
-              <span>(maybe twice per month)</span>
+              <span>(three times a month max.)</span>
             </li>
-            <li>A significant change occurs in the web app (perhaps someday)</li>
+            <li>A significant change occurs in the web app (not anytime soon)</li>
           </ul>
         </div>
       </div>
@@ -592,42 +607,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var player = this.Typer(vader, headerMessages);
       }
 
-      toggleSubscription(){
-        var self = this;
-        var notifications_checkbox = this.$.notifications_checkbox;
-        if (notifications_checkbox.checked) {
-          this.userSubscribed = false;
-          this.subscriptionIcon = "notifications-none";
-
+      toggleSubscription(e){
+        if (this.userSubscribed) {
           this.toastText = "You won't receive any notifications";
           this.$.toast.show();
         } else {
+          var self = this;
           this.$.messaging.requestPermission().then(function() {
-            self.userSubscribed = true;
-            self.subscriptionIcon = "notifications-active";
-
             self.toastText = "Thanks for subscribing!";
             self.$.toast.show();
           }, function(err) {
-            notifications_checkbox.checked = false;
-
-            self.toastText = "To subscribe, reload and allow notifications";
+            self.userSubscribed = false;
+            self.toastText = "To subscribe, allow notifications and reload";
             self.$.toast.show();
           });
         }
       }
       handleSubscription(e){
-        this.hasSubscription = e.detail.value;
-        this.$.notifications_checkbox.checked = this.hasSubscription;
+        //Checks Firebase for the user subscription value and applies it to the checkbox.
+        var storedValue = e.detail.value;
 
-        //Show an icon corresponding to the actual subscription
-        if (Object.keys(this.hasSubscription).length === 0 && this.hasSubscription.constructor === Object) { //While Firebase data loads
-          this.hasSubscription = false;
-          this.subscriptionIcon = "notifications-none";
-        } else if (this.hasSubscription) { //If the subscription is active
-          this.subscriptionIcon = "notifications-active";
-        } else{ //If the subscription is not active
-          this.subscriptionIcon = "notifications-none";
+        if (Object.keys(storedValue).length === 0 && storedValue.constructor === Object || !storedValue) {
+          this.userSubscribed = false;
+        } else if (storedValue) {
+          this.userSubscribed = true;
         }
       }
 
