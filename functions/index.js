@@ -18,6 +18,13 @@ exports.handleSubscription = functions.database
   .ref('/users/{uid}/subscribed')
   .onWrite(event => {
     const uid = event.params.uid;
+
+    // If we are deleting the user stop doing stuff
+    if (!event.data.exists()) {
+      console.log(`The user ${uid} was removed`);
+      return;
+    }
+
     const subscribed = event.data.val();
 
     const root = event.data.ref.root;
@@ -27,6 +34,7 @@ exports.handleSubscription = functions.database
 
         let requestUrl;
         if (subscribed) {
+          // TODO: Add counter to Firebase database to know how many people have subscribed
           requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
         } else {
           requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
@@ -47,7 +55,8 @@ exports.handleSubscription = functions.database
         };
         request(options, function (error, response, body) {
           if (error) throw new Error(error);
-          console.log("User: " + userToken, "Subscription state: " + subscribed, "Response: " + body);
+          console.log("User: " + uid, "Subscribed: " + subscribed);
+          console.log("Response:", body);
         });
       });
   });

@@ -123,7 +123,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: rgba(20,20,20,0.5);
       }
       #notifications_dialog{
-        position: fixed;
         width: 330px;
         height: 440px;
         box-sizing: border-box;
@@ -240,7 +239,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: block;
         }
         #notifications_dialog{
-          position: fixed;
           top: 0 !important;
           left: 0 !important;
           width: 100% !important;
@@ -314,7 +312,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
       app-name="alejost848"
       path="/users/[[user.uid]]/subscribed"
-      data="[[userSubscribed]]"
+      data="[[firebaseSubscribed]]"
       on-data-changed="handleSubscription">
     </firebase-document>
 
@@ -612,16 +610,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       toggleSubscription(e){
         if (this.userSubscribed) {
+          this.firebaseSubscribed = false;
           this.toastText = "You won't receive any notifications";
           this.$.toast.show();
         } else {
           var self = this;
           this.$.messaging.requestPermission().then(function() {
+            self.firebaseSubscribed = true;
             self.toastText = "Thanks for subscribing!";
             self.$.toast.show();
           }, function(err) {
             self.userSubscribed = false;
-            self.toastText = "To subscribe, allow notifications and reload";
+            self.toastText = "To subscribe, allow notifications and reload the site";
             self.$.toast.show();
           });
         }
