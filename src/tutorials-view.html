@@ -69,10 +69,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class TutorialsView extends Polymer.Element {
       static get is() { return 'tutorials-view'; }
 
-      static get observers() {
-        return [
-          '_computeTutorials(tutorials.splices)'
-        ];
+      static get properties() {
+        return {
+          tutorials: {
+            type: Array,
+            observer: '_tutorialsChanged',
+          }
+        };
       }
 
       ready() {
@@ -84,9 +87,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return new Array(number);
       }
 
-      _computeTutorials(data) {
-        if (data){
-          var tutorialsData = data.indexSplices[0].object;
+      _tutorialsChanged() {
+        if (this.tutorials.length > 0) {
           this.tutorialsLoaded = true;
         }
       }

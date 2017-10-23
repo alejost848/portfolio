@@ -187,10 +187,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class HomeView extends Polymer.Element {
       static get is() { return 'home-view'; }
 
-      static get observers() {
-        return [
-          '_computeTutorials(tutorials.splices)'
-        ];
+      static get properties() {
+        return {
+          tutorials: {
+            type: Array,
+            observer: '_tutorialsChanged',
+          }
+        };
       }
 
       constructor() {
@@ -215,13 +218,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return new Array(number);
       }
 
-      _computeTutorials(data) {
-        if (data){
-          var tutorialsData = data.indexSplices[0].object;
-          if (tutorialsData.length == 4) {
-            this.tutorialsLoaded = true;
-            return tutorialsData.reverse();
-          }
+      _tutorialsChanged(){
+        if (this.tutorials.length > 0) {
+          this.tutorials = this.tutorials.reverse();
+          this.tutorialsLoaded = true;
         }
       }
     }
