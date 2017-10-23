@@ -1,9 +1,17 @@
 {
   "rules": {
-    ".read": true,
-    ".write": "auth != null",
+    "headerMessages": {
+      ".read": true
+    },
     "tutorials": {
+      ".read": true,
     	".indexOn": ["publishedDate", "slug"]
+    },
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
     }
   }
 }
