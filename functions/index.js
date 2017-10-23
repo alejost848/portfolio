@@ -15,35 +15,39 @@ exports.createTutorialSlug = functions.database
   });
 
 exports.handleSubscription = functions.database
-  .ref('/users/{userKey}/subscribed')
-  .onUpdate(event => {
-    let subscribed = event.data.val();
-    let userToken = event.data.ref.parent.child('token');
-    console.log("userToken", userToken);
-    let requestUrl;
+  .ref('/users/{uid}/subscribed')
+  .onWrite(event => {
+    const uid = event.params.uid;
+    const subscribed = event.data.val();
 
-    if (subscribed) {
-      requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
-    } else {
-      requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
-    }
+    const root = event.data.ref.root;
+    root.child(`/users/${uid}/token`)
+      .once('value').then(snap => {
+        const userToken = snap.val();
 
-    var options = {
-      method: 'POST',
-      url: requestUrl,
-      headers: {
-        'content-type': 'application/json',
-        authorization: 'key=AAAAtNIEDkk:APA91bFpY2GxbM1gyStOUD4E3Dll_L4INgDolt7QkKleCNQzDbWNFj2oreTX9nJMzLPlsBXog3EimR_xudvCymx1zMB2xDEEo1FkQPSXO74Vrl8GvMB2Mafd0NapkFFW87VwkY_1zAxh'
-      },
-      body: {
-        to: '/topics/all',
-        registration_tokens: [userToken]
-      },
-      json: true
-    };
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
+        let requestUrl;
+        if (subscribed) {
+          requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
+        } else {
+          requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
+        }
 
-      console.log("body", body);
-    });
+        var options = {
+          method: 'POST',
+          url: requestUrl,
+          headers: {
+            'content-type': 'application/json',
+            authorization: 'key=AAAAtNIEDkk:APA91bFpY2GxbM1gyStOUD4E3Dll_L4INgDolt7QkKleCNQzDbWNFj2oreTX9nJMzLPlsBXog3EimR_xudvCymx1zMB2xDEEo1FkQPSXO74Vrl8GvMB2Mafd0NapkFFW87VwkY_1zAxh'
+          },
+          body: {
+            to: '/topics/all',
+            registration_tokens: [userToken]
+          },
+          json: true
+        };
+        request(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          console.log("User: " + userToken, "Subscription state: " + subscribed, "Response: " + body);
+        });
+      });
   });
