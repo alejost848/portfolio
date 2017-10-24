@@ -30,6 +30,9 @@
     "p5.js": "p5js#^0.5.13",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
+  },  
+  "resolutions": {
+    "polymer": "^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.3.0"

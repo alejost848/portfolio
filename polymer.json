@@ -11,21 +11,23 @@
   ],
   "sources": [
     "src/**/*",
-    "images/**/*",
-    "bower.json"
+    "images/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
     "bower_components/webcomponentsjs/*.js",
     "firebase-messaging-sw.js"
   ],
-  "builds": [{
-    "addServiceWorker": true,
-    "insertPrefetchLinks": true,
-    "js": {"minify": false},
-    "css": {"minify": true},
-    "html": {"minify": true}
-  }],
+  "builds": [
+    {
+      "preset": "es5-bundled",
+      "js": {"minify": false}
+    },
+    {
+      "preset": "es6-unbundled",
+      "js": {"minify": false}
+    }
+  ],
   "lint": {
     "rules": ["polymer-2"]
   }
