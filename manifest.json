@@ -1,10 +1,7 @@
 {
   "name": "Alejandro Sanclemente",
   "short_name": "alejo.st",
-  "start_url": "/?homescreen=1",
-  "display": "standalone",
-  "theme_color": "#141414",
-  "background_color": "#141414",
+  "description": "Portfolio of Alejandro Sanclemente",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
@@ -17,5 +14,9 @@
       "type": "image/png"
     }
   ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#141414",
+  "background_color": "#141414",
   "gcm_sender_id": "103953800507"
 }

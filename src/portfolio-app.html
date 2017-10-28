@@ -18,7 +18,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <!-- HACK: Stop scrolling in dialogs hack -->
@@ -269,8 +268,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}"></iron-media-query>
 
-    <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="[[rootPattern]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
+
+    <app-route
+        route="{{route}}"
+        pattern="[[rootPath]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
 
     <firebase-app
       app="{{app}}"
@@ -327,7 +335,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div condensed-title></div>
         </app-toolbar>
         <app-toolbar sticky>
-          <a href="/" id="header_link" class="link">
+          <a href="[[rootPath]]" id="header_link" class="link">
             <iron-icon id="header_logo" icon="my-icons:logo"></iron-icon>
           </a>
           <div main-title class="flex">
@@ -336,16 +344,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
           <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation">
             <paper-tab name="home" link>
-              <a class="link" href="/">Home</a>
+              <a class="link" href="[[rootPath]]">Home</a>
             </paper-tab>
             <paper-tab name="tutorials" link>
-              <a class="link" href="tutorials">Tutorials</a>
+              <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
             </paper-tab>
             <paper-tab name="projects" link>
-              <a class="link" href="projects">Projects</a>
+              <a class="link" href="[[rootPath]]projects">Projects</a>
             </paper-tab>
             <paper-tab name="about" link>
-              <a class="link" href="about">About</a>
+              <a class="link" href="[[rootPath]]about">About</a>
             </paper-tab>
           </paper-tabs>
 
@@ -369,7 +377,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-toolbar>
       </app-header>
 
-      <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
+      <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
         <home-view name="home"></home-view>
         <tutorials-view name="tutorials"></tutorials-view>
         <projects-view name="projects"></projects-view>
@@ -381,34 +389,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="bottom_nav">
         <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
           <paper-tab name="home" link>
-            <a class="link" href="/">
+            <a class="link" href="[[rootPath]]">
               <iron-icon icon="my-icons:logo"></iron-icon>
               <div>Home</div>
             </a>
           </paper-tab>
           <paper-tab name="tutorials" link>
-            <a class="link" href="tutorials">
+            <a class="link" href="[[rootPath]]tutorials">
               <iron-icon icon="my-icons:youtube"></iron-icon>
               <div>Tutorials</div>
             </a>
           </paper-tab>
           <paper-tab name="projects" link>
-            <a class="link" href="projects">
+            <a class="link" href="[[rootPath]]projects">
               <iron-icon icon="my-icons:view-carousel"></iron-icon>
               <div>Projects</div>
             </a>
           </paper-tab>
           <paper-tab name="about" link>
-            <a class="link" href="about">
-              <iron-icon icon="info"></iron-icon>
+            <a class="link" href="[[rootPath]]about">
+              <iron-icon icon="my-icons:info"></iron-icon>
               <div>About</div>
             </a>
           </paper-tab>
         </paper-tabs>
       </div>
-
     </app-header-layout>
-
+    
     <paper-dialog
       id="notifications_dialog"
       with-backdrop
@@ -453,9 +460,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // Gesture events like tap and track generated from touch will not be
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
-    
-    class MyApp extends Polymer.Element {
 
+    class PortfolioApp extends Polymer.Element {
       static get is() { return 'portfolio-app'; }
 
       static get properties() {
@@ -465,9 +471,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          rootPattern: String,
           routeData: Object,
           subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
         };
       }
 
@@ -475,14 +483,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return [
           '_routePageChanged(routeData.page)',
         ];
-      }
-
-      constructor() {
-        super();
-
-        // Get root pattern for app-route, for more info about `rootPath` see:
-        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
-        this.rootPattern = (new URL(this.rootPath)).pathname;
       }
 
       ready() {
@@ -511,11 +511,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _routePageChanged(page) {
-        // Polymer 2.0 will call with `undefined` on initialization.
-        // Ignore until we are properly called with a string.
-        if (page === undefined) {
-          return;
-        }
 
         if(page == "tutorial"){
           this._tutorialPlaying = true;
@@ -541,7 +536,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _showPage404() {
         this.page = 'error';
       }
-
 
       Typer (element, options, scenes) {
       	var defaultOptions = { erase: 35, type: 55, break: 1500 };
@@ -665,6 +659,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window.customElements.define(PortfolioApp.is, PortfolioApp);
   </script>
 </dom-module>

@@ -3,7 +3,7 @@
   "authors": [
     "Alejandro Sanclemente"
   ],
-  "license": "MIT",
+  "license": "https://polymer.github.io/LICENSE.txt",
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^2.0.4",
     "app-route": "PolymerElements/app-route#^2.0.3",
@@ -29,8 +29,9 @@
     "paper-dialog": "PolymerElements/paper-dialog#^2.0.0",
     "p5.js": "p5js#^0.5.13",
     "paper-toast": "PolymerElements/paper-toast#^2.0.0",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
-  },  
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "iron-dropdown": "PolymerElements/iron-dropdown#^2.1.0"
+  },
   "resolutions": {
     "polymer": "^2.0.0"
   },
