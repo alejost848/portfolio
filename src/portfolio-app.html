@@ -20,8 +20,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
-<!-- HACK: Stop scrolling in dialogs hack -->
-<link rel="import" href="../bower_components/iron-dropdown/iron-dropdown-scroll-manager.html">
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
@@ -415,7 +413,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-tabs>
       </div>
     </app-header-layout>
-    
+
     <paper-dialog
       id="notifications_dialog"
       with-backdrop
@@ -425,8 +423,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       vertical-offset="30"
       entry-animation="fade-in-animation"
       exit-animation="fade-out-animation"
-      on-iron-overlay-opened="_disableDocumentScrolling"
-      on-iron-overlay-closed="_restoreDocumentScrolling">
+      scroll-action="lock">
 
       <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
       <template is="dom-if" if="{{!largeScreen}}">
@@ -648,14 +645,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       _closeNotificationsDialog(){
         this.$.notifications_dialog.close();
-      }
-
-      // HACK: Stop scrolling in dialogs hack
-      _disableDocumentScrolling(e) {
-        Polymer.IronDropdownScrollManager.pushScrollLock(e.target);
-      }
-      _restoreDocumentScrolling(e) {
-        Polymer.IronDropdownScrollManager.removeScrollLock(e.target);
       }
     }
 
