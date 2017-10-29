@@ -267,15 +267,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}"></iron-media-query>
 
     <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
+      route="{{route}}"
+      url-space-regex="^[[rootPath]]">
     </app-location>
 
     <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
+      route="{{route}}"
+      pattern="[[rootPath]]:page"
+      data="{{routeData}}"
+      tail="{{subroute}}">
     </app-route>
 
     <firebase-app
@@ -499,10 +499,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.auth.signInAnonymously()
           .then(function(response) { // optionally handle a successful login
             console.log("login successful");
-            console.log(response);
           })
           .catch(function(error) { // unsuccessful authentication response here
-            console.log(error);
             console.log("login failed");
           });
       }
