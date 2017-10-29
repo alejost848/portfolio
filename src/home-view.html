@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/sliding-pages/sliding-pages.html">
 
 <link rel="import" href="shared-styles.html">
@@ -30,30 +31,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       #slider_container{
         position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        height: 540px;
       }
       sliding-pages{
-        height: 540px;
-        border-radius: 4px;
-        @apply --shadow-elevation-4dp;
+        height: 100%;
       }
-      sliding-pages > div {
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        user-select: none;
-        cursor: pointer;
+      .slide {
+        padding: 0;
+        background-color: #141414;
       }
-      sliding-pages div {
-        --page-background-color: #141414;
+      .slide a {
+        width: 100%;
+        height: 100%;
+      }
+      .slide iron-image{
+        width: 100%;
+        height: 100%;
+        background-color: #141414;
+        opacity: 0.4;
+      }
+      #carousel_title{
+        z-index: 999;
+        position: absolute;
+        bottom: 20px;
+        padding: 0 20px;
+        box-sizing: border-box;
         color: white;
+        width: 100%;
+      }
+      #carousel_title paper-icon-button{
+        --paper-icon-button-ink-color: white;
+      }
+      #slider_container iron-icon{
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+      }
+      #slider_container paper-progress{
+        top: 0;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        pointer-events: none;
+        --paper-progress-container-color: transparent;
+        --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
+        --paper-progress-height: 100%;
+        opacity: 0.05;
       }
       #carousel_dots{
         position: absolute;
-        bottom: 30px;
-        left: 0;
-        right: 0;
+        top: 25px;
+        left: 15px;
         width: 80px;
         margin: 0 auto;
         z-index: 999;
@@ -62,7 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.25);
         transition: all 0.5s;
         cursor: pointer;
       }
@@ -83,50 +114,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{tutorials}}">
     </firebase-query>
 
-
     <div id="content">
-      <div id="slider_container">
-        <sliding-pages active-index="{{carouselSlide}}">
-          <div>
-            <div class="paper-font-headline">
-              Page 1
-            </div>
-            <div>
-              Child div
-            </div>
-          </div>
+      <div id="slider_container" class="card" on-mouseover="_stopCarousel" on-mouseout="_resumeCarousel">
 
-          <div>
-            <div class="paper-font-headline">
-              Page 2
+        <sliding-pages active-index="{{slide}}">
+          <template is="dom-repeat" items="[[carouselItems]]" as="slide">
+            <div class="slide">
+              <a href="[[rootPath]][[slide.slug]]" class="link">
+                <iron-image src="[[slide.image]]" preload fade sizing="cover"></iron-image>
+              </a>
             </div>
-          </div>
-
-          <div>
-            <div class="paper-font-headline">
-              Page 3
-            </div>
-          </div>
-
-          <div>
-            <div class="paper-font-headline">
-              Page 4
-            </div>
-          </div>
-
-          <div>
-            <div class="paper-font-headline">
-              Page 5
-            </div>
-          </div>
+          </template>
         </sliding-pages>
-        <iron-selector id="carousel_dots" selected="{{carouselSlide}}" on-iron-select="changeCarousel" class="layout horizontal center-justified">
+
+        <!-- Maximum value in frames (seconds = frames/60) -->
+        <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
+
+        <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center-justified">
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
           <div class="carousel_dot"></div>
         </iron-selector>
+
+        <div id="carousel_title" class="layout horizontal center">
+          <iron-icon icon="[[sliderIcon]]"></iron-icon>
+          <div class="paper-font-subhead">[[slideTitle]]</div>
+          <span class="flex"></span>
+          <paper-icon-button icon="my-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
+          <paper-icon-button icon="my-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
+        </div>
       </div>
 
       <div class="module">
@@ -192,6 +210,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           tutorials: {
             type: Array,
             observer: '_tutorialsChanged',
+          },
+          slide: {
+            type: Number,
+            observer: '_slideChanged'
           }
         };
       }
@@ -200,18 +222,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super();
         this.tutorialsLoaded = false;
 
-        this.carouselSlide = 0;
-        this.changeCarousel();
+        this.slide = 0;
+        this.sliderIcon = "my-icons:play-circle-outline";
+
+        this.carouselItems = [
+          {
+            "title": "Hoy es Diseño",
+            "slug": "tutorial/08-get-small-files-when-rendering",
+            "image": "https://source.unsplash.com/random/1200x540",
+          },
+          {
+            "title": "Arcades",
+            "slug": "tutorial/07-create-exploded-isometrics-with-this-script",
+            "image": "https://source.unsplash.com/random/1200x541",
+          },
+          {
+            "title": "Particles",
+            "slug": "tutorial/08-get-small-files-when-rendering",
+            "image": "https://source.unsplash.com/random/1200x542",
+          },
+          {
+            "title": "Hello World",
+            "slug": "tutorial/08-get-small-files-when-rendering",
+            "image": "https://source.unsplash.com/random/1200x543",
+          },
+          {
+            "title": "Static on the Wire",
+            "slug": "tutorial/08-get-small-files-when-rendering",
+            "image": "https://source.unsplash.com/random/1200x544",
+          }
+        ];
       }
 
-      changeCarousel() {
-        //Resets the timeout
-        clearTimeout(this.carouselTimeout);
-
-        this.carouselTimeout = setTimeout(() => {
-          this.carouselSlide = this.carouselSlide === 4 ? 0 : (this.carouselSlide + 1);
-          this.changeCarousel();
-        }, 6000);
+      _slideChanged(){
+        this.progress = 0;
+        this._resumeCarousel();
+        this.slideTitle = this.carouselItems[this.slide].title;
+      }
+      _resumeCarousel(){
+        clearInterval(this.carouselTimeout);
+        //Increment progress by 1 every frame. If it reaches the maximum value, then reset.
+        this.carouselTimeout = setInterval(() => {
+          this.progress++;
+          if (this.progress == this.$.slider_progress.max) {
+            this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+            this.progress = 0;
+          }
+        }, 1000/60);
+        this.sliderIcon = "my-icons:play-circle-outline";
+      }
+      _stopCarousel(){
+        clearInterval(this.carouselTimeout);
+        this.sliderIcon = "my-icons:pause-circle-outline";
+      }
+      _previousSlide(){
+        this.slide = this.slide === 0 ? 4 : (this.slide - 1);
+      }
+      _nextSlide(){
+        this.slide = this.slide === 4 ? 0 : (this.slide + 1);
       }
 
       _createDummyArray(number) {
