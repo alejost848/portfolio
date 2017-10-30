@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const slugify = require('slugify');
 const request = require("request");
 
-exports.createTutorialSlug = functions.database
+exports.addTutorial = functions.database
   .ref('/tutorials/after-effects/{tutorialKey}')
   .onCreate(event => {
     //Generate slug when a new tutorial is added
