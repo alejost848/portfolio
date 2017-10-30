@@ -60,26 +60,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-sizing: border-box;
         color: white;
         width: 100%;
+        pointer-events: none;
       }
       #carousel_title paper-icon-button{
+        pointer-events: all;
         --paper-icon-button-ink-color: white;
+        border-radius: 50%;
+        transition: background-color 0.3s;
+        --paper-icon-button-hover:{
+          background-color: rgba(255,255,255,0.08);
+        }
       }
-      #slider_container iron-icon{
-        width: 28px;
-        height: 28px;
-        margin-right: 10px;
-      }
-      #slider_container paper-progress{
-        top: 0;
+      #slider_progress{
+        position: absolute;
+        bottom: 0;
         z-index: 999;
         width: 100%;
-        height: 100%;
-        position: absolute;
         pointer-events: none;
         --paper-progress-container-color: transparent;
         --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
-        --paper-progress-height: 100%;
-        opacity: 0.05;
       }
       #carousel_dots{
         position: absolute;
@@ -131,16 +130,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
 
         <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center-justified">
-          <div class="carousel_dot"></div>
-          <div class="carousel_dot"></div>
-          <div class="carousel_dot"></div>
-          <div class="carousel_dot"></div>
-          <div class="carousel_dot"></div>
+          <template is="dom-repeat" items="[[carouselItems]]">
+            <div class="carousel_dot" on-tap="_stopCarousel"></div>
+          </template>
         </iron-selector>
 
         <div id="carousel_title" class="layout horizontal center">
-          <iron-icon icon="[[sliderIcon]]"></iron-icon>
-          <div class="paper-font-subhead">[[slideTitle]]</div>
+          <div class="paper-font-headline">[[slideTitle]]</div>
           <span class="flex"></span>
           <paper-icon-button icon="my-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
           <paper-icon-button icon="my-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
@@ -223,7 +219,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.tutorialsLoaded = false;
 
         this.slide = 0;
-        this.sliderIcon = "my-icons:play-circle-outline";
 
         this.carouselItems = [
           {
@@ -269,17 +264,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.progress = 0;
           }
         }, 1000/60);
-        this.sliderIcon = "my-icons:play-circle-outline";
       }
       _stopCarousel(){
-        clearInterval(this.carouselTimeout);
-        this.sliderIcon = "my-icons:pause-circle-outline";
+        // HACK: Use setTimeout to ensure that the function executes after _slideChanged when clicking the carousel dots
+        setTimeout(() => {
+          clearInterval(this.carouselTimeout);
+        }, 1);
       }
       _previousSlide(){
         this.slide = this.slide === 0 ? 4 : (this.slide - 1);
+        this._stopCarousel();
       }
       _nextSlide(){
         this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+        this._stopCarousel();
       }
 
       _createDummyArray(number) {
