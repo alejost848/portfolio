@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-query
       id="doc"
       app-name="alejost848"
-      path="/tutorials"
+      path="/tutorials/after-effects"
       order-by-child="publishedDate"
       data="{{tutorials}}">
     </firebase-query>
@@ -46,8 +46,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[!tutorialsLoaded]]">
           <div class="layout horizontal wrap">
             <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-              <div class="video_card layout vertical center-center">
-                <iron-image src="/images/card_placeholder.png"></iron-image>
+              <div class="basic_card layout vertical center-center">
+                <iron-image src="[[rootPath]]images/card_placeholder.png"></iron-image>
               </div>
             </template>
           </div>
@@ -55,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[tutorialsLoaded]]">
           <div class="layout horizontal wrap">
             <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-              <a href="/tutorial/[[tutorial.slug]]" class="link video_card">
+              <a href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" class="link basic_card">
                 <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
               </a>
             </template>

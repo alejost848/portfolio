@@ -17,6 +17,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/sliding-pages/sliding-pages.html">
 
+<script src="../bower_components/moment/min/moment.min.js"></script>
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="home-view">
@@ -107,10 +109,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-query
       app-name="alejost848"
-      path="/tutorials"
+      path="/tutorials/after-effects"
       order-by-child="publishedDate"
       limit-to-last="4"
-      data="{{tutorials}}">
+      on-data-changed="_tutorialsChanged">
     </firebase-query>
 
     <div id="content">
@@ -145,47 +147,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div class="module">
         <div class="module_header layout horizontal center">
-          <div class="module_info">
-            <div class="module_title paper-font-headline">Latest tutorials</div>
-            <div class="module_subtitle paper-font-subhead">From my YouTube channel</div>
-          </div>
+          <div class="module_title paper-font-headline">Latest tutorials</div>
           <span class="flex"></span>
-          <a href="/tutorials" class="link">
+          <a href="[[rootPath]]tutorials" class="link">
             <paper-button class="module_button" noink>More</paper-button>
           </a>
         </div>
-        <template is="dom-if" if="[[!tutorialsLoaded]]">
-          <div class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-              <div class="video_card layout vertical center-center">
-                <iron-image src="/images/card_placeholder.png"></iron-image>
-              </div>
-            </template>
-          </div>
-        </template>
-        <template is="dom-if" if="[[tutorialsLoaded]]">
-          <div class="layout horizontal wrap center-justified">
-            <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-              <a href="/tutorial/[[tutorial.slug]]" class="link video_card">
-                <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
+        <div class="layout horizontal wrap center-justified">
+          <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+            <div class="card basic_card">
+              <a href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" class="link layout vertical">
+                <iron-image src="[[tutorial.thumbnail]]" sizing="cover" preload fade placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII="></iron-image>
+                <div class="basic_card_content layout vertical flex">
+                  <div class="basic_card_title">[[tutorial.title]]</div>
+                  <div class="basic_card_description">[[tutorial.shortDescription]]</div>
+                  <span class="flex"></span>
+                  <div class="basic_card_date paper-font-body1">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
+                </div>
               </a>
-            </template>
-          </div>
-        </template>
+            </div>
+          </template>
+        </div>
       </div>
 
       <div class="module">
         <div class="module_header layout horizontal center">
-          <div class="module_info">
-            <div class="module_title paper-font-headline">Latest projects</div>
-            <div class="module_subtitle paper-font-subhead">See what I've been up to</div>
-          </div>
+          <div class="module_title paper-font-headline">Latest projects</div>
           <span class="flex"></span>
           <paper-button class="module_button" noink>More</paper-button>
         </div>
         <div class="layout horizontal wrap">
           <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-            <div class="video_card layout vertical center-center">
+            <div class="basic_card layout vertical center-center">
               <iron-image src="/images/card_placeholder.png"></iron-image>
             </div>
           </template>
@@ -203,10 +196,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
-          tutorials: {
-            type: Array,
-            observer: '_tutorialsChanged',
-          },
           slide: {
             type: Number,
             observer: '_slideChanged'
@@ -216,34 +205,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       constructor() {
         super();
-        this.tutorialsLoaded = false;
 
         this.slide = 0;
+
+        this.tutorials = new Array(4);
 
         this.carouselItems = [
           {
             "title": "Hoy es Diseño",
-            "slug": "tutorial/08-get-small-files-when-rendering",
+            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
             "image": "https://source.unsplash.com/random/1200x540",
           },
           {
             "title": "Arcades",
-            "slug": "tutorial/07-create-exploded-isometrics-with-this-script",
+            "slug": "tutorial/after-effects/07-create-exploded-isometrics-with-this-script",
             "image": "https://source.unsplash.com/random/1200x541",
           },
           {
             "title": "Particles",
-            "slug": "tutorial/08-get-small-files-when-rendering",
+            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
             "image": "https://source.unsplash.com/random/1200x542",
           },
           {
             "title": "Hello World",
-            "slug": "tutorial/08-get-small-files-when-rendering",
+            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
             "image": "https://source.unsplash.com/random/1200x543",
           },
           {
             "title": "Static on the Wire",
-            "slug": "tutorial/08-get-small-files-when-rendering",
+            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
             "image": "https://source.unsplash.com/random/1200x544",
           }
         ];
@@ -284,11 +274,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return new Array(number);
       }
 
-      _tutorialsChanged(){
-        if (this.tutorials.length > 0) {
-          this.tutorials = this.tutorials.reverse();
-          this.tutorialsLoaded = true;
+      _tutorialsChanged(e){
+        var tutorials = e.detail.value;
+        if (tutorials.length > 0) {
+          this.tutorials = tutorials.reverse();
         }
+      }
+
+      _computeTimeAgo(publishedDate) {
+        return moment(publishedDate).fromNow();
       }
     }
 

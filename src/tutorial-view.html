@@ -115,11 +115,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-route route="{{route}}" pattern="/:slug" data="{{routeData}}"></app-route>
+    <app-route route="{{route}}" pattern="/:series/:slug" data="{{routeData}}"></app-route>
 
     <firebase-query
       app-name="alejost848"
-      path="/tutorials"
+      path="/tutorials/[[routeData.series]]"
       order-by-child="slug"
       equal-to="[[routeData.slug]]"
       data="{{queryResults}}">
@@ -152,8 +152,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
           <div id="title_header" class="layout horizontal center">
             <div>
-              <div id="episode_number" class="paper-font-subhead">[[_computeEpisodeNumber(tutorial.title)]]</div>
-              <div class="module_title paper-font-headline">[[_computeEpisodeName(tutorial.title)]]</div>
+              <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
+              <div class="module_title paper-font-headline">[[tutorial.title]]</div>
             </div>
             <span class="flex"></span>
             <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
