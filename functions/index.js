@@ -3,15 +3,22 @@ const slugify = require('slugify');
 const request = require("request");
 
 exports.createTutorialSlug = functions.database
-  .ref('/tutorials/{tutorialKey}')
+  .ref('/tutorials/after-effects/{tutorialKey}')
   .onCreate(event => {
     //Generate slug when a new tutorial is added
     let titleAndEpisode = event.data.val().title;
+
     let title = titleAndEpisode.split(" | ")[0];
     let episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
-
     let slug = slugify(episodeNumber + "-" + title, {lower: true});
-    return event.data.ref.update({slug: slug});
+    let shortDescription = event.data.val().description.split(".")[0];
+
+    return event.data.ref.update({
+      title: title,
+      slug: slug,
+      episodeNumber: episodeNumber,
+      shortDescription: shortDescription
+    });
   });
 
 exports.handleSubscription = functions.database
