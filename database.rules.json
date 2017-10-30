@@ -5,7 +5,9 @@
     },
     "tutorials": {
       ".read": true,
-    	".indexOn": ["publishedDate", "slug"]
+      "after-effects": {
+        ".indexOn": ["publishedDate", "slug"]
+      }
     },
     "users": {
       "$uid": {
