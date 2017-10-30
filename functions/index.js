@@ -11,7 +11,7 @@ exports.addTutorial = functions.database
     let title = titleAndEpisode.split(" | ")[0];
     let episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
     let slug = slugify(episodeNumber + "-" + title, {lower: true});
-    let shortDescription = event.data.val().description.split(".")[0];
+    let shortDescription = event.data.val().description.split(".")[0] + ".";
 
     return event.data.ref.update({
       title: title,
