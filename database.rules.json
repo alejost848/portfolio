@@ -3,6 +3,9 @@
     "headerMessages": {
       ".read": true
     },
+    "sliderItems":{
+      ".read": true
+    },
     "tutorials": {
       ".read": true,
       "after-effects": {
