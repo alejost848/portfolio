@@ -1,0 +1,207 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+
+<link rel="import" href="../../bower_components/sliding-pages/sliding-pages.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+
+<dom-module id="alejost-slider">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        height: 540px;
+        @apply --shadow-transition;
+        @apply --shadow-elevation-4dp;
+        background-color: var(--card-image-bg-color);
+      }
+      :host:hover{
+        @apply --shadow-elevation-12dp;
+      }
+      sliding-pages{
+        height: 100%;
+      }
+      .slide {
+        padding: 0;
+        background-color: var(--card-image-bg-color);
+      }
+      .slide a {
+        width: 100%;
+        height: 100%;
+      }
+      .slide iron-image{
+        width: 100%;
+        height: 100%;
+        background-color: var(--card-image-bg-color);
+        opacity: 0.4;
+      }
+      #carousel_title{
+        z-index: 999;
+        position: absolute;
+        bottom: 20px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        color: white;
+        width: 100%;
+        pointer-events: none;
+      }
+      #carousel_title paper-icon-button{
+        pointer-events: all;
+        --paper-icon-button-ink-color: white;
+        border-radius: 50%;
+        transition: background-color 0.3s;
+        --paper-icon-button-hover:{
+          background-color: rgba(255,255,255,0.08);
+        }
+      }
+      #slider_progress{
+        position: absolute;
+        bottom: 0;
+        z-index: 999;
+        width: 100%;
+        pointer-events: none;
+        --paper-progress-container-color: transparent;
+        --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
+        opacity: 0.5;
+      }
+      #carousel_dots{
+        position: absolute;
+        top: 25px;
+        left: 15px;
+        width: 80px;
+        margin: 0 auto;
+        z-index: 999;
+      }
+      .carousel_dot{
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.25);
+        transition: all 0.5s;
+        cursor: pointer;
+      }
+      .carousel_dot + .carousel_dot{
+        margin-left: 5px;
+      }
+      .carousel_dot.iron-selected{
+        background-color: rgba(255,255,255,0.9);
+      }
+    </style>
+
+    <sliding-pages active-index="{{slide}}">
+      <template is="dom-repeat" items="[[data]]" as="slide">
+        <div class="slide">
+          <a href="[[rootPath]][[slide.slug]]" class="link">
+            <iron-image src="[[slide.image]]" preload fade sizing="cover" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII="></iron-image>
+          </a>
+        </div>
+      </template>
+    </sliding-pages>
+
+    <!-- Maximum value in frames (seconds = frames/60) -->
+    <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
+
+    <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center-justified">
+      <template is="dom-repeat" items="[[data]]">
+        <div class="carousel_dot" on-tap="_stopCarousel"></div>
+      </template>
+    </iron-selector>
+
+    <div id="carousel_title" class="layout horizontal center">
+      <div class="paper-font-headline">[[slideTitle]]</div>
+      <span class="flex"></span>
+      <paper-icon-button icon="my-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
+      <paper-icon-button icon="my-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
+    </div>
+  </template>
+
+  <script>
+    class AlejostSlider extends Polymer.Element {
+      static get is() { return 'alejost-slider'; }
+
+      static get properties() {
+        return {
+          data: {
+            type: Array,
+            observer: '_dataChanged'
+          },
+          slide: {
+            type: Number,
+            observer: '_slideChanged'
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+
+        this.addEventListener('mouseover', this._stopCarousel);
+        this.addEventListener('mouseout', this._resumeCarousel);
+      }
+
+      _dataChanged(data){
+        this.slide = 0;
+        // HACK: Call _slideChanged so the title gets changed accordingly
+        this._slideChanged();
+      }
+
+      _slideChanged(){
+        this.progress = 0;
+        // HACK: Get the title only when the data from Firebase is not empty
+        if (this.data.length > 0) {
+          this._resumeCarousel();
+          this.slideTitle = this.data[this.slide].title;
+        }
+      }
+      _resumeCarousel(){
+        clearInterval(this.carouselTimeout);
+        //Increment progress by 1 every frame. If it reaches the maximum value, then reset.
+        this.carouselTimeout = setInterval(() => {
+          this.progress++;
+          if (this.progress == this.$.slider_progress.max) {
+            this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+            this.progress = 0;
+          }
+        }, 1000/60);
+      }
+      _stopCarousel(){
+        // HACK: Use setTimeout to ensure that the function executes after _slideChanged when clicking the carousel dots
+        setTimeout(() => {
+          clearInterval(this.carouselTimeout);
+        }, 1);
+      }
+      _previousSlide(){
+        this.slide = this.slide === 0 ? 4 : (this.slide - 1);
+        this._stopCarousel();
+      }
+      _nextSlide(){
+        this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+        this._stopCarousel();
+      }
+    }
+
+    window.customElements.define(AlejostSlider.is, AlejostSlider);
+  </script>
+</dom-module>

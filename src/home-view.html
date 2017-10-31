@@ -15,178 +15,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
-<link rel="import" href="../bower_components/sliding-pages/sliding-pages.html">
 
-<script src="../bower_components/moment/min/moment.min.js"></script>
+<link rel="import" href="elements/alejost-slider.html">
+<link rel="import" href="elements/alejost-module.html">
+<link rel="import" href="elements/alejost-card.html">
 
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="home-view">
   <template>
     <style include="shared-styles">
-
       :host {
         display: block;
-        @apply --layout-vertical;
-        @apply --layout-center;
       }
-
-      #slider_container{
-        position: relative;
-        overflow: hidden;
-        border-radius: 4px;
-        height: 540px;
-      }
-      sliding-pages{
-        height: 100%;
-      }
-      .slide {
-        padding: 0;
-        background-color: #141414;
-      }
-      .slide a {
-        width: 100%;
-        height: 100%;
-      }
-      .slide iron-image{
-        width: 100%;
-        height: 100%;
-        background-color: #141414;
-        opacity: 0.4;
-      }
-      #carousel_title{
-        z-index: 999;
-        position: absolute;
-        bottom: 20px;
-        padding: 0 20px;
-        box-sizing: border-box;
-        color: white;
-        width: 100%;
-        pointer-events: none;
-      }
-      #carousel_title paper-icon-button{
-        pointer-events: all;
-        --paper-icon-button-ink-color: white;
-        border-radius: 50%;
-        transition: background-color 0.3s;
-        --paper-icon-button-hover:{
-          background-color: rgba(255,255,255,0.08);
-        }
-      }
-      #slider_progress{
-        position: absolute;
-        bottom: 0;
-        z-index: 999;
-        width: 100%;
-        pointer-events: none;
-        --paper-progress-container-color: transparent;
-        --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
-      }
-      #carousel_dots{
-        position: absolute;
-        top: 25px;
-        left: 15px;
-        width: 80px;
-        margin: 0 auto;
-        z-index: 999;
-      }
-      .carousel_dot{
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.25);
-        transition: all 0.5s;
-        cursor: pointer;
-      }
-      .carousel_dot + .carousel_dot{
-        margin-left: 5px;
-      }
-      .carousel_dot.iron-selected{
-        background-color: rgba(255,255,255,0.9);
-      }
-
     </style>
+
+    <firebase-query
+      app-name="alejost848"
+      path="/sliderItems"
+      data="{{sliderItems}}">
+    </firebase-query>
 
     <firebase-query
       app-name="alejost848"
       path="/tutorials/after-effects"
       order-by-child="publishedDate"
       limit-to-last="4"
-      on-data-changed="_tutorialsChanged">
+      data="{{tutorials}}">
     </firebase-query>
 
-    <div id="content">
-      <div id="slider_container" class="card" on-mouseover="_stopCarousel" on-mouseout="_resumeCarousel">
+    <alejost-slider data="[[sliderItems]]"></alejost-slider>
 
-        <sliding-pages active-index="{{slide}}">
-          <template is="dom-repeat" items="[[carouselItems]]" as="slide">
-            <div class="slide">
-              <a href="[[rootPath]][[slide.slug]]" class="link">
-                <iron-image src="[[slide.image]]" preload fade sizing="cover"></iron-image>
-              </a>
-            </div>
-          </template>
-        </sliding-pages>
+    <alejost-module module-title="Latest tutorials" module-href="[[rootPath]]tutorials">
+      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+        <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
+      </template>
+    </alejost-module>
 
-        <!-- Maximum value in frames (seconds = frames/60) -->
-        <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
-
-        <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center-justified">
-          <template is="dom-repeat" items="[[carouselItems]]">
-            <div class="carousel_dot" on-tap="_stopCarousel"></div>
-          </template>
-        </iron-selector>
-
-        <div id="carousel_title" class="layout horizontal center">
-          <div class="paper-font-headline">[[slideTitle]]</div>
-          <span class="flex"></span>
-          <paper-icon-button icon="my-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
-          <paper-icon-button icon="my-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
-        </div>
-      </div>
-
-      <div class="module">
-        <div class="module_header layout horizontal center">
-          <div class="module_title paper-font-headline">Latest tutorials</div>
-          <span class="flex"></span>
-          <a href="[[rootPath]]tutorials" class="link">
-            <paper-button class="module_button" noink>More</paper-button>
-          </a>
-        </div>
-        <div class="layout horizontal wrap center-justified">
-          <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-            <div class="card basic_card">
-              <a href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" class="link layout vertical">
-                <iron-image src="[[tutorial.thumbnail]]" sizing="cover" preload fade placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII="></iron-image>
-                <div class="basic_card_content layout vertical flex">
-                  <div class="basic_card_title">[[tutorial.title]]</div>
-                  <div class="basic_card_description">[[tutorial.shortDescription]]</div>
-                  <span class="flex"></span>
-                  <div class="basic_card_date paper-font-body1">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
-                </div>
-              </a>
-            </div>
-          </template>
-        </div>
-      </div>
-
-      <div class="module">
-        <div class="module_header layout horizontal center">
-          <div class="module_title paper-font-headline">Latest projects</div>
-          <span class="flex"></span>
-          <paper-button class="module_button" noink>More</paper-button>
-        </div>
-        <div class="layout horizontal wrap">
-          <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-            <div class="basic_card layout vertical center-center">
-              <iron-image src="/images/card_placeholder.png"></iron-image>
-            </div>
-          </template>
-        </div>
-      </div>
-
-    </div>
-
+    <alejost-module module-title="Latest projects" module-href="[[rootPath]]projects">
+      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+        <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
+      </template>
+    </alejost-module>
 
   </template>
 
@@ -196,93 +66,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
-          slide: {
-            type: Number,
-            observer: '_slideChanged'
-          }
+          tutorials: {
+            type: Array,
+            observer: '_tutorialsChanged'
+          },
+          sliderItems: Array
         };
       }
 
       constructor() {
         super();
-
-        this.slide = 0;
-
-        this.tutorials = new Array(4);
-
-        this.carouselItems = [
-          {
-            "title": "Hoy es Diseño",
-            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
-            "image": "https://source.unsplash.com/random/1200x540",
-          },
-          {
-            "title": "Arcades",
-            "slug": "tutorial/after-effects/07-create-exploded-isometrics-with-this-script",
-            "image": "https://source.unsplash.com/random/1200x541",
-          },
-          {
-            "title": "Particles",
-            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
-            "image": "https://source.unsplash.com/random/1200x542",
-          },
-          {
-            "title": "Hello World",
-            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
-            "image": "https://source.unsplash.com/random/1200x543",
-          },
-          {
-            "title": "Static on the Wire",
-            "slug": "tutorial/after-effects/08-get-small-files-when-rendering",
-            "image": "https://source.unsplash.com/random/1200x544",
-          }
-        ];
       }
 
-      _slideChanged(){
-        this.progress = 0;
-        this._resumeCarousel();
-        this.slideTitle = this.carouselItems[this.slide].title;
-      }
-      _resumeCarousel(){
-        clearInterval(this.carouselTimeout);
-        //Increment progress by 1 every frame. If it reaches the maximum value, then reset.
-        this.carouselTimeout = setInterval(() => {
-          this.progress++;
-          if (this.progress == this.$.slider_progress.max) {
-            this.slide = this.slide === 4 ? 0 : (this.slide + 1);
-            this.progress = 0;
-          }
-        }, 1000/60);
-      }
-      _stopCarousel(){
-        // HACK: Use setTimeout to ensure that the function executes after _slideChanged when clicking the carousel dots
-        setTimeout(() => {
-          clearInterval(this.carouselTimeout);
-        }, 1);
-      }
-      _previousSlide(){
-        this.slide = this.slide === 0 ? 4 : (this.slide - 1);
-        this._stopCarousel();
-      }
-      _nextSlide(){
-        this.slide = this.slide === 4 ? 0 : (this.slide + 1);
-        this._stopCarousel();
-      }
-
-      _createDummyArray(number) {
-        return new Array(number);
-      }
-
-      _tutorialsChanged(e){
-        var tutorials = e.detail.value;
-        if (tutorials.length > 0) {
-          this.tutorials = tutorials.reverse();
+      ready() {
+        super.ready();
+        // HACK: Create array of elements only when they are empty
+        // This fixes when you load /tutorials first and move to the home section
+        if (this.tutorials.length == 0) {
+          this.tutorials = new Array(4);
         }
       }
 
-      _computeTimeAgo(publishedDate) {
-        return moment(publishedDate).fromNow();
+      _tutorialsChanged(tutorials){
+        if (tutorials.length > 0) {
+          this.tutorials = tutorials.reverse();
+        }
       }
     }
 

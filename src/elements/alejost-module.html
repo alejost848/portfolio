@@ -1,0 +1,66 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+
+<dom-module id="alejost-module">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        margin-top: 50px;
+      }
+      #module_header{
+        margin: 0 8px;
+        margin-bottom: 16px;
+      }
+      #module_title{
+        color: #eee;
+        font-weight: 300;
+      }
+      #module_button{
+        margin-right: -8px;
+        font-size: 16px;
+        color: var(--app-gradient-left-color);
+      }
+    </style>
+
+    <div id="module_header" class="layout horizontal center">
+      <div id="module_title" class="paper-font-headline">[[moduleTitle]]</div>
+      <span class="flex"></span>
+      <a href="[[moduleHref]]" class="link">
+        <paper-button id="module_button" noink>More</paper-button>
+      </a>
+    </div>
+    <div class="layout horizontal wrap center-justified">
+      <slot></slot>
+    </div>
+  </template>
+
+  <script>
+    class AlejostModule extends Polymer.Element {
+      static get is() { return 'alejost-module'; }
+
+      static get properties() {
+        return {
+          moduleTitle: String,
+          moduleHref: String
+        };
+      }
+    }
+
+    window.customElements.define(AlejostModule.is, AlejostModule);
+  </script>
+</dom-module>
