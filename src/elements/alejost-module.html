@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #module_header{
         margin: 0 8px;
         margin-bottom: 16px;
+        height: 54px;
       }
       #module_title{
         color: #eee;
@@ -40,9 +41,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="module_header" class="layout horizontal center">
       <div id="module_title" class="paper-font-headline">[[moduleTitle]]</div>
       <span class="flex"></span>
-      <a href="[[moduleHref]]" class="link">
-        <paper-button id="module_button" noink>More</paper-button>
-      </a>
+      <template is="dom-if" if="[[moduleHref]]">
+        <a href="[[moduleHref]]" class="link">
+          <paper-button id="module_button" noink>More</paper-button>
+        </a>
+      </template>
     </div>
     <div class="layout horizontal wrap center-justified">
       <slot></slot>
