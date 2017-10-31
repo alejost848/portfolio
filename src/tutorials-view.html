@@ -10,9 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
-
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="elements/alejost-module.html">
+<link rel="import" href="elements/alejost-card.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -21,48 +20,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        @apply --layout-vertical;
-        @apply --layout-center;
       }
     </style>
 
     <firebase-query
-      id="doc"
       app-name="alejost848"
       path="/tutorials/after-effects"
       order-by-child="publishedDate"
       data="{{tutorials}}">
     </firebase-query>
 
+    <h1>Tutorials</h1>
 
-    <div id="content">
-      <div class="module">
-        <div class="module_header layout horizontal center">
-          <div class="module_info">
-            <div class="module_title paper-font-headline">After Effects Series</div>
-            <div class="module_subtitle paper-font-subhead">Animation tutorials for AE and C4D</div>
-          </div>
-        </div>
-        <template is="dom-if" if="[[!tutorialsLoaded]]">
-          <div class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[_createDummyArray(4)]]">
-              <div class="basic_card layout vertical center-center">
-                <iron-image src="[[rootPath]]images/card_placeholder.png"></iron-image>
-              </div>
-            </template>
-          </div>
-        </template>
-        <template is="dom-if" if="[[tutorialsLoaded]]">
-          <div class="layout horizontal wrap">
-            <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-              <a href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" class="link basic_card">
-                <iron-image src="[[tutorial.thumbnail]]" preload fade></iron-image>
-              </a>
-            </template>
-          </div>
-        </template>
-      </div>
-    </div>
+    <alejost-module module-title="After Effects Series">
+      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+        <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
+      </template>
+    </alejost-module>
   </template>
 
   <script>
@@ -73,23 +47,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return {
           tutorials: {
             type: Array,
-            observer: '_tutorialsChanged',
+            observer: '_tutorialsChanged'
           }
         };
       }
 
       ready() {
         super.ready();
-        this.tutorialsLoaded = false;
+        // HACK: Create array of elements only when they are empty
+        // This fixes when you load /tutorials first and move to the home section
+        if (this.tutorials.length == 0) {
+          this.tutorials = new Array(4);
+        }
       }
 
-      _createDummyArray(number) {
-        return new Array(number);
-      }
-
-      _tutorialsChanged() {
-        if (this.tutorials.length > 0) {
-          this.tutorialsLoaded = true;
+      _tutorialsChanged(tutorials){
+        if (tutorials.length > 0) {
+          this.tutorials = tutorials.reverse();
         }
       }
     }

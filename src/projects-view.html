@@ -9,6 +9,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="elements/alejost-module.html">
+<link rel="import" href="elements/alejost-card.html">
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="projects-view">
@@ -16,21 +20,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        @apply --layout-vertical;
-        @apply --layout-center;
       }
     </style>
 
-    <div id="content">
-      <h1>Projects</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
-    </div>
+    <firebase-query
+      app-name="alejost848"
+      path="/tutorials/after-effects"
+      order-by-child="publishedDate"
+      data="{{tutorials}}">
+    </firebase-query>
+
+    <h1>Projects</h1>
+
+    <alejost-module module-title="After Effects Series">
+      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
+        <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
+      </template>
+    </alejost-module>
   </template>
 
   <script>
     class ProjectsView extends Polymer.Element {
       static get is() { return 'projects-view'; }
+
+      static get properties() {
+        return {
+          tutorials: {
+            type: Array,
+            observer: '_tutorialsChanged'
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        // HACK: Create array of elements only when they are empty
+        // This fixes when you load /tutorials first and move to the home section
+        if (this.tutorials.length == 0) {
+          this.tutorials = new Array(4);
+        }
+      }
+
+      _tutorialsChanged(tutorials){
+        if (tutorials.length > 0) {
+          this.tutorials = tutorials.reverse();
+        }
+      }
     }
 
     window.customElements.define(ProjectsView.is, ProjectsView);
