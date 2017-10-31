@@ -255,9 +255,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: 0;
           box-sizing: border-box;
         }
+        iron-pages > * {
+          padding-bottom: 60px;
+        }
       }
 
-      @media (max-width: 400px) {
+      @media (max-width: 480px) {
         #condensed_toolbar{
           display: none;
         }
@@ -270,6 +273,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #animated_comment{
           display: none;
+        }
+        iron-pages > * {
+          padding: 22px 0px;
+          padding-bottom: 60px;
         }
       }
     </style>
