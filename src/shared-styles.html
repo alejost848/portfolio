@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         /*Cards dark theme*/
         --card-bg-color: #212121;
-        --card-image-bg-color: #262626;
+        --card-image-bg-color: #141414;
         --card-title-color: #f4f4f4;
         --card-description-color: #aaaaaa;
         --card-date-color: #606060;
@@ -52,80 +52,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .paper-font-menu { @apply --paper-font-menu; }
       .paper-font-button { @apply --paper-font-button; }
 
-      .card{
-        @apply --shadow-transition;
-        @apply --shadow-elevation-4dp;
-      }
-      .card:hover{
-        @apply --shadow-elevation-12dp;
-      }
-
-      /*Content*/
-      #content{
-        width: 100%;
-        max-width: 1200px;
-        padding: 50px 0;
-        box-sizing: border-box;
-      }
-
-      /*Modules*/
-      .module{
-        margin-top: 50px;
-      }
-      .module_header{
-        margin: 0 8px;
-        margin-bottom: 16px;
-      }
-      .module_title{
-        color: #eee;
-        font-weight: 300;
-      }
-      .module_subtitle{
-        color: #777;
-      }
-      .module_button{
-        margin-right: -8px;
-        font-size: 16px;
-        color: var(--app-gradient-left-color);
-      }
-
-      /*Cards*/
-      .basic_card {
-        margin: 4px;
-        width: calc(25% - 8px);
-        border-radius: 4px;
-        background-color: var(--card-bg-color);
-        overflow: hidden;
-      }
-      .basic_card iron-image{
-        width: 100%;
-        height: 215px;
-        background-color: var(--card-image-bg-color);
-      }
-      .basic_card a{
-        height: 100%;
-      }
-      .basic_card_content{
-        padding: 18px;
-      }
-      .basic_card_title{
-        font-size: 18px;
-        line-height: 24px;
-        font-weight: 400;
-        margin-bottom: 10px;
-        color: var(--card-title-color);
-      }
-      .basic_card_description{
-        font-size: 15px;
-        line-height: 20px;
-        font-weight: 400;
-        color: var(--card-description-color);
-      }
-      .basic_card_date{
-        margin-top: 12px;
-        color: var(--card-date-color);
-      }
-
       paper-button{
         @apply --paper-font-button;
       }
@@ -143,12 +69,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-align: center;
         --paper-tooltip:{
           font-size: 12px;
-        }
-      }
-
-      @media (max-width: 1200px) {
-        #content{
-          padding: 22px 10px;
         }
       }
 

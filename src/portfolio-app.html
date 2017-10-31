@@ -166,10 +166,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: white;
       }
 
-      /*Content*/
+      iron-pages {
+        width: 100%;
+        @apply --layout-vertical;
+        @apply --layout-center;
+      }
 
-      #main_pages * {
-        padding-bottom: 56px;
+      iron-pages > * {
+        width: 100%;
+        max-width: 1200px;
+        padding: 50px 0;
+        box-sizing: border-box;
       }
 
       /*Bottom nav*/
@@ -211,6 +218,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #condensed_toolbar{
           height: 42px;
+        }
+        iron-pages > * {
+          padding: 22px 10px;
         }
       }
 
@@ -375,7 +385,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-toolbar>
       </app-header>
 
-      <iron-pages id="main_pages" selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
+      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
         <home-view name="home"></home-view>
         <tutorials-view name="tutorials"></tutorials-view>
         <projects-view name="projects"></projects-view>
