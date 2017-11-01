@@ -345,7 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-header-layout>
 
-      <app-header id="header" reveals condenses slot="header" effects="waterfall blend-background resize-snapped-title" threshold="130">
+      <app-header id="header" reveals condenses slot="header" hidden$="[[_shouldHideHeader(page)]]" effects="waterfall blend-background resize-snapped-title" threshold="130">
         <app-toolbar id="condensed_toolbar">
           <div condensed-title></div>
         </app-toolbar>
@@ -656,6 +656,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       _closeNotificationsDialog(){
         this.$.notifications_dialog.close();
+      }
+
+      _shouldHideHeader(page) {
+        if (page == "tutorial") {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
 

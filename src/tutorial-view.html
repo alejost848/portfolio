@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
 
@@ -24,93 +25,84 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        @apply --layout-vertical;
-        @apply --layout-center;
       }
 
-      #content{
-        max-width: 960px;
-        padding: 0;
-        background-color: white;
-        border-radius: 4px;
-        overflow: hidden;
-        @apply --shadow-elevation-8dp;
-        margin-top: 50px;
-        z-index: 1;
-      }
-      #title_header{
-        position: relative;
-        min-height: 116px;
-        box-sizing: border-box;
-        padding: 30px;
-      }
-      #episode_number{
-        color: rgba(0, 0, 0, 0.5);
-        font-weight: 500;
-      }
-      #episode_duration{
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 20px;
-        min-width: 80px;
-        margin-left: 20px;
-        text-align: right;
-      }
-      .module_title{
-        color: white;
-      }
-      #publishedDate{
-        padding: 0 30px;
-        padding-top: 20px;
-        color: #444;
-      }
-      #description {
-        padding: 30px;
-        padding-top: 20px;
-        color: #555;
-      }
-      #video_info{
-        position: relative;
-        background-color: #ccc;
-        transition: background-color 0.5s ease-in;
-      }
       #video_progress{
         position: absolute;
         top: 0;
-        bottom: 0;
         left: 0;
         width: 100%;
+        height: 462px;
         --paper-progress-height: 100%;
         --paper-progress-active-color: rgba(0, 0, 0, 0.1);
         --paper-progress-container-color: transparent;
+        z-index: -1;
+      }
+
+      #card{
+        position: relative;
+        background-color: var(--card-bg-color);
+        border-radius: 4px;
+        overflow: hidden;
+        @apply --shadow-elevation-4dp;
+      }
+      #title_header{
+        height: 92px;
+        padding: 15px 0;
+      }
+      #episode_number{
+        color: rgba(20, 20, 20, 0.5);
+        font-weight: 500;
+      }
+      #episode_duration{
+        color: rgba(20, 20, 20, 0.5);
+        font-size: 20px;
+      }
+      google-youtube{
+        background-color: var(--card-image-bg-color);
+      }
+      #publishedDate{
+        padding: 0 30px;
+        padding-top: 30px;
+        color: var(--card-date-color);
+      }
+      #description {
+        padding: 30px;
+        color: var(--card-description-color);
+      }
+
+      #loading_progress{
+        width: 100%;
+        --paper-progress-container-color: transparent;
+        --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
+        opacity: 0.5;
+      }
+
+      iron-icon{
+        color: white;
+        width: 32px;
+        height: 32px;
       }
 
       /*Fab*/
       #share_fab{
         position: absolute;
-        bottom: -28px;
-        right: 5%;
-        --paper-fab-background: var(--app-accent-color);
-        --paper-fab-keyboard-focus-background: var(--app-gradient-right-color);
-      }
-
-      @media (max-width: 1400px) {
-        #share_fab{
-          position: fixed;
-          bottom: 24px;
-          right: 24px;
-          z-index: 4;
-        }
+        right: 30px;
+        bottom: 30px;
+        color: rgba(20, 20, 20, 0.65);
+        --paper-fab-background: var(--app-gradient-right-color);
+        --paper-fab-keyboard-focus-background: var(--app-accent-color);
       }
 
       @media (max-width: 960px) {
-        #content{
-          margin-top: -280px;
+        #card{
+          position: static;
         }
-      }
-
-      @media (max-width: 600px) {
         #share_fab{
+          position: fixed;
           bottom: 80px;
+          right: 24px;
+          z-index: 4;
         }
       }
     </style>
@@ -122,48 +114,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       path="/tutorials/[[routeData.series]]"
       order-by-child="slug"
       equal-to="[[routeData.slug]]"
-      data="{{queryResults}}">
+      data="{{data}}">
     </firebase-query>
 
-    <div>
-      <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
-      <paper-tooltip for="share_fab">Share</paper-tooltip>
-    </div>
+    <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
 
-    <div id="content">
-      <template id="dom_repeat" is="dom-repeat" items="[[queryResults]]" as="tutorial">
+    <a href="[[rootPath]]tutorials" class="link">
+      <iron-icon icon="my-icons:logo"></iron-icon>
+    </a>
 
-        <google-youtube
-          id="video"
-          fluid
-          autoplay="1"
-          video-id="[[tutorial.videoId]]"
-          showinfo="0"
-          currenttime="{{videoCurrentTime}}"
-          duration="{{videoDuration}}"
-          rel="0"
-          modestbranding="1">
-        </google-youtube>
-
-        <!-- Hidden image for getting the main color -->
-        <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
-
-        <div id="video_info" style="background-color: #[[mainColor]]">
-          <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
-          <div id="title_header" class="layout horizontal center">
-            <div>
-              <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
-              <div class="module_title paper-font-headline">[[tutorial.title]]</div>
-            </div>
-            <span class="flex"></span>
-            <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
-          </div>
+    <div id="title_header" class="layout horizontal center">
+      <template is="dom-if" if="[[dataLoaded]]">
+        <div>
+          <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
+          <h1>[[tutorial.title]]</h1>
         </div>
-
-        <div id="publishedDate" class="paper-font-body2">Published [[_computeTimeAgo(tutorial.publishedDate)]]</div>
-        <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+        <span class="flex"></span>
+        <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
       </template>
     </div>
+    <div id="card">
+      <google-youtube
+        id="video"
+        fluid
+        autoplay="1"
+        video-id="[[tutorial.videoId]]"
+        showinfo="0"
+        currenttime="{{videoCurrentTime}}"
+        duration="{{videoDuration}}"
+        rel="0"
+        modestbranding="1">
+      </google-youtube>
+
+      <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
+
+      <!-- HACK: Hidden image for getting the main color -->
+      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+
+      <template is="dom-if" if="[[dataLoaded]]">
+        <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
+        <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+        <div>
+          <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
+          <paper-tooltip for="share_fab" position="top">Share</paper-tooltip>
+        </div>
+      </template>
+    </div>
+
   </template>
 
   <script>
@@ -176,8 +173,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             reflectToAttribute: true,
             observer: '_videoStateChanged',
+          },
+          data: {
+            type: Array,
+            observer: '_dataChanged'
           }
         };
+      }
+
+      _dataChanged(data){
+        if (data.length > 0) {
+          this.tutorial = data[0];
+          this.dataLoaded = true;
+        }
       }
 
       _goBack() {
@@ -220,13 +228,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _computeTimeAgo(publishedDate) {
-        return moment(publishedDate).fromNow();
+        return "Published " + moment(publishedDate).fromNow();
       }
 
       _getMainColor(e){
         var vibrant = new Vibrant(e.target, 5, 5);
         var swatches = vibrant.swatches();
         this.mainColor = swatches["Vibrant"].getHex().substring(1);
+        console.log(swatches);
       }
     }
 
