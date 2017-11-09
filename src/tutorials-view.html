@@ -25,46 +25,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-query
       app-name="alejost848"
-      path="/tutorials/after-effects"
+      path="/tutorials"
       order-by-child="publishedDate"
-      data="{{tutorials}}">
+      data="{{series}}">
     </firebase-query>
 
     <h1>Tutorials</h1>
 
-    <alejost-module module-title="After Effects Series">
-      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-        <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
-      </template>
-    </alejost-module>
+    <template is="dom-repeat" items="[[series]]" as="serie">
+      <alejost-module module-title="[[serie.name]]">
+        <template is="dom-repeat" items="[[_toArray(serie.videos)]]" as="tutorial">
+          <alejost-card href="[[rootPath]]tutorial/after-effects/" data="[[tutorial]]"></alejost-card>
+        </template>
+      </alejost-module>
+    </template>
   </template>
 
   <script>
     class TutorialsView extends Polymer.Element {
       static get is() { return 'tutorials-view'; }
 
-      static get properties() {
-        return {
-          tutorials: {
-            type: Array,
-            observer: '_tutorialsChanged'
-          }
-        };
-      }
-
       ready() {
         super.ready();
-        // HACK: Create array of elements only when they are empty
-        // This fixes when you load /tutorials first and move to the home section
-        if (this.tutorials.length == 0) {
-          this.tutorials = new Array(4);
-        }
       }
-
-      _tutorialsChanged(tutorials){
-        if (tutorials.length > 0) {
-          this.tutorials = tutorials.reverse();
-        }
+      _toArray(obj) {
+        // HACK: Convert Object from Firebase to Array and reverse it
+        return Object.keys(obj).map(function(key) {
+          return obj[key];
+        }).reverse();
       }
     }
 
