@@ -5,19 +5,24 @@ const request = require("request");
 exports.addTutorial = functions.database
   .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
   .onCreate(event => {
-    //Generate slug when a new tutorial is added
-    let titleAndEpisode = event.data.val().title;
+    let tutorialInfo = event.data.val();
+    let titleAndEpisode = tutorialInfo.title;
 
-    let title = titleAndEpisode.split(" | ")[0];
-    let episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
-    let slug = slugify(episodeNumber + "-" + title, {lower: true});
-    let shortDescription = event.data.val().description.split(".")[0] + ".";
+    tutorialInfo.title = titleAndEpisode.split(" | ")[0];
+    tutorialInfo.episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
+    tutorialInfo.slug = slugify(tutorialInfo.episodeNumber + "-" + tutorialInfo.title, {lower: true});
+    tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
 
-    return event.data.ref.update({
-      title: title,
-      slug: slug,
-      episodeNumber: episodeNumber,
-      shortDescription: shortDescription
+    //Updates the information of the new tutorial in /tutorials
+    return event.data.ref.update(tutorialInfo).then(() => {
+      //After that, it takes the oldest tutorial in home/latestTutorials and replaces it with the new one
+      const root = event.data.ref.root;
+      return root.child('home/latestTutorials')
+        .orderByChild("publishedDate")
+        .limitToFirst(1)
+        .once('child_added', (snapshot) => {
+          return snapshot.ref.update(tutorialInfo);
+        });
     });
   });
 
