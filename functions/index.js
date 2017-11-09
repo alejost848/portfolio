@@ -3,7 +3,7 @@ const slugify = require('slugify');
 const request = require("request");
 
 exports.addTutorial = functions.database
-  .ref('/tutorials/after-effects/{tutorialKey}')
+  .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
   .onCreate(event => {
     //Generate slug when a new tutorial is added
     let titleAndEpisode = event.data.val().title;
