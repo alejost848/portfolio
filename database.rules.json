@@ -1,12 +1,20 @@
 {
   "rules": {
-    "sliderItems":{
-      ".read": true
+    "home": {
+      ".read": true,
+      "latestTutorials": {
+        ".indexOn": "publishedDate"
+      },
+      "latestWorks": {
+        ".indexOn": "publishedDate"
+      }
     },
     "tutorials": {
       ".read": true,
-      "after-effects": {
-        ".indexOn": ["publishedDate", "slug"]
+      "$sid": {
+        "videos": {
+          ".indexOn": ["publishedDate", "slug"]
+        }
       }
     },
     "users": {
