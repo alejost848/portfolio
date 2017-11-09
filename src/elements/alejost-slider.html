@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: relative;
         overflow: hidden;
         border-radius: 4px;
-        height: 540px;
+        height: 480px;
         @apply --shadow-transition;
         @apply --shadow-elevation-4dp;
         background-color: var(--card-image-bg-color);
@@ -46,6 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .slide {
         padding: 0;
         background-color: var(--card-image-bg-color);
+        z-index: 0;
       }
       .slide a {
         width: 100%;
@@ -58,7 +59,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         opacity: 0.4;
       }
       #carousel_title{
-        z-index: 999;
         position: absolute;
         bottom: 20px;
         padding: 0 20px;
@@ -66,6 +66,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: white;
         width: 100%;
         pointer-events: none;
+      }
+      #carousel_title div{
+        font-size: 20px;
       }
       #carousel_title paper-icon-button{
         pointer-events: all;
@@ -79,7 +82,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #slider_progress{
         position: absolute;
         bottom: 0;
-        z-index: 999;
         width: 100%;
         pointer-events: none;
         --paper-progress-container-color: transparent;
@@ -92,7 +94,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 15px;
         width: 80px;
         margin: 0 auto;
-        z-index: 999;
       }
       .carousel_dot{
         width: 10px;
@@ -107,6 +108,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .carousel_dot.iron-selected{
         background-color: rgba(255,255,255,0.9);
+      }
+
+      @media (max-width: 960px) {
+        :host{
+          height: 400px;
+        }
+      }
+      @media (max-width: 720px) {
+        :host{
+          height: 290px;
+        }
+        #carousel_title div{
+          font-size: 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        :host{
+          height: 200px;
+        }
+        #carousel_dots{
+          top: 20px;
+        }
+        #carousel_title{
+          bottom: 10px;
+          padding-right: 10px;
+        }
       }
     </style>
 

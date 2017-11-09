@@ -23,18 +23,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-top: 50px;
       }
       #module_header{
-        margin: 0 8px;
         margin-bottom: 16px;
         height: 54px;
       }
       #module_title{
         color: #eee;
         font-weight: 300;
+        font-size: 20px;
       }
       #module_button{
-        margin-right: -8px;
-        font-size: 16px;
-        color: var(--app-gradient-left-color);
+        margin-right: 0px;
+        transition: background-color 0.3s;
+        color: var(--app-accent-color);
+      }
+      #module_button:hover{
+        background-color: rgba(255, 255, 255, 0.02);
       }
     </style>
 
@@ -43,11 +46,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <span class="flex"></span>
       <template is="dom-if" if="[[moduleHref]]">
         <a href="[[moduleHref]]" class="link">
-          <paper-button id="module_button" noink>More</paper-button>
+          <paper-button id="module_button" noink class="paper-font-button">More</paper-button>
         </a>
       </template>
     </div>
-    <div class="layout horizontal wrap center-justified">
+    <div class="layout horizontal wrap justified">
       <slot></slot>
     </div>
   </template>

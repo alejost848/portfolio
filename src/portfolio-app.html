@@ -9,10 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 
@@ -43,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="lazy-import" href="home-view.html">
 <link rel="lazy-import" href="tutorials-view.html">
-<link rel="lazy-import" href="projects-view.html">
+<link rel="lazy-import" href="works-view.html">
 <link rel="lazy-import" href="tutorial-view.html">
 <link rel="lazy-import" href="about-view.html">
 <link rel="lazy-import" href="error-view.html">
@@ -57,67 +53,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Header*/
-      app-header {
+      #header {
         color: #fff;
-        --app-header-background-rear-layer: {
-          background: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
-        };
-        --app-header-shadow: {
-          box-shadow: inset 0px 5px 2px -3px rgba(0, 0, 0, 0.15);
-        };
       }
-      app-toolbar{
+      .app_toolbar{
         width: 100%;
-        max-width: 1200px;
+        max-width: 1100px;
         height: 62px;
         margin: 0 auto;
         box-sizing: border-box;
-        padding: 0;
+        padding: 0 10px;
       }
       #header_link{
         margin-right: 20px;
-        transition: all 0.7s ease;
       }
       #header_logo{
-        width: 46px;
-        height: 46px;
-        transition: all 0.7s ease;
-      }
-      #header_logo.headerRevealed{
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
       }
       #header_tabs{
         width: 100%;
-        max-width: 480px;
+        max-width: 360px;
         height: 100%;
         text-transform: uppercase;
-        --paper-tabs-selection-bar-color: white;
-        --paper-tab-ink: white;
+        --paper-tabs-selection-bar-color: var(--app-accent-color);
+        --paper-tab-bar-color: rgba(255,255,255, 0.9);
         --paper-tab-content:{
           color: white;
-          font-weight: 600;
         }
         --paper-tab-content-unselected:{
-          color: rgba(20,20,20,0.5);
+          color: rgba(255,255,255,0.7);
         }
-      }
-      #header_name{
-        line-height: 20px;
-        font-size: 22px;
-        transition: all 0.7s ease;
-      }
-      #animated_comment{
-        font-size: 18px;
-        line-height: 28px;
-        height: 22px;
-        color: rgba(20,20,20,0.5);
-        transition: all 0.7s ease;
       }
 
       /*Notifications*/
       #notifications_button{
-        color: rgba(20,20,20,0.5);
+        margin-left: 10px;
+        color: rgba(255,255,255, 0.9);
+        border-radius: 50%;
+        transition: background-color 0.3s;
+        --paper-icon-button-hover:{
+          background-color: rgba(255,255,255,0.08);
+        }
       }
       #notifications_dialog{
         width: 330px;
@@ -174,8 +151,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       iron-pages > * {
         width: 100%;
-        max-width: 1200px;
-        padding: 50px 0;
+        max-width: 1100px;
+        padding: 50px 10px;
         box-sizing: border-box;
       }
 
@@ -190,7 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.14),
                     0 1px 5px 0 rgba(0, 0, 0, 0.12),
                     0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        z-index: 3;
+        z-index: 106;
       }
       #bottom_nav paper-tabs{
         height: 100%;
@@ -198,26 +175,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #bottom_nav paper-tab{
         --paper-tab-content:{
           transition: all 0.1s cubic-bezier(0.4, 0.0, 1, 1);
-          font-size: 14px;
+          font-size: 13px;
           color: var(--app-accent-color);
         }
         --paper-tab-content-unselected:{
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 400;
           color: #777;
         }
       }
-      paper-tab[link] a {
+      paper-tab a {
         @apply --layout-vertical;
         @apply --layout-center-center;
       }
 
-      @media (max-width: 1200px) {
-        app-toolbar{
-          padding: 0px 10px;
-        }
+      @media (max-width: 1100px) {
         #condensed_toolbar{
-          height: 42px;
+          height: 10px;
+        }
+        .app_toolbar{
+          padding: 0px 10px;
         }
         iron-pages > * {
           padding: 22px 10px;
@@ -225,22 +202,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       @media (max-width: 960px) {
+        #condensed_toolbar{
+          display: none;
+        }
         #header_wrapper{
           height: 212px;
         }
         #header_tabs{
           display: none;
         }
+        #header_logo{
+          width: 32px;
+          height: 32px;
+        }
         #header_link{
           margin-right: 12px;
-        }
-        #header_name{
-          font-size: 18px;
-          line-height: 20px;
-        }
-        #animated_comment{
-          font-size: 16px;
-          line-height: 22px;
         }
         #bottom_nav{
           display: block;
@@ -261,27 +237,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       @media (max-width: 480px) {
-        #condensed_toolbar{
-          display: none;
-        }
-        #header_logo{
-          width: 32px;
-          height: 32px;
-        }
-        #header_name{
-          display: none;
-        }
-        #animated_comment{
-          display: none;
-        }
-        iron-pages > * {
-          padding: 22px 0px;
-          padding-bottom: 60px;
-        }
+
       }
     </style>
 
-    <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}"></iron-media-query>
+    <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}" on-query-matches-changed="_screenSizeChanged"></iron-media-query>
 
     <app-location
       route="{{route}}"
@@ -312,12 +272,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       online="{{online}}">
     </firebase-auth>
 
-    <firebase-document
-      app-name="alejost848"
-      path="/headerMessages"
-      on-data-changed="_handleHeaderMessages">
-    </firebase-document>
-
     <!-- Firebase notifications -->
     <firebase-messaging
       id="messaging"
@@ -343,89 +297,87 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Main content -->
     <p5js-experiment></p5js-experiment>
 
-    <app-header-layout>
-
-      <app-header id="header" reveals condenses slot="header" hidden$="[[_shouldHideHeader(page)]]" effects="waterfall blend-background resize-snapped-title" threshold="130">
-        <app-toolbar id="condensed_toolbar">
-          <div condensed-title></div>
-        </app-toolbar>
-        <app-toolbar sticky>
-          <a href="[[rootPath]]" id="header_link" class="link">
-            <iron-icon id="header_logo" icon="my-icons:logo"></iron-icon>
-          </a>
-          <div main-title class="flex">
-            <div id="header_name">Alejandro Sanclemente</div>
-            <div id="animated_comment"></div>
-          </div>
-          <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation">
-            <paper-tab name="home" link>
-              <a class="link" href="[[rootPath]]">Home</a>
-            </paper-tab>
-            <paper-tab name="tutorials" link>
-              <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
-            </paper-tab>
-            <paper-tab name="projects" link>
-              <a class="link" href="[[rootPath]]projects">Projects</a>
-            </paper-tab>
-            <paper-tab name="about" link>
-              <a class="link" href="[[rootPath]]about">About</a>
-            </paper-tab>
-          </paper-tabs>
-
-          <!-- Show the notifications button if the browser supports push notifications -->
-          <div>
-            <template is="dom-if" if="[[pushSupported]]">
-              <template is="dom-if" if="[[userSubscribed]]">
-                <paper-icon-button id="notifications_button" icon="my-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
-                <paper-tooltip>Notifications active</paper-tooltip>
-              </template>
-              <template is="dom-if" if="[[!userSubscribed]]">
-                <paper-icon-button id="notifications_button" icon="my-icons:notifications-none" on-tap="_openNotificationsDialog"></paper-icon-button>
-                <paper-tooltip>Notifications inactive</paper-tooltip>
-              </template>
-            </template>
-          </div>
-        </app-toolbar>
-      </app-header>
-
-      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
-        <home-view name="home"></home-view>
-        <tutorials-view name="tutorials"></tutorials-view>
-        <projects-view name="projects"></projects-view>
-        <tutorial-view name="tutorial" route="[[subroute]]" playing="{{_tutorialPlaying}}"></tutorial-view>
-        <about-view name="about"></about-view>
-        <error-view name="error"></error-view>
-      </iron-pages>
-
-      <div id="bottom_nav">
-        <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
-          <paper-tab name="home" link>
-            <a class="link" href="[[rootPath]]">
-              <iron-icon icon="my-icons:logo"></iron-icon>
-              <div>Home</div>
-            </a>
+    <div id="header">
+      <div id="condensed_toolbar" class="app_toolbar"></div>
+      <div class="app_toolbar layout horizontal center">
+        <a href="[[rootPath]]" id="header_link" class="link">
+          <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
+        </a>
+        <span class="flex"></span>
+        <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation" noink>
+          <paper-tab name="works" link>
+            <a class="link" href="[[rootPath]]works">Works</a>
           </paper-tab>
           <paper-tab name="tutorials" link>
-            <a class="link" href="[[rootPath]]tutorials">
-              <iron-icon icon="my-icons:youtube"></iron-icon>
-              <div>Tutorials</div>
-            </a>
-          </paper-tab>
-          <paper-tab name="projects" link>
-            <a class="link" href="[[rootPath]]projects">
-              <iron-icon icon="my-icons:view-carousel"></iron-icon>
-              <div>Projects</div>
-            </a>
+            <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
           </paper-tab>
           <paper-tab name="about" link>
-            <a class="link" href="[[rootPath]]about">
-              <iron-icon icon="my-icons:info"></iron-icon>
-              <div>About</div>
-            </a>
+            <a class="link" href="[[rootPath]]about">About</a>
           </paper-tab>
         </paper-tabs>
+
+        <!-- Show the notifications button if the browser supports push notifications -->
+        <div>
+          <template is="dom-if" if="[[pushSupported]]">
+            <template is="dom-if" if="[[userSubscribed]]">
+              <paper-icon-button id="notifications_button" icon="my-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
+              <paper-tooltip fit-to-visible-bounds>You are subscribed to notifications</paper-tooltip>
+            </template>
+            <template is="dom-if" if="[[!userSubscribed]]">
+              <paper-icon-button id="notifications_button" icon="my-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
+              <paper-tooltip fit-to-visible-bounds>You are not receiving any notifications</paper-tooltip>
+            </template>
+          </template>
+        </div>
       </div>
-    </app-header-layout>
+    </div>
+
+    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
+      <home-view name="home"></home-view>
+      <tutorials-view name="tutorials"></tutorials-view>
+      <works-view name="works"></works-view>
+      <tutorial-view name="tutorial" route="[[subroute]]" playing="{{_tutorialPlaying}}"></tutorial-view>
+      <about-view name="about"></about-view>
+      <error-view name="error"></error-view>
+    </iron-pages>
+
+    <div id="bottom_nav">
+      <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
+        <paper-tab name="home">
+          <a class="link" href="[[rootPath]]">
+            <iron-icon icon="my-icons:logo"></iron-icon>
+            <div>Home</div>
+          </a>
+        </paper-tab>
+        <paper-tab name="works">
+          <a class="link" href="[[rootPath]]works">
+            <iron-icon icon="my-icons:view-carousel"></iron-icon>
+            <div>Works</div>
+          </a>
+        </paper-tab>
+        <paper-tab name="tutorials">
+          <a class="link" href="[[rootPath]]tutorials">
+            <iron-icon icon="my-icons:youtube"></iron-icon>
+            <div>Tutorials</div>
+          </a>
+        </paper-tab>
+        <paper-tab name="about">
+          <a class="link" href="[[rootPath]]about">
+            <iron-icon icon="my-icons:info"></iron-icon>
+            <div>About</div>
+          </a>
+        </paper-tab>
+          <!-- <paper-tab name="works" link>
+            <a class="link" href="[[rootPath]]works">Works</a>
+          </paper-tab>
+          <paper-tab name="tutorials" link>
+            <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
+          </paper-tab>
+          <paper-tab name="about" link>
+            <a class="link" href="[[rootPath]]about">About</a>
+          </paper-tab> -->
+      </paper-tabs>
+    </div>
 
     <paper-dialog
       id="notifications_dialog"
@@ -453,7 +405,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           If this option is selected, I will be notified when:
           <ul>
             <li>
-              <span>Tutorials or projects are uploaded</span>
+              <span>Tutorials or works are uploaded</span>
               <span>(three times a month max.)</span>
             </li>
             <li>A significant change occurs in the web app (not anytime soon)</li>
@@ -498,17 +450,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
 
-        //Animate header
-        this.headerRevealed = false;
-        this.$.header.addEventListener('threshold-triggered-changed', e => {
-          let headerRevealed = e.detail.value;
-          if (headerRevealed) {
-            this.$.header_logo.classList.add("headerRevealed");
-          } else {
-            this.$.header_logo.classList.remove("headerRevealed");
-          }
-        });
-
         this.$.auth.signInAnonymously()
           .then(function(response) { // optionally handle a successful login
             console.log("login successful");
@@ -545,87 +486,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'error';
       }
 
-      Typer (element, options, scenes) {
-      	var defaultOptions = { erase: 35, type: 55, break: 1500 };
-        var config = {};
-        if (Array.isArray(options)) {
-        	scenes = options;
-          options = {};
-        }
-        for (var key in defaultOptions) {
-        	if (!defaultOptions.hasOwnProperty(key)) continue;
-          if (options[key] != null) {
-          	config[key] = options[key];
-          } else {
-          	config[key] = defaultOptions[key];
-          }
-        }
-        var status = 'ready';
-        var state = '';
-        var currentSceneIndex = 0
-        function type () {
-        	if (status !== 'playing') {
-          	return;
-          }
-          if (scenes) {
-            var scene = scenes[currentSceneIndex];
-            if (state === scene) {
-              return setTimeout(erase, config.break);
-            }
-            state = scene.substr(0, state.length + 1);
-            element.textContent = state;
-            setTimeout(type, config.type);
-          }
-        }
-        function erase () {
-          if (status !== 'playing') {
-          	return;
-          }
-        	if (state === '') {
-          	currentSceneIndex++;
-            if (currentSceneIndex === scenes.length) {
-            	currentSceneIndex = 0;
-            }
-            return type();
-          }
-          if (currentSceneIndex < scenes.length - 1) {
-            state = state.substr(0, state.length - 1);
-            element.textContent = state;
-            setTimeout(erase, config.erase);
-          }
-        }
-
-        function stop () {
-        	status = 'ready';
-        }
-
-        function play () {
-        	if (status === 'ready') {
-          	status = 'playing';
-          	type();
-          }
-        }
-        play();
-        return { play: play, stop: stop };
-      }
-
-      _handleHeaderMessages(e) {
-        const headerMessages = e.detail.value;
-        var vader = this.$.animated_comment;
-        var player = this.Typer(vader, headerMessages);
-      }
-
       toggleSubscription(e){
         if (this.userSubscribed) {
           this.firebaseSubscribed = false;
           this.toastText = "You won't receive any notifications";
           this.$.toast.show();
+          this.$.notifications_dialog.close();
         } else {
           var self = this;
           this.$.messaging.requestPermission().then(function() {
             self.firebaseSubscribed = true;
             self.toastText = "Thanks for subscribing!";
             self.$.toast.show();
+            self.$.notifications_dialog.close();
           }, function(err) {
             self.userSubscribed = false;
             self.toastText = "To subscribe, allow notifications and reload the site";
@@ -658,11 +531,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.notifications_dialog.close();
       }
 
-      _shouldHideHeader(page) {
-        if (page == "tutorial") {
-          return true;
+      _screenSizeChanged(e){
+        let largeScreen = e.detail.value;
+        if (largeScreen) {
+          this.$.toast.verticalOffset = 0;
         } else {
-          return false;
+          this.$.toast.verticalOffset = 56;
         }
       }
     }

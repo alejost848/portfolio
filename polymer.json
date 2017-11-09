@@ -4,7 +4,7 @@
   "fragments": [
     "src/home-view.html",
     "src/tutorials-view.html",
-    "src/projects-view.html",
+    "src/works-view.html",
     "src/tutorial-view.html",
     "src/about-view.html",
     "src/error-view.html"

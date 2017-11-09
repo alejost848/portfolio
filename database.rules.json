@@ -1,8 +1,5 @@
 {
   "rules": {
-    "headerMessages": {
-      ".read": true
-    },
     "sliderItems":{
       ".read": true
     },

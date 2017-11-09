@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="projects-view">
+<dom-module id="works-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -30,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{tutorials}}">
     </firebase-query>
 
-    <h1>Projects</h1>
+    <h1>Works</h1>
 
     <alejost-module module-title="After Effects Series">
       <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
@@ -40,8 +40,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class ProjectsView extends Polymer.Element {
-      static get is() { return 'projects-view'; }
+    class WorksView extends Polymer.Element {
+      static get is() { return 'works-view'; }
 
       static get properties() {
         return {
@@ -68,6 +68,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
 
-    window.customElements.define(ProjectsView.is, ProjectsView);
+    window.customElements.define(WorksView.is, WorksView);
   </script>
 </dom-module>
