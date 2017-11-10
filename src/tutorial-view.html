@@ -39,7 +39,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
         background-color: var(--tutorial-color, #333);
-        opacity: 0.9;
         z-index: -1;
       }
 
@@ -70,13 +69,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       google-youtube{
         background-color: var(--card-image-bg-color);
       }
-      #publishedDate{
+      #card_content{
         padding: 30px;
+        position: relative;
+      }
+      #publishedDate{
+        margin-bottom: 30px;
         color: var(--card-date-color);
       }
       #description {
-        padding: 0 30px;
-        padding-bottom: 30px;
         color: var(--card-description-color);
       }
 
@@ -90,11 +91,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /*Fab*/
       #share_fab{
         position: absolute;
-        right: 30px;
-        bottom: 30px;
+        right: 24px;
+        top: 24px;
         color: white;
         transition: background-color 0.8s ease;
-        background-color: var(--tutorial-color, #888);
+        background-color: var(--tutorial-color, #333);
         @apply --shadow-transition;
         @apply --shadow-elevation-6dp;
       }
@@ -106,8 +107,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #card{
           position: static;
         }
+        #card_content{
+          position: static;
+        }
         #share_fab{
           position: fixed;
+          top: auto;
           bottom: 80px;
           right: 24px;
           z-index: 2;
@@ -128,13 +133,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #video_progress{
           height: 200px;
         }
+        #card_content{
+          padding: 20px;
+        }
         #publishedDate{
-          padding: 20px 10px;
           font-size: 13px;
         }
         #description {
-          padding: 0 10px;
-          padding-bottom: 30px;
           font-size: 13px;
           line-height: 18px;
         }
@@ -201,11 +206,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
 
       <template is="dom-if" if="[[dataLoaded]]">
-        <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
-        <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
-        <div>
-          <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
-          <paper-tooltip id="share_tooltip" for="share_fab" position="top">Share</paper-tooltip>
+        <div id="card_content">
+          <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
+          <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+          <div>
+            <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
+            <paper-tooltip id="share_tooltip" for="share_fab" position="top">Share</paper-tooltip>
+          </div>
         </div>
       </template>
     </div>
@@ -247,6 +254,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _activeChanged(active) {
         if (!active) {
           this.stopPlayback();
+
+          //Change browser theme color
+          let metaThemeColor = document.querySelector('meta[name=theme-color]');
+          metaThemeColor.setAttribute("content", "#121212");
+
+          //Change background color
+          this.updateStyles({
+            '--tutorial-color': '#333'
+          });
         }
       }
 
@@ -263,6 +279,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var vibrant = new Vibrant(e.target, 8, 5);
         var swatches = vibrant.swatches();
         this.mainColor = swatches["Vibrant"].getHex().substring(1);
+
+        //Change browser theme color
+        let metaThemeColor = document.querySelector('meta[name=theme-color]');
+        metaThemeColor.setAttribute("content", '#' + this.mainColor);
+
+        //Change background color
         this.updateStyles({
           '--tutorial-color': '#' + this.mainColor
         });
