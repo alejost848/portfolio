@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 
-<link rel="import" href="my-icons.html">
+<link rel="import" href="alejost-icons.html">
 <link rel="import" href="shared-styles.html">
 
 <link rel="lazy-import" href="home-view.html">
@@ -296,7 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="condensed_toolbar" class="app_toolbar"></div>
       <div class="app_toolbar layout horizontal center">
         <a href="[[rootPath]]" id="header_link" class="link">
-          <iron-icon id="header_logo" icon="my-icons:[[headerIcon]]"></iron-icon>
+          <iron-icon id="header_logo" icon="alejost-icons:[[headerIcon]]"></iron-icon>
         </a>
         <span class="flex"></span>
         <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation" noink>
@@ -315,11 +315,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div>
           <template is="dom-if" if="[[pushSupported]]">
             <template is="dom-if" if="[[userSubscribed]]">
-              <paper-icon-button id="notifications_button" icon="my-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
+              <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
               <paper-tooltip fit-to-visible-bounds>You are subscribed to notifications</paper-tooltip>
             </template>
             <template is="dom-if" if="[[!userSubscribed]]">
-              <paper-icon-button id="notifications_button" icon="my-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
+              <paper-icon-button id="notifications_button" icon="alejost-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
               <paper-tooltip fit-to-visible-bounds>You are not receiving any notifications</paper-tooltip>
             </template>
           </template>
@@ -340,25 +340,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
         <paper-tab name="home">
           <a class="link" href="[[rootPath]]">
-            <iron-icon icon="my-icons:logo"></iron-icon>
+            <iron-icon icon="alejost-icons:logo"></iron-icon>
             <div>Home</div>
           </a>
         </paper-tab>
         <paper-tab name="works">
           <a class="link" href="[[rootPath]]works">
-            <iron-icon icon="my-icons:view-carousel"></iron-icon>
+            <iron-icon icon="alejost-icons:view-carousel"></iron-icon>
             <div>Works</div>
           </a>
         </paper-tab>
         <paper-tab name="tutorials">
           <a class="link" href="[[rootPath]]tutorials">
-            <iron-icon icon="my-icons:youtube"></iron-icon>
+            <iron-icon icon="alejost-icons:youtube"></iron-icon>
             <div>Tutorials</div>
           </a>
         </paper-tab>
         <paper-tab name="about">
           <a class="link" href="[[rootPath]]about">
-            <iron-icon icon="my-icons:info"></iron-icon>
+            <iron-icon icon="alejost-icons:info"></iron-icon>
             <div>About</div>
           </a>
         </paper-tab>
@@ -378,7 +378,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
       <template is="dom-if" if="{{!largeScreen}}">
-        <paper-icon-button id="notifications_close" icon="my-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
+        <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
       </template>
 
       <div id="notifications_content">
