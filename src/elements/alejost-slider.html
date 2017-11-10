@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _slideChanged(){
         this.progress = 0;
         // HACK: Get the title only when the data from Firebase is not empty
-        if (this.data.length > 0) {
+        if (this.data && this.data.length > 0) {
           this._resumeCarousel();
           this.slideTitle = this.data[this.slide].title;
         }
