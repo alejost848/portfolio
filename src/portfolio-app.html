@@ -89,6 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: rgba(255,255,255, 0.9);
         border-radius: 50%;
         transition: background-color 0.3s;
+        --paper-icon-button-ink-color: white;
         --paper-icon-button-hover:{
           background-color: rgba(255,255,255,0.08);
         }
@@ -316,11 +317,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-if" if="[[pushSupported]]">
             <template is="dom-if" if="[[userSubscribed]]">
               <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
-              <paper-tooltip fit-to-visible-bounds>You are subscribed to notifications</paper-tooltip>
+              <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are subscribed to notifications</paper-tooltip>
             </template>
             <template is="dom-if" if="[[!userSubscribed]]">
               <paper-icon-button id="notifications_button" icon="alejost-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
-              <paper-tooltip fit-to-visible-bounds>You are not receiving any notifications</paper-tooltip>
+              <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are not receiving any notifications</paper-tooltip>
             </template>
           </template>
         </div>
@@ -331,7 +332,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <home-view name="home"></home-view>
       <tutorials-view name="tutorials"></tutorials-view>
       <works-view name="works"></works-view>
-      <tutorial-view name="tutorial" route="[[subroute]]" playing="{{_tutorialPlaying}}"></tutorial-view>
+      <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}"></tutorial-view>
       <about-view name="about"></about-view>
       <error-view name="error"></error-view>
     </iron-pages>
@@ -449,13 +450,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         if(page != "tutorial"){
           this.headerIcon = "logo-color";
-          this._tutorialPlaying = false;
+          this._tutorialActive = false;
           this.updateStyles({
             '--app-background-color': '#121212'
           });
         } else {
           this.headerIcon = "logo";
-          this._tutorialPlaying = true;
+          this._tutorialActive = true;
           window.scrollTo(0, 0);
         }
 

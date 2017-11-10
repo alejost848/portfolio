@@ -14,7 +14,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
-<link rel="import" href="../bower_components/share-menu/share-menu.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -26,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
+        padding-top: 30px !important;
       }
 
       #video_progress{
@@ -38,8 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-progress-height: 100%;
         --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
-        background-color: var(--tutorial-color, #888);
-        pointer-events: none;
+        background-color: var(--tutorial-color, #333);
         opacity: 0.9;
         z-index: -1;
       }
@@ -50,6 +49,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-radius: 4px;
         overflow: hidden;
         @apply --shadow-elevation-4dp;
+      }
+      #loading_card{
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        background-color: var(--card-image-bg-color);
       }
       #title_header{
         height: 92px;
@@ -112,11 +116,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #share_fab.animate{
           bottom: 136px;
         }
+        #share_tooltip{
+          display: none;
+        }
       }
       @media (max-width: 480px) {
         :host{
           padding: 0px !important;
           padding-bottom: 60px !important;
+        }
+        #video_progress{
+          height: 200px;
         }
         #publishedDate{
           padding: 20px 10px;
@@ -170,7 +180,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </div>
     <div id="card">
-      <template is="dom-if" if="[[playing]]" restamp="true">
+      <template is="dom-if" if="[[dataLoaded]]" restamp="true">
         <google-youtube
           id="video"
           fluid
@@ -180,6 +190,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           duration="{{videoDuration}}"
           rel="0">
         </google-youtube>
+      </template>
+      <template is="dom-if" if="[[!dataLoaded]]">
+        <div id="loading_card"></div>
       </template>
 
       <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
@@ -191,13 +204,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
         <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
         <div>
-          <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="_share"></paper-fab>
-          <paper-tooltip for="share_fab" position="top">Share</paper-tooltip>
+          <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
+          <paper-tooltip id="share_tooltip" for="share_fab" position="top">Share</paper-tooltip>
         </div>
       </template>
     </div>
 
-    <share-menu id="shareMenu" title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
   </template>
 
   <script>
@@ -206,10 +218,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
-          playing: {
+          active: {
             type: Boolean,
-            reflectToAttribute: true,
-            observer: '_videoStateChanged',
+            observer: '_activeChanged',
           },
           data: {
             type: Array,
@@ -219,9 +230,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _dataChanged(data){
+        this.dataLoaded = false;
         if (data.length > 0) {
           this.tutorial = data[0];
-          this.dataLoaded = true;
+          // HACK: Wait a ms to set the dataLoaded to true and trigger the video restamp
+          setTimeout(() => {
+            this.dataLoaded = true;
+          },1);
         }
       }
 
@@ -229,8 +244,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.shadowRoot.querySelector('#video').pause();
       }
 
-      _videoStateChanged(playing) {
-        if (!playing) {
+      _activeChanged(active) {
+        if (!active) {
           this.stopPlayback();
         }
       }
@@ -260,8 +275,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.shadowRoot.querySelector("#share_fab").classList.remove("animate");
         }
       }
-      _share(){
-        this.$.shareMenu.share();
+      share() {
+        if (navigator.share !== undefined && window.isSecureContext) {
+          let url = document.location.href;
+          const canonicalElement = document.querySelector('link[rel=canonical]');
+          if (canonicalElement !== null) {
+            url = canonicalElement.href;
+          }
+          navigator.share({url: url}).catch(error => console.error);
+        } else {
+          // TODO: asdas
+          console.log("open not native share implementation");
+        }
       }
     }
 
