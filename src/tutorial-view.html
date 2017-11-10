@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+<link rel="import" href="../bower_components/share-menu/share-menu.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -33,9 +34,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 0;
         width: 100%;
         height: 462px;
+        transition: background-color 0.8s ease;
         --paper-progress-height: 100%;
-        --paper-progress-active-color: rgba(0, 0, 0, 0.1);
+        --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
+        background-color: var(--tutorial-color, #888);
+        pointer-events: none;
+        opacity: 0.9;
         z-index: -1;
       }
 
@@ -51,23 +56,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-bottom: 15px;
       }
       #episode_number{
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 500;
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 400;
       }
       #episode_duration{
-        color: rgba(20, 20, 20, 0.5);
-        font-size: 20px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 18px;
       }
       google-youtube{
         background-color: var(--card-image-bg-color);
       }
       #publishedDate{
-        padding: 0 30px;
-        padding-top: 30px;
+        padding: 30px;
         color: var(--card-date-color);
       }
       #description {
-        padding: 30px;
+        padding: 0 30px;
+        padding-bottom: 30px;
         color: var(--card-description-color);
       }
 
@@ -83,9 +88,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: absolute;
         right: 30px;
         bottom: 30px;
-        color: rgba(20, 20, 20, 0.65);
-        --paper-fab-background: var(--app-gradient-right-color);
-        --paper-fab-keyboard-focus-background: var(--app-accent-color);
+        color: white;
+        transition: background-color 0.8s ease;
+        background-color: var(--tutorial-color, #888);
+        @apply --shadow-transition;
+        @apply --shadow-elevation-6dp;
+      }
+      #share_fab:hover{
+        @apply --shadow-elevation-12dp;
       }
 
       @media (max-width: 960px) {
@@ -97,6 +107,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           bottom: 80px;
           right: 24px;
           z-index: 2;
+          transition: bottom 0.3s ease;
+        }
+        #share_fab.animate{
+          bottom: 136px;
+        }
+      }
+      @media (max-width: 480px) {
+        :host{
+          padding: 0px !important;
+          padding-bottom: 60px !important;
+        }
+        #publishedDate{
+          padding: 20px 10px;
+          font-size: 13px;
+        }
+        #description {
+          padding: 0 10px;
+          padding-bottom: 30px;
+          font-size: 13px;
+          line-height: 18px;
+        }
+        #title_header{
+          padding: 0 10px;
+        }
+        #episode_number{
+          font-size: 14px;
+        }
+        #episode_duration{
+          display: none;
+        }
+        #share_fab{
+          bottom: 72px;
+          right: 16px;
+        }
+        #share_fab.animate{
+          bottom: 128px;
         }
       }
     </style>
@@ -124,17 +170,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </div>
     <div id="card">
-      <google-youtube
-        id="video"
-        fluid
-        autoplay="1"
-        video-id="[[tutorial.videoId]]"
-        showinfo="0"
-        currenttime="{{videoCurrentTime}}"
-        duration="{{videoDuration}}"
-        rel="0"
-        modestbranding="1">
-      </google-youtube>
+      <template is="dom-if" if="[[playing]]" restamp="true">
+        <google-youtube
+          id="video"
+          fluid
+          video-id="[[tutorial.videoId]]"
+          showinfo="0"
+          currenttime="{{videoCurrentTime}}"
+          duration="{{videoDuration}}"
+          rel="0">
+        </google-youtube>
+      </template>
 
       <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
 
@@ -145,12 +191,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
         <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
         <div>
-          <paper-fab id="share_fab" icon="my-icons:share"></paper-fab>
+          <paper-fab id="share_fab" icon="my-icons:share" on-tap="_share"></paper-fab>
           <paper-tooltip for="share_fab" position="top">Share</paper-tooltip>
         </div>
       </template>
     </div>
 
+    <share-menu id="shareMenu" title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
   </template>
 
   <script>
@@ -178,37 +225,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _goBack() {
-        window.history.back();
-      }
-
-      resumePlayback() {
-        if (this.shadowRoot.querySelector("#video")) {
-          this.shadowRoot.querySelector("#video").play();
-        }
-      }
-
       stopPlayback() {
-        this.shadowRoot.querySelector("#video").pause();
+        this.shadowRoot.querySelector('#video').pause();
       }
 
       _videoStateChanged(playing) {
-        if (playing) {
-          this.resumePlayback();
-        } else {
+        if (!playing) {
           this.stopPlayback();
-        }
-      }
-
-      _computeEpisodeNumber(title) {
-        if (title) {
-          return title.split(" | ")[1];
-        }
-      }
-
-      _computeEpisodeName(title) {
-        if (title) {
-          return title.split(" | ")[0];
         }
       }
 
@@ -222,10 +245,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _getMainColor(e){
-        var vibrant = new Vibrant(e.target, 5, 5);
+        var vibrant = new Vibrant(e.target, 8, 5);
         var swatches = vibrant.swatches();
         this.mainColor = swatches["Vibrant"].getHex().substring(1);
-        console.log(swatches);
+        this.updateStyles({
+          '--tutorial-color': '#' + this.mainColor
+        });
+      }
+
+      _toastOpened(isOpen){
+        if (isOpen) {
+          this.shadowRoot.querySelector("#share_fab").classList.add("animate");
+        } else{
+          this.shadowRoot.querySelector("#share_fab").classList.remove("animate");
+        }
+      }
+      _share(){
+        this.$.shareMenu.share();
       }
     }
 

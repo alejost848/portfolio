@@ -47,7 +47,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        background-color: var(--app-background-color);
       }
 
       /*Header*/
@@ -297,7 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="condensed_toolbar" class="app_toolbar"></div>
       <div class="app_toolbar layout horizontal center">
         <a href="[[rootPath]]" id="header_link" class="link">
-          <iron-icon id="header_logo" icon="my-icons:logo-color"></iron-icon>
+          <iron-icon id="header_logo" icon="my-icons:[[headerIcon]]"></iron-icon>
         </a>
         <span class="flex"></span>
         <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation" noink>
@@ -401,7 +400,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </paper-dialog>
 
-    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]"></paper-toast>
+    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened"></paper-toast>
 
   </template>
 
@@ -448,10 +447,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged(page) {
 
-        if(page == "tutorial"){
-          this._tutorialPlaying = true;
-        } else {
+        if(page != "tutorial"){
+          this.headerIcon = "logo-color";
           this._tutorialPlaying = false;
+          this.updateStyles({
+            '--app-background-color': '#121212'
+          });
+        } else {
+          this.headerIcon = "logo";
+          this._tutorialPlaying = true;
+          window.scrollTo(0, 0);
         }
 
         // If no page was found in the route data, page will be an empty string.
@@ -524,6 +529,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.toast.verticalOffset = 0;
         } else {
           this.$.toast.verticalOffset = 56;
+        }
+      }
+
+      _toastOpened(opened){
+        let isOpen = opened.detail.value;
+        let tutorialView = this.shadowRoot.querySelector('tutorial-view');
+        // HACK: Avoid errors in console the first time it's run
+        if (typeof tutorialView._toastOpened === "function") {
+          tutorialView._toastOpened(isOpen);
         }
       }
     }
