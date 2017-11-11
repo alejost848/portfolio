@@ -203,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
 
       <!-- HACK: Hidden image for getting the main color -->
-      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/[[tutorial.videoId]]/mqdefault.jpg" crossorigin="Anonymous" hidden>
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
@@ -240,6 +240,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.dataLoaded = false;
         if (data.length > 0) {
           this.tutorial = data[0];
+
+          window.dispatchEvent(new CustomEvent('sherby-metadata', {
+            detail: {
+              "og:site_name": this.tutorial.title,
+              "title": this.tutorial.title,
+              "og:title": this.tutorial.title,
+              "description": this.tutorial.shortDescription,
+              "og:description": this.tutorial.shortDescription,
+              "og:type": "article",
+              "og:image": this.tutorial.thumbnail,
+              "og:url": window.location.href
+            }
+          }));
+
           // HACK: Wait a ms to set the dataLoaded to true and trigger the video restamp
           setTimeout(() => {
             this.dataLoaded = true;
@@ -299,11 +313,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       share() {
         if (navigator.share !== undefined && window.isSecureContext) {
-          let url = document.location.href;
-          const canonicalElement = document.querySelector('link[rel=canonical]');
-          if (canonicalElement !== null) {
-            url = canonicalElement.href;
-          }
+          let url = window.location.href;
           navigator.share({url: url}).catch(error => console.error);
         } else {
           // TODO: asdas

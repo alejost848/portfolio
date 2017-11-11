@@ -32,6 +32,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 
+<link rel="import" href="../bower_components/sherby-metadata/sherby-metadata.html">
+
 <link rel="import" href="alejost-icons.html">
 <link rel="import" href="shared-styles.html">
 
@@ -238,6 +240,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }
     </style>
+
+    <sherby-metadata data="[[data]]"></sherby-metadata>
 
     <iron-media-query query="min-width: 960px" query-matches="{{largeScreen}}" on-query-matches-changed="_screenSizeChanged"></iron-media-query>
 
@@ -448,9 +452,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _routePageChanged(page) {
 
+        //Change meta tags
+        let title;
+        switch (page) {
+          case "":
+            title = "Alejandro Sanclemente";
+            break;
+          case "works":
+            title = "Works";
+            break;
+          case "tutorials":
+            title = "Tutorials";
+            break;
+          case "about":
+            title = "About";
+            break;
+          default:
+            title = "404 Not Found";
+        }
+
         if(page != "tutorial"){
           this.headerIcon = "logo-color";
           this._tutorialActive = false;
+          // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('sherby-metadata', {
+              detail: {
+                "og:site_name": "Alejandro Sanclemente",
+                "title": title,
+                "og:title": title,
+                "description": "Interaction / Motion / Web designer",
+                "og:description": "Interaction / Motion / Web designer",
+                "og:type": "website",
+                "og:image": `${window.location.origin}/images/cover.png`,
+                "og:url": window.location.href
+              }
+            }));
+          }, 50);
         } else {
           this.headerIcon = "logo";
           this._tutorialActive = true;
