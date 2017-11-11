@@ -26,5 +26,14 @@ module.exports = {
         },
       },
     },
+    {
+      urlPattern: /^https:\/\/i\.ytimg\.com\/vi\//,
+      handler: 'networkFirst',
+      options: {
+        cache: {
+          name: 'thumbnails-cache',
+        },
+      },
+    },
   ],
 };
