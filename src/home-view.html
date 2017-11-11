@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+
 <link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
@@ -33,16 +35,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-query
       app-name="alejost848"
       path="/home/sliderItems"
-      data="{{sliderItems}}">
+      data="{{firebaseSliderItems}}">
     </firebase-query>
+
+    <app-indexeddb-mirror
+      key="slider"
+      data="{{firebaseSliderItems}}"
+      persisted-data="{{sliderItems}}">
+    </app-indexeddb-mirror>
 
     <firebase-query
       app-name="alejost848"
       path="/home/latestTutorials"
       order-by-child="publishedDate"
       limit-to-last="4"
-      data="{{tutorials}}">
+      data="{{firebaseTutorials}}">
     </firebase-query>
+
+    <app-indexeddb-mirror
+      key="tutorials"
+      data="{{firebaseTutorials}}"
+      persisted-data="{{tutorials}}">
+    </app-indexeddb-mirror>
 
     <alejost-slider data="[[sliderItems]]"></alejost-slider>
 
@@ -89,8 +103,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _tutorialsChanged(tutorials){
         if (tutorials.length > 0) {
-          this.tutorials = tutorials.reverse();
+          this.tutorials = this.sortByKeyDescending(tutorials, "publishedDate");
         }
+      }
+
+      sortByKeyDescending(array, key) {
+        return array.sort(function(a, b) {
+          var x = a[key]; var y = b[key];
+          return ((x < y) ? -1 : ((x > y) ? 1 : 0))*-1;
+        });
       }
     }
 
