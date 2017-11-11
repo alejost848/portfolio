@@ -203,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
 
       <!-- HACK: Hidden image for getting the main color -->
-      <img on-load="_getMainColor" src="http://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/[[tutorial.videoId]]/mqdefault.jpg" crossorigin="Anonymous" hidden>
+      <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/[[tutorial.videoId]]/mqdefault.jpg" crossorigin="Anonymous" hidden>
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
