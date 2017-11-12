@@ -271,7 +271,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       id="auth"
       app="[[app]]"
       user="{{user}}"
-      online="{{online}}">
+      online="{{online}}"
+      on-online-changed="_onlineStateChanged">
     </firebase-auth>
 
     <!-- Firebase notifications -->
@@ -316,19 +317,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </paper-tab>
         </paper-tabs>
 
-        <!-- Show the notifications button if the browser supports push notifications -->
-        <div>
+        <template is="dom-if" if="[[!online]]">
+          <div>
+            <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-off" disabled></paper-icon-button>
+            <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">Notifications not available offline</paper-tooltip>
+          </div>
+        </template>
+        <template is="dom-if" if="[[online]]">
+          <!-- Show the notifications button if the browser supports push notifications -->
           <template is="dom-if" if="[[pushSupported]]">
-            <template is="dom-if" if="[[userSubscribed]]">
-              <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
-              <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are subscribed to notifications</paper-tooltip>
-            </template>
-            <template is="dom-if" if="[[!userSubscribed]]">
-              <paper-icon-button id="notifications_button" icon="alejost-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
-              <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are not receiving any notifications</paper-tooltip>
-            </template>
+            <div>
+              <template is="dom-if" if="[[userSubscribed]]">
+                <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
+                <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are subscribed to notifications</paper-tooltip>
+              </template>
+              <template is="dom-if" if="[[!userSubscribed]]">
+                <paper-icon-button id="notifications_button" icon="alejost-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
+                <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are not receiving any notifications</paper-tooltip>
+              </template>
+            </div>
           </template>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -574,6 +583,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // HACK: Avoid errors in console the first time it's run
         if (typeof tutorialView._toastOpened === "function") {
           tutorialView._toastOpened(isOpen);
+        }
+      }
+
+      _onlineStateChanged(e){
+        let online = e.detail.value;
+        if (!online) {
+          this.toastDuration = 0;
+          this.toastText = "Offline. Some content may not be available.";
+          this.$.toast.show();
+        } else {
+          this.$.toast.hide();
         }
       }
     }
