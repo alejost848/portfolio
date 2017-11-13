@@ -212,6 +212,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           duration="{{videoDuration}}"
           rel="0">
         </google-youtube>
+
+        <!-- HACK: Hidden image for getting the main color -->
+        <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
       </template>
       <template is="dom-if" if="[[!dataLoaded]]">
         <div id="loading_card">
@@ -225,9 +228,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-progress id="loading_progress" indeterminate></paper-progress>
         </template>
       </template>
-
-      <!-- HACK: Hidden image for getting the main color -->
-      <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
@@ -290,7 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _activeChanged(active) {
-        if (!active && this.online) {
+        if (!active) {
           this.stopPlayback();
 
           //Change browser theme color
@@ -332,7 +332,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (isOpen) {
           this.shadowRoot.querySelector("#share_fab").classList.add("animate");
         } else{
-          this.shadowRoot.querySelector("#share_fab").classList.remove("animate");
+          if (this.shadowRoot.querySelector("#share_fab")) {
+            this.shadowRoot.querySelector("#share_fab").classList.remove("animate");
+          }
         }
       }
       share() {
