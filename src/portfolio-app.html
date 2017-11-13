@@ -319,8 +319,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <template is="dom-if" if="[[!online]]">
           <div>
-            <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-off" disabled></paper-icon-button>
-            <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">Notifications not available offline</paper-tooltip>
+            <paper-icon-button id="notifications_button" icon="alejost-icons:cloud-off" disabled></paper-icon-button>
+            <paper-tooltip fit-to-visible-bounds animation-delay="100" hidden="[[!largeScreen]]">You are offline</paper-tooltip>
           </div>
         </template>
         <template is="dom-if" if="[[online]]">
@@ -329,11 +329,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div>
               <template is="dom-if" if="[[userSubscribed]]">
                 <paper-icon-button id="notifications_button" icon="alejost-icons:notifications-active" on-tap="_openNotificationsDialog"></paper-icon-button>
-                <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are subscribed to notifications</paper-tooltip>
+                <paper-tooltip fit-to-visible-bounds animation-delay="100" hidden="[[!largeScreen]]">Stop getting notified about new stuff</paper-tooltip>
               </template>
               <template is="dom-if" if="[[!userSubscribed]]">
                 <paper-icon-button id="notifications_button" icon="alejost-icons:notifications" on-tap="_openNotificationsDialog"></paper-icon-button>
-                <paper-tooltip fit-to-visible-bounds hidden="[[!largeScreen]]">You are not receiving any notifications</paper-tooltip>
+                <paper-tooltip fit-to-visible-bounds animation-delay="100" hidden="[[!largeScreen]]">Get notified about new stuff</paper-tooltip>
               </template>
             </div>
           </template>
@@ -524,6 +524,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       toggleSubscription(e){
+        this.toastDuration = 4000;
+
         if (this.userSubscribed) {
           this.firebaseSubscribed = false;
           this.toastText = "You won't receive any notifications";
@@ -533,7 +535,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var self = this;
           this.$.messaging.requestPermission().then(function() {
             self.firebaseSubscribed = true;
-            self.toastText = "Thanks for subscribing!";
+            self.toastText = "You'll get occasional notifications";
             self.$.toast.show();
             self.$.notifications_dialog.close();
           }, function(err) {
