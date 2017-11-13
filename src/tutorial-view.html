@@ -10,10 +10,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="shared-styles.html">
 
@@ -50,9 +54,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --shadow-elevation-4dp;
       }
       #loading_card{
+        position: relative;
         width: 100%;
         padding-top: 56.25%; /* 16:9 Aspect Ratio */
         background-color: var(--card-image-bg-color);
+      }
+      #offline_tutorial{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+      }
+      #offline_tutorial iron-icon{
+        color: rgba(255, 255, 255, 0.5);
+        width: 48px;
+        height: 48px;
       }
       #title_header{
         height: 92px;
@@ -157,7 +173,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           right: 16px;
         }
         #share_fab.animate{
-          bottom: 128px;
+          bottom: 125px;
         }
       }
     </style>
@@ -169,7 +185,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       path="/tutorials/[[routeData.series]]/videos"
       order-by-child="slug"
       equal-to="[[routeData.slug]]"
-      data="{{data}}">
+      data="{{data}}"
+      online="{{online}}">
     </firebase-query>
 
     <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
@@ -197,13 +214,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </google-youtube>
       </template>
       <template is="dom-if" if="[[!dataLoaded]]">
-        <div id="loading_card"></div>
+        <div id="loading_card">
+          <template is="dom-if" if="[[!online]]">
+            <div id="offline_tutorial" class="layout vertical center-center">
+              <iron-icon icon="alejost-icons:cloud-off"></iron-icon>
+            </div>
+          </template>
+        </div>
+        <template is="dom-if" if="[[online]]">
+          <paper-progress id="loading_progress" indeterminate></paper-progress>
+        </template>
       </template>
 
-      <paper-progress id="loading_progress" indeterminate hidden$="[[dataLoaded]]"></paper-progress>
-
       <!-- HACK: Hidden image for getting the main color -->
-      <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/[[tutorial.videoId]]/mqdefault.jpg" crossorigin="Anonymous" hidden>
+      <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
@@ -266,7 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _activeChanged(active) {
-        if (!active) {
+        if (!active && this.online) {
           this.stopPlayback();
 
           //Change browser theme color
