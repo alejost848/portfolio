@@ -30,7 +30,7 @@ module.exports = {
     },
     {
       urlPattern: /^https:\/\/i\.ytimg\.com\/vi\//,
-      handler: 'networkFirst',
+      handler: 'fastest',
       options: {
         cache: {
           name: 'thumbnails-cache',
