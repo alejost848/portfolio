@@ -30,7 +30,8 @@
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
     "paper-fab": "PolymerElements/paper-fab#^2.0.0",
     "share-menu": "Dabolus/share-menu#^2.0.4",
-    "sherby-metadata": "SherbyElements/sherby-metadata#^1.0.1"
+    "sherby-metadata": "SherbyElements/sherby-metadata#^1.0.1",
+    "font-roboto": "PolymerElements/font-roboto-local#^1.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"
