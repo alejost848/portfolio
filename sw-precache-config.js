@@ -12,7 +12,9 @@
 
 module.exports = {
   staticFileGlobs: [
+    'bower_components/**/*.{html,js,css}',
     'bower_components/webcomponentsjs/webcomponents-loader.js',
+    'src/**',
     'images/**',
     'manifest.json',
   ],
