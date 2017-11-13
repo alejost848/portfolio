@@ -29,7 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-messaging.html">
 
 <link rel="import" href="../bower_components/sherby-metadata/sherby-metadata.html">
@@ -476,6 +475,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           case "about":
             title = "About";
             break;
+          case "tutorial":
+            this.headerIcon = "logo";
+            this._tutorialActive = true;
+            break;
           default:
             title = "404 Not Found";
         }
@@ -498,11 +501,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }
             }));
           }, 50);
-        } else {
-          this.headerIcon = "logo";
-          this._tutorialActive = true;
-          window.scrollTo(0, 0);
         }
+
+        window.scrollTo(0, 0);
 
         // If no page was found in the route data, page will be an empty string.
         // Default to 'home' in that case.
