@@ -53,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         overflow: hidden;
         @apply --shadow-elevation-4dp;
       }
-      #loading_card{
+      #placeholder_card{
         position: relative;
         width: 100%;
         padding-top: 56.25%; /* 16:9 Aspect Ratio */
@@ -202,30 +202,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </div>
     <div id="card">
-      <template is="dom-if" if="[[dataLoaded]]" restamp="true">
-        <google-youtube
-          id="video"
-          fluid
-          video-id="[[tutorial.videoId]]"
-          showinfo="0"
-          currenttime="{{videoCurrentTime}}"
-          duration="{{videoDuration}}"
-          rel="0">
-        </google-youtube>
-
-        <!-- HACK: Hidden image for getting the main color -->
-        <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
-      </template>
-      <template is="dom-if" if="[[!dataLoaded]]">
-        <div id="loading_card">
-          <template is="dom-if" if="[[!online]]">
-            <div id="offline_tutorial" class="layout vertical center-center">
-              <iron-icon icon="alejost-icons:cloud-off"></iron-icon>
-            </div>
-          </template>
+      <template is="dom-if" if="[[!online]]">
+        <div id="placeholder_card">
+          <div id="offline_tutorial" class="layout vertical center-center">
+            <iron-icon icon="alejost-icons:cloud-off"></iron-icon>
+          </div>
         </div>
-        <template is="dom-if" if="[[online]]">
+      </template>
+
+      <template is="dom-if" if="[[online]]" restamp="true">
+        <template is="dom-if" if="[[!dataLoaded]]">
+          <div id="placeholder_card"></div>
           <paper-progress id="loading_progress" indeterminate></paper-progress>
+        </template>
+
+        <template is="dom-if" if="[[dataLoaded]]" restamp="true">
+          <google-youtube
+            id="video"
+            fluid
+            video-id="[[tutorial.videoId]]"
+            showinfo="0"
+            currenttime="{{videoCurrentTime}}"
+            duration="{{videoDuration}}"
+            rel="0">
+          </google-youtube>
+
+          <!-- HACK: Hidden image for getting the main color -->
+          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
         </template>
       </template>
 
@@ -286,7 +289,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       stopPlayback() {
-        this.shadowRoot.querySelector('#video').pause();
+        if (this.online) {
+          this.shadowRoot.querySelector('#video').pause();
+        }
       }
 
       _activeChanged(active) {
