@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="elements/alejost-module.html">
@@ -29,8 +31,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-name="alejost848"
       path="/tutorials"
       order-by-child="publishedDate"
-      data="{{series}}">
+      data="{{firebaseSeries}}">
     </firebase-query>
+
+    <app-indexeddb-mirror
+      key="series"
+      data="{{firebaseSeries}}"
+      persisted-data="{{series}}">
+    </app-indexeddb-mirror>
 
     <h1>Works</h1>
 
