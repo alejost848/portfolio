@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 
@@ -106,20 +107,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     0 3px 1px -2px rgba(0, 0, 0, 0.2);
         z-index: 106;
       }
-      #bottom_nav paper-tabs{
+      #bottom_nav iron-selector{
+        width: 100%;
         height: 100%;
       }
-      #bottom_nav paper-tab{
-        --paper-tab-content:{
-          transition: color 0.1s cubic-bezier(0.4, 0.0, 1, 1), font-size 0.1s cubic-bezier(0.4, 0.0, 1, 1);
-          font-size: 13px;
-          color: var(--app-accent-color);
-        }
-        --paper-tab-content-unselected:{
-          font-size: 11px;
-          font-weight: 400;
-          color: #777;
-        }
+      #bottom_nav .bottom_nav_item{
+        font-size: 12px;
+        color: #777;
+        transition: color 0.1s cubic-bezier(0.4, 0.0, 1, 1);
+      }
+      #bottom_nav .bottom_nav_item.iron-selected{
+        font-weight: 500;
+        color: var(--app-accent-color);
       }
       paper-tab a {
         @apply --layout-vertical;
@@ -230,32 +229,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
 
     <div id="bottom_nav">
-      <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
-        <paper-tab name="home">
-          <a class="link" href="[[rootPath]]">
-            <iron-icon icon="alejost-icons:logo"></iron-icon>
-            <div>Home</div>
-          </a>
-        </paper-tab>
-        <paper-tab name="works">
-          <a class="link" href="[[rootPath]]works">
-            <iron-icon icon="alejost-icons:view-carousel"></iron-icon>
-            <div>Works</div>
-          </a>
-        </paper-tab>
-        <paper-tab name="tutorials">
-          <a class="link" href="[[rootPath]]tutorials">
-            <iron-icon icon="alejost-icons:youtube"></iron-icon>
-            <div>Tutorials</div>
-          </a>
-        </paper-tab>
-        <paper-tab name="about">
-          <a class="link" href="[[rootPath]]about">
-            <iron-icon icon="alejost-icons:info"></iron-icon>
-            <div>About</div>
-          </a>
-        </paper-tab>
-      </paper-tabs>
+      <iron-selector selected="[[page]]" attr-for-selected="name" role="navigation" class="layout horizontal center">
+        <a name="home" class="bottom_nav_item flex link layout vertical center-center" href="[[rootPath]]">
+          <iron-icon icon="alejost-icons:logo"></iron-icon>
+          <div>Home</div>
+        </a>
+        <a name="works" class="bottom_nav_item flex link layout vertical center-center" href="[[rootPath]]works">
+          <iron-icon icon="alejost-icons:view-carousel"></iron-icon>
+          <div>Works</div>
+        </a>
+        <a name="tutorials" class="bottom_nav_item flex link layout vertical center-center" href="[[rootPath]]tutorials">
+          <iron-icon icon="alejost-icons:youtube"></iron-icon>
+          <div>Tutorials</div>
+        </a>
+        <a name="about" class="bottom_nav_item flex link layout vertical center-center" href="[[rootPath]]about">
+          <iron-icon icon="alejost-icons:info"></iron-icon>
+          <div>About</div>
+        </a>
+      </iron-selector>
     </div>
 
     <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened"></paper-toast>
