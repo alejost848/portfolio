@@ -231,18 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (data.length > 0) {
           this.tutorial = data[0];
 
-          window.dispatchEvent(new CustomEvent('sherby-metadata', {
-            detail: {
-              "og:site_name": "Alejandro Sanclemente",
-              "title": this.tutorial.title + " | Alejandro Sanclemente",
-              "og:title": this.tutorial.title + " | Alejandro Sanclemente",
-              "description": this.tutorial.shortDescription,
-              "og:description": this.tutorial.shortDescription,
-              "og:type": "article",
-              "og:image": this.tutorial.thumbnail,
-              "og:url": window.location.href
-            }
-          }));
+          this._updateMetadata();
 
           // HACK: Wait a ms to set the dataLoaded to true and trigger the video restamp
           setTimeout(() => {
@@ -269,7 +258,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.updateStyles({
             '--tutorial-color': '#333'
           });
+        } else if (active && this.dataLoaded) {
+          this._updateMetadata();
+          //Change background color
+          this.updateStyles({
+            '--tutorial-color': '#' + this.mainColor
+          });
         }
+      }
+
+      _updateMetadata(){
+        window.dispatchEvent(new CustomEvent('sherby-metadata', {
+          detail: {
+            "og:site_name": "Alejandro Sanclemente",
+            "title": this.tutorial.title + " | Alejandro Sanclemente",
+            "og:title": this.tutorial.title + " | Alejandro Sanclemente",
+            "description": this.tutorial.shortDescription,
+            "og:description": this.tutorial.shortDescription,
+            "og:type": "article",
+            "og:image": this.tutorial.thumbnail,
+            "og:url": window.location.href
+          }
+        }));
       }
 
       _computeDuration(duration) {
