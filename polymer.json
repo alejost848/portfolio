@@ -7,7 +7,9 @@
     "src/works-view.html",
     "src/tutorial-view.html",
     "src/about-view.html",
-    "src/error-view.html"
+    "src/error-view.html",
+    "bower_components/paper-dialog/paper-dialog.html",
+    "bower_components/paper-toggle-button/paper-toggle-button.html"
   ],
   "sources": [
     "src/**/*",
