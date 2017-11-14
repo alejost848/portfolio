@@ -14,14 +14,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
@@ -94,52 +91,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-icon-button-hover:{
           background-color: rgba(255,255,255,0.08);
         }
-      }
-      #notifications_dialog{
-        width: 330px;
-        height: 440px;
-        box-sizing: border-box;
-        color: #222;
-        background-color: white;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-      #notifications_dialog > * {
-        margin-top: 0;
-        padding: 0;
-      }
-      #notifications_image{
-        width: 100%;
-        height: 200px;
-        background-color: #eee;
-      }
-      #notifications_content{
-        padding: 16px !important;
-      }
-      #notifications_content_header{
-        margin-bottom: 24px;
-      }
-      #notifications_content paper-toggle-button{
-        --paper-toggle-button-checked-bar-color:  var(--app-accent-color);
-        --paper-toggle-button-checked-button-color: var(--app-accent-color);
-        --paper-toggle-button-checked-ink-color: var(--app-accent-color);
-        cursor: pointer;
-      }
-      #notifications_content ul{
-        padding-left: 20px;
-      }
-      #notifications_content li{
-        padding-top: 6px;
-      }
-      #notifications_content li span{
-        display: inline-block;
-      }
-      #notifications_close{
-        position: absolute;
-        padding: 8px !important;
-        top: 4px;
-        left: 4px;
-        color: white;
       }
 
       iron-pages {
@@ -219,16 +170,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #bottom_nav{
           display: block;
-        }
-        #notifications_dialog{
-          top: 0 !important;
-          left: 0 !important;
-          width: 100% !important;
-          height: 100% !important;
-          max-width: 100% !important;
-          max-height: 100% !important;
-          margin: 0;
-          box-sizing: border-box;
         }
         iron-pages > * {
           padding-bottom: 60px;
@@ -337,6 +278,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
           </template>
         </template>
+
+        <notifications-dialog id="notifications_dialog" subscribed="{{userSubscribed}}" on-toggle-subscription="toggleSubscription"></notifications-dialog>
       </div>
     </div>
 
@@ -377,41 +320,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-tab>
       </paper-tabs>
     </div>
-
-    <paper-dialog
-      id="notifications_dialog"
-      with-backdrop
-      horizontal-align="right"
-      vertical-align="top"
-      horizontal-offset="-40"
-      vertical-offset="30"
-      entry-animation="fade-in-animation"
-      exit-animation="fade-out-animation"
-      scroll-action="lock">
-
-      <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
-      <template is="dom-if" if="{{!largeScreen}}">
-        <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
-      </template>
-
-      <div id="notifications_content">
-        <div id="notifications_content_header" class="layout horizontal center">
-          <div class="paper-font-headline">Notifications</div>
-          <span class="flex"></span>
-          <paper-toggle-button on-tap="toggleSubscription" checked="{{userSubscribed}}"></paper-toggle-button>
-        </div>
-        <div class="paper-font-body1">
-          If this option is selected, I will be notified when:
-          <ul>
-            <li>
-              <span>Tutorials or works are uploaded</span>
-              <span>(three times a month max.)</span>
-            </li>
-            <li>A significant change occurs in the web app (not anytime soon)</li>
-          </ul>
-        </div>
-      </div>
-    </paper-dialog>
 
     <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened"></paper-toast>
 
@@ -524,21 +432,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'error';
       }
 
-      toggleSubscription(e){
+      toggleSubscription(){
         this.toastDuration = 4000;
 
         if (this.userSubscribed) {
           this.firebaseSubscribed = false;
           this.toastText = "You won't receive any notifications";
           this.$.toast.show();
-          this.$.notifications_dialog.close();
+          _closeNotificationsDialog();
         } else {
           var self = this;
           this.$.messaging.requestPermission().then(function() {
             self.firebaseSubscribed = true;
+            // TODO: Replace toast stuff with a function that handles toast text and duration
             self.toastText = "You'll get occasional notifications";
             self.$.toast.show();
-            self.$.notifications_dialog.close();
+            _closeNotificationsDialog();
           }, function(err) {
             self.userSubscribed = false;
             self.toastText = "To subscribe, allow notifications and reload the site";
@@ -564,8 +473,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _openNotificationsDialog(e){
-        this.$.notifications_dialog.positionTarget = e.target;
-        this.$.notifications_dialog.open();
+        var eventTarget = e.target;
+        Polymer.importHref(
+            this.resolveUrl('elements/notifications-dialog.html'),
+            () => {
+              this.$.notifications_dialog.positionTarget = eventTarget;
+              this.$.notifications_dialog.open();
+            },
+            null,
+            true);
       }
       _closeNotificationsDialog(){
         this.$.notifications_dialog.close();
