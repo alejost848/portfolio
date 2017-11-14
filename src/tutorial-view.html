@@ -19,6 +19,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
+<link rel="import" href="elements/alejost-share.html">
+
 <link rel="import" href="shared-styles.html">
 
 <script src="../bower_components/moment/min/moment.min.js"></script>
@@ -104,38 +106,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         opacity: 0.5;
       }
 
-      /*Fab*/
-      #share_fab{
-        position: absolute;
-        right: 24px;
-        top: 24px;
-        color: white;
-        transition: background-color 0.8s ease;
-        background-color: var(--tutorial-color, #333);
-        @apply --shadow-transition;
-        @apply --shadow-elevation-6dp;
-      }
-      #share_fab:hover{
-        @apply --shadow-elevation-12dp;
-      }
-
       @media (max-width: 960px) {
         #card{
           position: static;
         }
         #card_content{
           position: static;
-        }
-        #share_fab{
-          position: fixed;
-          top: auto;
-          bottom: 80px;
-          right: 24px;
-          z-index: 2;
-          transition: bottom 0.3s ease;
-        }
-        #share_fab.animate{
-          bottom: 136px;
         }
       }
       @media (max-width: 480px) {
@@ -164,13 +140,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #episode_duration{
           display: none;
-        }
-        #share_fab{
-          bottom: 72px;
-          right: 16px;
-        }
-        #share_fab.animate{
-          bottom: 125px;
         }
       }
     </style>
@@ -233,10 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="card_content">
           <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
           <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
-          <div>
-            <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
-            <paper-tooltip fit-to-visible-bounds for="share_fab" animation-delay="100">Share</paper-tooltip>
-          </div>
+          <alejost-share></alejost-share>
         </div>
       </template>
     </div>
@@ -331,21 +297,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _toastOpened(isOpen){
-        if (isOpen) {
-          this.shadowRoot.querySelector("#share_fab").classList.add("animate");
-        } else{
-          if (this.shadowRoot.querySelector("#share_fab")) {
-            this.shadowRoot.querySelector("#share_fab").classList.remove("animate");
-          }
-        }
-      }
-      share() {
-        if (navigator.share !== undefined && window.isSecureContext) {
-          let url = window.location.href;
-          navigator.share({url: url}).catch(error => console.error);
-        } else {
-          // TODO: asdas
-          console.log("open not native share implementation");
+        if (this.shadowRoot.querySelector("alejost-share")) {
+          this.shadowRoot.querySelector("alejost-share")._toastOpened(isOpen);
         }
       }
     }
