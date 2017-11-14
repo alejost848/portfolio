@@ -72,6 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         top: 4px;
         left: 4px;
         color: white;
+        display: none;
       }
 
       @media (max-width: 960px) {
@@ -84,6 +85,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           max-height: 100% !important;
           margin: 0;
           box-sizing: border-box;
+        }
+        #notifications_close{
+          display: block;
         }
       }
     </style>
@@ -101,9 +105,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       position-target="[[positionTarget]]">
 
       <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
-      <template is="dom-if" if="{{!largeScreen}}">
-        <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="_closeNotificationsDialog"></paper-icon-button>
-      </template>
+      
+      <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="close"></paper-icon-button>
 
       <div id="notifications_content">
         <div id="notifications_content_header" class="layout horizontal center">

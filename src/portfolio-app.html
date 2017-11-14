@@ -441,7 +441,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.firebaseSubscribed = false;
           this.toastText = "You won't receive any notifications";
           this.$.toast.show();
-          _closeNotificationsDialog();
+          this._closeNotificationsDialog();
         } else {
           var self = this;
           this.$.messaging.requestPermission().then(function() {
@@ -449,7 +449,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             // TODO: Replace toast stuff with a function that handles toast text and duration
             self.toastText = "You'll get occasional notifications";
             self.$.toast.show();
-            _closeNotificationsDialog();
+            self._closeNotificationsDialog();
           }, function(err) {
             self.userSubscribed = false;
             self.toastText = "To subscribe, allow notifications and reload the site";
