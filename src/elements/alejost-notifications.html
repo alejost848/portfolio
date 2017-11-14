@@ -1,0 +1,176 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-messaging.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="alejost-notifications">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      #notifications_button{
+        margin-left: 10px;
+        color: rgba(255,255,255, 0.9);
+        border-radius: 50%;
+        transition: background-color 0.3s;
+        --paper-icon-button-ink-color: white;
+        --paper-icon-button-hover:{
+          background-color: rgba(255,255,255,0.08);
+        }
+      }
+    </style>
+
+    <firebase-auth
+      id="auth"
+      app-name="alejost848"
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-messaging
+      id="messaging"
+      app-name="alejost848"
+      token="{{token}}"
+      push-supported="{{pushSupported}}"
+      on-last-message-changed="handleMessage">
+    </firebase-messaging>
+
+    <firebase-document
+      app-name="alejost848"
+      path="/users/[[user.uid]]/token"
+      data="[[token]]">
+    </firebase-document>
+
+    <firebase-document
+      app-name="alejost848"
+      path="/users/[[user.uid]]/subscribed"
+      data="[[firebaseSubscribed]]"
+      on-data-changed="handleSubscription">
+    </firebase-document>
+
+    <div>
+      <paper-icon-button
+        id="notifications_button"
+        icon="alejost-icons:[[_computeIcon(online, userSubscribed)]]"
+        disabled="[[!online]]"
+        on-tap="openNotificationsDialog"
+        hidden="[[!pushSupported]]">
+      </paper-icon-button>
+      <paper-tooltip fit-to-visible-bounds animation-delay="100">[[_computeTooltip(online, userSubscribed)]]</paper-tooltip>
+    </div>
+
+    <notifications-dialog id="notifications_dialog" subscribed="{{userSubscribed}}" on-toggle-subscription="toggleSubscription"></notifications-dialog>
+
+  </template>
+
+  <script>
+    class AlejostNotifications extends Polymer.Element {
+      static get is() { return 'alejost-notifications'; }
+
+      ready() {
+        super.ready();
+
+        this.$.auth.signInAnonymously();
+      }
+
+      toggleSubscription(){
+        if (this.userSubscribed) {
+          this.firebaseSubscribed = false;
+          this.openToast("You won't receive any notifications", 4000);
+          this.closeNotificationsDialog();
+        } else {
+          this.$.messaging.requestPermission().then(() => {
+            this.firebaseSubscribed = true;
+            this.openToast("You'll get occasional notifications", 4000);
+            this.closeNotificationsDialog();
+          }, (error) => {
+            this.userSubscribed = false;
+            this.openToast("To subscribe, allow notifications and reload the site", 4000);
+            this.$.toast.show();
+          });
+        }
+      }
+
+      handleSubscription(e){
+        //Checks Firebase for the user subscription value and applies it to the checkbox.
+        var storedValue = e.detail.value;
+        if (Object.keys(storedValue).length === 0 && storedValue.constructor === Object || !storedValue) {
+          this.userSubscribed = false;
+        } else if (storedValue) {
+          this.userSubscribed = true;
+        }
+      }
+
+      handleMessage(e){
+        if (e.detail.value) {
+          console.log('message received:', e.detail.value.notification);
+        }
+      }
+
+      openNotificationsDialog(e){
+        var eventTarget = e.target;
+        Polymer.importHref(
+            this.resolveUrl('notifications-dialog.html'),
+            () => {
+              this.$.notifications_dialog.positionTarget = eventTarget;
+              this.$.notifications_dialog.open();
+            },
+            null,
+            true);
+      }
+
+      closeNotificationsDialog(){
+        this.$.notifications_dialog.close();
+      }
+
+      openToast(text, duration){
+        this.dispatchEvent(new CustomEvent('open-toast', { detail: {text: text, duration: duration}, bubbles: true, composed: true }));
+      }
+
+      _computeIcon(online, userSubscribed){
+        if (online) {
+          if (userSubscribed) {
+            return "notifications-active";
+          } else {
+            return "notifications";
+          }
+        } else {
+          return "cloud-off";
+        }
+      }
+
+      _computeTooltip(online, userSubscribed){
+        if (online) {
+          if (userSubscribed) {
+            return "Stop getting notified about new stuff";
+          } else {
+            return "Get notified about new stuff";
+          }
+        } else {
+          return "You are offline";
+        }
+      }
+    }
+
+    window.customElements.define(AlejostNotifications.is, AlejostNotifications);
+  </script>
+</dom-module>
