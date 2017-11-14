@@ -207,7 +207,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.carouselTimeout = setInterval(() => {
           this.progress++;
           if (this.progress == this.$.slider_progress.max) {
-            this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+            this.slide = this.slide === this.data.length - 1 ? 0 : (this.slide + 1);
             this.progress = 0;
           }
         }, 1000/60);
@@ -219,11 +219,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, 1);
       }
       _previousSlide(){
-        this.slide = this.slide === 0 ? 4 : (this.slide - 1);
+        this.slide = this.slide === 0 ? this.data.length - 1 : (this.slide - 1);
         this._stopCarousel();
       }
       _nextSlide(){
-        this.slide = this.slide === 4 ? 0 : (this.slide + 1);
+        this.slide = this.slide === this.data.length - 1 ? 0 : (this.slide + 1);
         this._stopCarousel();
       }
     }
