@@ -41,6 +41,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
 
+      #content{
+        height: 100vh;
+        overflow-y: scroll;
+      }
+
       /*Header*/
       #header {
         color: #fff;
@@ -134,6 +139,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       @media (max-width: 960px) {
+        #content{
+          height: calc(100vh - 56px);
+        }
         #condensed_toolbar{
           display: none;
         }
@@ -188,36 +196,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-app>
 
     <!-- Main content -->
-    <div id="header">
-      <div id="condensed_toolbar" class="app_toolbar"></div>
-      <div class="app_toolbar layout horizontal center">
-        <a href="[[rootPath]]" id="header_link" class="link">
-          <iron-icon id="header_logo" icon="alejost-icons:[[headerIcon]]"></iron-icon>
-        </a>
-        <span class="flex"></span>
-        <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation" noink>
-          <paper-tab name="works" link>
-            <a class="link" href="[[rootPath]]works">Works</a>
-          </paper-tab>
-          <paper-tab name="tutorials" link>
-            <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
-          </paper-tab>
-          <paper-tab name="about" link>
-            <a class="link" href="[[rootPath]]about">About</a>
-          </paper-tab>
-        </paper-tabs>
-        <alejost-notifications online="[[online]]" on-subscription-change="_openToast"></alejost-notifications>
+    <div id="content">
+      <div id="header">
+        <div id="condensed_toolbar" class="app_toolbar"></div>
+        <div class="app_toolbar layout horizontal center">
+          <a href="[[rootPath]]" id="header_link" class="link">
+            <iron-icon id="header_logo" icon="alejost-icons:[[headerIcon]]"></iron-icon>
+          </a>
+          <span class="flex"></span>
+          <paper-tabs id="header_tabs" selected="[[page]]" attr-for-selected="name" role="navigation" noink>
+            <paper-tab name="works" link>
+              <a class="link" href="[[rootPath]]works">Works</a>
+            </paper-tab>
+            <paper-tab name="tutorials" link>
+              <a class="link" href="[[rootPath]]tutorials">Tutorials</a>
+            </paper-tab>
+            <paper-tab name="about" link>
+              <a class="link" href="[[rootPath]]about">About</a>
+            </paper-tab>
+          </paper-tabs>
+          <alejost-notifications online="[[online]]" on-subscription-change="_openToast"></alejost-notifications>
+        </div>
       </div>
-    </div>
 
-    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
-      <home-view name="home"></home-view>
-      <tutorials-view name="tutorials"></tutorials-view>
-      <works-view name="works"></works-view>
-      <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}"></tutorial-view>
-      <about-view name="about"></about-view>
-      <error-view name="error"></error-view>
-    </iron-pages>
+      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
+        <home-view name="home"></home-view>
+        <tutorials-view name="tutorials"></tutorials-view>
+        <works-view name="works"></works-view>
+        <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}"></tutorial-view>
+        <about-view name="about"></about-view>
+        <error-view name="error"></error-view>
+      </iron-pages>
+    </div>
 
     <div id="bottom_nav">
       <paper-tabs selected="[[page]]" attr-for-selected="name" role="navigation" no-bar noink>
