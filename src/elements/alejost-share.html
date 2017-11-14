@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
@@ -43,12 +44,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       #dialog{
         width: 180px;
-        min-height: 200px;
+        min-height: 168px;
         box-sizing: border-box;
         color: #222;
         background-color: white;
         border-radius: 4px;
         overflow: hidden;
+        margin: 0;
       }
       #dialog > * {
         margin-top: 0;
@@ -73,6 +75,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #888;
         margin: 6px;
         margin-right: 10px;
+      }
+      .social_link > *{
+        transition: color 0.2s ease;
+      }
+      .social_link:hover > *{
+        color: #212121;
+        font-weight: 500;
+      }
+      .social_link div{
+        font-size: 15px;
       }
 
       @media (max-width: 960px) {
@@ -100,6 +112,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <iron-media-query
+      query="min-width: 960px"
+      on-query-matches-changed="_screenSizeChanged">
+    </iron-media-query>
+
     <div>
       <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
       <paper-tooltip fit-to-visible-bounds for="share_fab" animation-delay="100">Share</paper-tooltip>
@@ -108,9 +125,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-dialog
       id="dialog"
       horizontal-align="right"
-      vertical-align="top"
-      horizontal-offset="-40"
-      vertical-offset="-24"
       entry-animation="fade-in-animation"
       exit-animation="fade-out-animation"
       opened="{{opened}}"
@@ -125,20 +139,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
 
         <div id="buttons" class="layout vertical">
-          <a href="#" class="link layout horizontal center">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
             <iron-icon icon="alejost-icons:facebook"></iron-icon>
             <div class="paper-font-body1">Facebook</div>
           </a>
-          <a href="#" class="link layout horizontal center">
+          <a href="https://twitter.com/intent/tweet?url=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
             <iron-icon icon="alejost-icons:twitter"></iron-icon>
             <div class="paper-font-body1">Twitter</div>
           </a>
-          <a href="#" class="link layout horizontal center">
-            <iron-icon icon="alejost-icons:view-carousel"></iron-icon>
-            <div class="paper-font-body1">Google+</div>
-          </a>
-          <a href="#" class="link layout horizontal center">
-            <iron-icon icon="alejost-icons:view-carousel"></iron-icon>
+          <a href="mailto:?body=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
+            <iron-icon icon="alejost-icons:email"></iron-icon>
             <div class="paper-font-body1">Email</div>
           </a>
         </div>
@@ -168,9 +178,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       share(e) {
+        this.shareUrl = window.location.href;
         if (navigator.share !== undefined && window.isSecureContext) {
-          let url = window.location.href;
-          navigator.share({url: url}).catch(error => console.error);
+          navigator.share({url: this.shareUrl}).catch(error => console.error);
         } else {
           this.openDialog(e);
         }
@@ -181,6 +191,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.share_fab.classList.add("animate");
         } else{
           this.$.share_fab.classList.remove("animate");
+        }
+      }
+
+      _screenSizeChanged(e){
+        let largeScreen = e.detail.value;
+        if (largeScreen) {
+          this.$.dialog.verticalAlign = "top";
+        } else {
+          this.$.dialog.verticalAlign = "bottom";
         }
       }
     }
