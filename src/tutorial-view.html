@@ -137,9 +137,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #share_fab.animate{
           bottom: 136px;
         }
-        #share_tooltip{
-          display: none;
-        }
       }
       @media (max-width: 480px) {
         :host{
@@ -238,7 +235,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
           <div>
             <paper-fab id="share_fab" icon="alejost-icons:share" on-tap="share"></paper-fab>
-            <paper-tooltip id="share_tooltip" for="share_fab" position="top">Share</paper-tooltip>
+            <paper-tooltip fit-to-visible-bounds for="share_fab" animation-delay="100">Share</paper-tooltip>
           </div>
         </div>
       </template>
