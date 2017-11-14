@@ -210,9 +210,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-auth
       id="auth"
       app="[[app]]"
-      user="{{user}}"
-      online="{{online}}"
-      on-online-changed="_onlineStateChanged">
+      user="{{user}}">
     </firebase-auth>
 
     <!-- Firebase notifications -->
@@ -330,7 +328,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
 
-    class PortfolioApp extends Polymer.Element {
+    class PortfolioApp extends Polymer.mixinBehaviors([Polymer.AppNetworkStatusBehavior], Polymer.Element) {
       static get is() { return 'portfolio-app'; }
 
       static get properties() {
@@ -345,6 +343,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          online: {
+            type: Boolean,
+            observer: "_onlineStateChanged"
+          }
         };
       }
 
@@ -505,8 +507,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _onlineStateChanged(e){
-        let online = e.detail.value;
+      _onlineStateChanged(online){
         if (!online) {
           this.toastDuration = 0;
           this.toastText = "Offline. Some content may not be available.";
