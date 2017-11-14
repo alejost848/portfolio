@@ -89,21 +89,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #carousel_dots{
         position: absolute;
-        top: 25px;
+        top: 20px;
         left: 15px;
-        width: 80px;
-        margin: 0 auto;
+        margin-left: 4px;
       }
       .carousel_dot{
-        width: 10px;
-        height: 10px;
+        width: 11px;
+        height: 11px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.25);
         transition: all 0.5s;
         cursor: pointer;
       }
       .carousel_dot + .carousel_dot{
-        margin-left: 5px;
+        margin-left: 6px;
       }
       .carousel_dot.iron-selected{
         background-color: rgba(255,255,255,0.9);
@@ -126,9 +125,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host{
           height: 200px;
         }
-        #carousel_dots{
-          top: 20px;
-        }
         #carousel_title{
           bottom: 10px;
           padding-right: 10px;
@@ -149,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Maximum value in frames (seconds = frames/60) -->
     <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
 
-    <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center-justified">
+    <iron-selector id="carousel_dots" selected="{{slide}}" class="layout horizontal center">
       <template is="dom-repeat" items="[[data]]">
         <div class="carousel_dot" on-tap="_stopCarousel"></div>
       </template>
