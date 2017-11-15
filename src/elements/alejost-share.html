@@ -34,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         top: 24px;
         color: white;
         transition: background-color 0.8s ease, var(--shadow-transition_-_transition);
-        background-color: var(--tutorial-color, #333);
+        background-color: var(--tutorial-color, var(--card-image-bg-color));
         @apply --shadow-elevation-6dp;
       }
 
@@ -47,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 168px;
         box-sizing: border-box;
         color: #222;
-        background-color: white;
+        background-color: var(--dialog-bg-color);
         border-radius: 4px;
         overflow: hidden;
         margin: 0;

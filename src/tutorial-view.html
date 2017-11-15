@@ -252,15 +252,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           //Change browser theme color
           let metaThemeColor = document.querySelector('meta[name=theme-color]');
-          metaThemeColor.setAttribute("content", "#121212");
 
-          //Change background color
+          //Get a CSS property depending on whether the shady CSS polyfill is loaded:
+          let bgColor;
+          if (ShadyCSS) {
+            bgColor = ShadyCSS.getComputedStyleValue(this, '--app-background-color');
+          } else {
+            bgColor = getComputedStyle(this).getPropertyValue('--app-background-color');
+          }
+          metaThemeColor.setAttribute("content", bgColor);
+
+          //Change background color for the tutorial-view
           this.updateStyles({
             '--tutorial-color': '#333'
           });
         } else if (active && this.dataLoaded) {
           this._updateMetadata();
-          //Change background color
+
+          //Change background color for the tutorial-view
           this.updateStyles({
             '--tutorial-color': '#' + this.mainColor
           });

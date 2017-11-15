@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 440px;
         box-sizing: border-box;
         color: #222;
-        background-color: white;
+        background-color: var(--dialog-bg-color);
         border-radius: 4px;
         overflow: hidden;
       }
@@ -105,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       position-target="[[positionTarget]]">
 
       <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
-      
+
       <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="close"></paper-icon-button>
 
       <div id="notifications_content">
