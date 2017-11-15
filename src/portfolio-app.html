@@ -288,6 +288,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
+      ready(){
+        super.ready();
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.getRegistration().then((registration) => {
+              if (registration) {
+                registration.addEventListener('updatefound', () => {
+                  this._openToast({detail: {text: "New version available. Reload to update.", duration: 0}});
+                });
+              }
+            });
+          });
+        }
+      }
+
       _routePageChanged(page) {
 
         //Change meta tags
