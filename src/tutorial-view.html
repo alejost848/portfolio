@@ -31,7 +31,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        padding-top: 30px !important;
       }
 
       #video_progress{
@@ -73,8 +72,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 48px;
       }
       #title_header{
-        height: 92px;
-        padding-bottom: 15px;
+        height: 72px;
+        margin-bottom: 23px;
       }
       #episode_number{
         color: rgba(0, 0, 0, 0.5);
@@ -134,6 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #title_header{
           padding: 0 10px;
+          margin-bottom: 0px;
         }
         #episode_number{
           font-size: 14px;
@@ -160,8 +160,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="title_header" class="layout horizontal center">
       <template is="dom-if" if="[[dataLoaded]]">
         <div>
-          <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
           <h1>[[tutorial.title]]</h1>
+          <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
         </div>
         <span class="flex"></span>
         <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
