@@ -39,6 +39,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       sliding-pages{
         height: 100%;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII=");
+        background-repeat: no-repeat;
+        background-position: center center;
       }
       .slide {
         overflow: hidden;
@@ -136,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-repeat" items="[[data]]" as="slide">
         <div class="slide">
           <a href="[[rootPath]][[slide.slug]]" class="link">
-            <iron-image src="[[rootPath]]images/slider/[[slide.image]]" preload fade sizing="cover" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII="></iron-image>
+            <iron-image src="[[rootPath]]images/slider/[[slide.image]]" preload fade sizing="cover"></iron-image>
           </a>
         </div>
       </template>
@@ -151,12 +154,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </iron-selector>
 
-    <div id="carousel_title" class="layout horizontal center">
-      <div class="paper-font-headline">[[slideTitle]]</div>
-      <span class="flex"></span>
-      <paper-icon-button icon="alejost-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
-      <paper-icon-button icon="alejost-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
-    </div>
+    <template is="dom-if" if="[[slideTitle]]">
+      <div id="carousel_title" class="layout horizontal center">
+        <div class="paper-font-headline">[[slideTitle]]</div>
+        <span class="flex"></span>
+        <paper-icon-button icon="alejost-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
+        <paper-icon-button icon="alejost-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
+      </div>
+    </template>
   </template>
 
   <script>
