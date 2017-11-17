@@ -224,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <home-view name="home"></home-view>
         <tutorials-view name="tutorials"></tutorials-view>
         <works-view name="works"></works-view>
-        <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}"></tutorial-view>
+        <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}" toast-open="[[toastOpen]]"></tutorial-view>
         <about-view name="about"></about-view>
         <error-view name="error"></error-view>
       </iron-pages>
@@ -394,11 +394,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _toastOpened(e){
         let isOpen = e.detail.value;
-        let tutorialView = this.shadowRoot.querySelector('tutorial-view');
-        // HACK: Avoid errors in console the first time it's run by checking if the function is defined
-        if (typeof tutorialView._toastOpened === "function") {
-          tutorialView._toastOpened(isOpen);
-        }
+        this.toastOpen = isOpen;
       }
 
       _onlineStateChanged(online){

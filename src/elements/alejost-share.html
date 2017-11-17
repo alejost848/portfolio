@@ -29,9 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #share_fab{
-        position: absolute;
-        right: 24px;
-        top: 24px;
         color: white;
         transition: background-color 0.8s ease, var(--shadow-transition_-_transition);
         background-color: var(--tutorial-color, var(--card-image-bg-color));
@@ -80,8 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         transition: color 0.2s ease;
       }
       .social_link:hover > *{
-        color: #212121;
-        font-weight: 500;
+        color: #444;
       }
       .social_link div{
         font-size: 15px;
@@ -161,6 +157,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class AlejostShare extends Polymer.Element {
       static get is() { return 'alejost-share'; }
 
+      static get properties() {
+        return {
+          shareUrl: {
+            type: String,
+            value: window.location.href
+          },
+          toastOpen: {
+            type: Boolean,
+            observer: '_toastOpened'
+          }
+        };
+      }
+
       openDialog(e){
         var eventTarget = e.target;
         Polymer.importHref(
@@ -178,7 +187,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       share(e) {
-        this.shareUrl = window.location.href;
         if (navigator.share !== undefined && window.isSecureContext) {
           navigator.share({url: this.shareUrl}).catch(error => console.error);
         } else {
