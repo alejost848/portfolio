@@ -105,6 +105,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         opacity: 0.5;
       }
 
+      alejost-share{
+        position: absolute;
+        right: 24px;
+        color: white;
+        margin-top: -28px;
+        z-index: 2;
+      }
+
       @media (max-width: 960px) {
         #card{
           position: static;
@@ -188,10 +196,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             fluid
             video-id="[[tutorial.videoId]]"
             showinfo="0"
+            fs="0"
+            modestbranding="1"
             currenttime="{{videoCurrentTime}}"
             duration="{{videoDuration}}"
             rel="0">
           </google-youtube>
+
+          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
 
           <!-- HACK: Hidden image for getting the main color -->
           <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
@@ -202,7 +214,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="card_content">
           <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
           <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
-          <alejost-share></alejost-share>
         </div>
       </template>
     </div>
@@ -222,6 +233,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           data: {
             type: Array,
             observer: '_dataChanged'
+          },
+          toastOpen: {
+            type: Boolean,
+            observer: '_toastOpened'
           }
         };
       }
@@ -316,9 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _toastOpened(isOpen){
-        if (this.shadowRoot.querySelector("alejost-share")) {
-          this.shadowRoot.querySelector("alejost-share")._toastOpened(isOpen);
-        }
+        this.toastOpen = isOpen;
       }
     }
 
