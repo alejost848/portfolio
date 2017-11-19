@@ -6,6 +6,7 @@
     "src/tutorials-view.html",
     "src/works-view.html",
     "src/tutorial-view.html",
+    "src/work-view.html",
     "src/about-view.html",
     "src/error-view.html",
     "bower_components/paper-dialog/paper-dialog.html",

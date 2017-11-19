@@ -1,0 +1,341 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+
+<link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="elements/alejost-share.html">
+
+<link rel="import" href="shared-styles.html">
+
+<script async src="../bower_components/moment/min/moment.min.js"></script>
+<script async src="../bower_components/vibrant/dist/Vibrant.min.js"></script>
+
+<dom-module id="work-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      #video_progress{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 462px;
+        transition: background-color 0.8s ease;
+        --paper-progress-height: 100%;
+        --paper-progress-active-color: rgba(0, 0, 0, 0.05);
+        --paper-progress-container-color: transparent;
+        background-color: var(--tutorial-color, #333);
+        z-index: -1;
+      }
+
+      #card{
+        position: relative;
+        background-color: var(--card-bg-color);
+        border-radius: 4px;
+        overflow: hidden;
+        @apply --shadow-elevation-4dp;
+      }
+      #placeholder_card{
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        background-color: var(--card-image-bg-color);
+      }
+      #offline_tutorial{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+      }
+      #offline_tutorial iron-icon{
+        color: rgba(255, 255, 255, 0.5);
+        width: 48px;
+        height: 48px;
+      }
+      #title_header{
+        height: 72px;
+        margin-bottom: 23px;
+      }
+      #episode_number{
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 400;
+      }
+      #episode_duration{
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 18px;
+      }
+      google-youtube{
+        background-color: var(--card-image-bg-color);
+      }
+      #card_content{
+        padding: 30px;
+        position: relative;
+      }
+      #publishedDate{
+        margin-bottom: 30px;
+        color: var(--card-date-color);
+      }
+      #description {
+        color: var(--card-description-color);
+      }
+
+      #loading_progress{
+        width: 100%;
+        --paper-progress-container-color: transparent;
+        --paper-progress-active-color: linear-gradient(to right, var(--app-gradient-left-color), var(--app-gradient-right-color));
+        opacity: 0.5;
+      }
+
+      alejost-share{
+        position: absolute;
+        right: 24px;
+        color: white;
+        margin-top: -28px;
+        z-index: 2;
+        --fab-color: var(--tutorial-color, #333);
+      }
+
+      @media (max-width: 960px) {
+        #card{
+          position: static;
+        }
+        #card_content{
+          position: static;
+        }
+      }
+      @media (max-width: 480px) {
+        :host{
+          padding: 0px !important;
+          padding-bottom: 60px !important;
+        }
+        #video_progress{
+          height: 200px;
+        }
+        #card_content{
+          padding: 20px;
+        }
+        #publishedDate{
+          font-size: 13px;
+        }
+        #description {
+          font-size: 13px;
+          line-height: 18px;
+        }
+        #title_header{
+          padding: 0 10px;
+          margin-bottom: 0px;
+        }
+        #episode_number{
+          font-size: 14px;
+        }
+        #episode_duration{
+          display: none;
+        }
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:slug" data="{{routeData}}"></app-route>
+
+    <firebase-query
+      app-name="alejost848"
+      path="/works"
+      order-by-child="slug"
+      equal-to="[[routeData.slug]]"
+      data="{{data}}"
+      online="{{online}}">
+    </firebase-query>
+
+    <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
+
+    <div id="title_header" class="layout horizontal center">
+      <template is="dom-if" if="[[dataLoaded]]">
+        <div>
+          <h1>[[tutorial.title]]</h1>
+          <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
+        </div>
+        <span class="flex"></span>
+        <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
+      </template>
+    </div>
+    <div id="card">
+      <template is="dom-if" if="[[!online]]">
+        <div id="placeholder_card">
+          <div id="offline_tutorial" class="layout vertical center-center">
+            <iron-icon icon="alejost-icons:cloud-off"></iron-icon>
+          </div>
+        </div>
+      </template>
+
+      <template is="dom-if" if="[[online]]" restamp="true">
+        <template is="dom-if" if="[[!dataLoaded]]">
+          <div id="placeholder_card"></div>
+          <paper-progress id="loading_progress" indeterminate></paper-progress>
+        </template>
+
+        <template is="dom-if" if="[[dataLoaded]]" restamp="true">
+          <google-youtube
+            id="video"
+            fluid
+            video-id="[[tutorial.videoId]]"
+            showinfo="0"
+            fs="0"
+            modestbranding="1"
+            currenttime="{{videoCurrentTime}}"
+            duration="{{videoDuration}}"
+            rel="0">
+          </google-youtube>
+
+          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
+
+          <!-- HACK: Hidden image for getting the main color -->
+          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+        </template>
+      </template>
+
+      <template is="dom-if" if="[[dataLoaded]]">
+        <div id="card_content">
+          <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
+          <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+        </div>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    class WorkView extends Polymer.Element {
+      static get is() { return 'work-view'; }
+
+      static get properties() {
+        return {
+          active: {
+            type: Boolean,
+            observer: '_activeChanged',
+          },
+          data: {
+            type: Array,
+            observer: '_dataChanged'
+          },
+          toastOpen: {
+            type: Boolean,
+            observer: '_toastOpened'
+          }
+        };
+      }
+
+      _dataChanged(data){
+        this.dataLoaded = false;
+        if (data.length > 0) {
+          this.tutorial = data[0];
+
+          this._updateMetadata();
+
+          // HACK: Wait a ms to set the dataLoaded to true and trigger the video restamp
+          setTimeout(() => {
+            this.dataLoaded = true;
+          },1);
+        }
+      }
+
+      stopPlayback() {
+        if (this.online) {
+          // this.shadowRoot.querySelector('#video').pause();
+        }
+      }
+
+      _activeChanged(active) {
+        if (!active) {
+          this.stopPlayback();
+
+          //Change browser theme color
+          let metaThemeColor = document.querySelector('meta[name=theme-color]');
+
+          //Get a CSS property depending on whether the shady CSS polyfill is loaded:
+          let bgColor;
+          if (ShadyCSS) {
+            bgColor = ShadyCSS.getComputedStyleValue(this, '--app-background-color');
+          } else {
+            bgColor = getComputedStyle(this).getPropertyValue('--app-background-color');
+          }
+          metaThemeColor.setAttribute("content", bgColor);
+
+          //Change background color for the work-view
+          this.updateStyles({
+            '--tutorial-color': '#333'
+          });
+        } else if (active && this.dataLoaded) {
+          this._updateMetadata();
+
+          //Change background color for the work-view
+          this.updateStyles({
+            '--tutorial-color': '#' + this.mainColor
+          });
+        }
+      }
+
+      _updateMetadata(){
+        window.dispatchEvent(new CustomEvent('sherby-metadata', {
+          detail: {
+            "og:site_name": "Alejandro Sanclemente",
+            "title": this.tutorial.title + " | Alejandro Sanclemente",
+            "og:title": this.tutorial.title + " | Alejandro Sanclemente",
+            "description": this.tutorial.shortDescription,
+            "og:description": this.tutorial.shortDescription,
+            "og:type": "article",
+            "og:image": this.tutorial.thumbnail,
+            "og:url": window.location.href
+          }
+        }));
+      }
+
+      _computeDuration(duration) {
+        let durationData = moment.duration(duration)._data;
+        return (durationData.hours ? durationData.hours + " h " : "") + durationData.minutes + " min";
+      }
+
+      _computeTimeAgo(publishedDate) {
+        return "Published " + moment(publishedDate).fromNow();
+      }
+
+      _getMainColor(e){
+        var vibrant = new Vibrant(e.target, 8, 5);
+        var swatches = vibrant.swatches();
+        this.mainColor = swatches["Vibrant"].getHex().substring(1);
+
+        //Change browser theme color
+        let metaThemeColor = document.querySelector('meta[name=theme-color]');
+        metaThemeColor.setAttribute("content", '#' + this.mainColor);
+
+        //Change background color
+        this.updateStyles({
+          '--tutorial-color': '#' + this.mainColor
+        });
+      }
+
+      _toastOpened(isOpen){
+        this.toastOpen = isOpen;
+      }
+    }
+
+    window.customElements.define(WorkView.is, WorkView);
+  </script>
+</dom-module>

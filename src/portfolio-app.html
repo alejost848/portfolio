@@ -32,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="tutorials-view.html">
 <link rel="lazy-import" href="works-view.html">
 <link rel="lazy-import" href="tutorial-view.html">
+<link rel="lazy-import" href="work-view.html">
 <link rel="lazy-import" href="about-view.html">
 <link rel="lazy-import" href="error-view.html">
 
@@ -225,6 +226,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <tutorials-view name="tutorials"></tutorials-view>
         <works-view name="works"></works-view>
         <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}" toast-open="[[toastOpen]]"></tutorial-view>
+        <work-view name="work" route="[[subroute]]" active="{{_workActive}}" toast-open="[[toastOpen]]"></work-view>
         <about-view name="about"></about-view>
         <error-view name="error"></error-view>
       </iron-pages>
@@ -324,13 +326,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.headerIcon = "logo";
             this._tutorialActive = true;
             break;
+          case "work":
+            this.headerIcon = "logo";
+            this._workActive = true;
+            break;
           default:
             title = "404 Not Found";
         }
 
-        if(page != "tutorial"){
+        if(page != "tutorial" && page != "work"){
           this.headerIcon = "logo-color";
           this._tutorialActive = false;
+          this._workActive = false;
           // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
           setTimeout(() => {
             window.dispatchEvent(new CustomEvent('sherby-metadata', {
