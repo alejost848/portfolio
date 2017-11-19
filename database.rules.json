@@ -22,6 +22,10 @@
         ".read": "$uid === auth.uid",
         ".write": "$uid === auth.uid"
       }
+    },
+    "works": {
+      ".read": true,
+      ".indexOn": ["publishedDate", "slug"]
     }
   }
 }
