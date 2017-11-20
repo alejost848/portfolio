@@ -11,11 +11,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
 
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
+<link rel="import" href="../bower_components/photo-gallery/photo-gallery.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
@@ -43,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-progress-height: 100%;
         --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
-        background-color: var(--tutorial-color, #333);
+        background-color: var(--work-color, #333);
         z-index: -1;
       }
 
@@ -60,13 +63,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-top: 56.25%; /* 16:9 Aspect Ratio */
         background-color: var(--card-image-bg-color);
       }
-      #offline_tutorial{
+      #placeholder_card iron-image{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--card-image-bg-color);
+      }
+      #offline_work{
         position: absolute;
         width: 100%;
         height: 100%;
         top: 0;
       }
-      #offline_tutorial iron-icon{
+      #offline_work iron-icon{
         color: rgba(255, 255, 255, 0.5);
         width: 48px;
         height: 48px;
@@ -79,23 +90,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: rgba(0, 0, 0, 0.5);
         font-weight: 400;
       }
-      #episode_duration{
-        color: rgba(0, 0, 0, 0.5);
-        font-size: 18px;
-      }
       google-youtube{
         background-color: var(--card-image-bg-color);
       }
       #card_content{
-        padding: 30px;
         position: relative;
       }
+      #information{
+        @apply --layout-horizontal;
+      }
+      .info_group{
+        padding: 50px 30px;
+      }
+      .info_item{
+        margin-bottom: 12px;
+      }
+      .info_item_title{
+        color: var(--card-date-color);
+        margin-bottom: 4px;
+      }
+      .info_chip{
+        background-color: #1c1c1c;
+        color: #c9c9c9;
+        font-size: 15px;
+        border-radius: 30px;
+        padding: 2px 12px;
+        margin: 2px;
+        font-weight: 300;
+        cursor: default;
+      }
       #publishedDate{
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         color: var(--card-date-color);
       }
       #description {
         color: var(--card-description-color);
+      }
+      #action_button{
+        margin: 0;
+        margin-top: 20px;
+        padding: 6px 16px;
+        color: white;
+        background-color: var(--work-color, #333);
+        transition: background-color 0.8s ease;
+      }
+
+      #action_button iron-icon{
+        width: 20px;
+        height: 20px;
+        margin-left: 6px;
+        margin-bottom: 2px;
       }
 
       #loading_progress{
@@ -111,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: white;
         margin-top: -28px;
         z-index: 2;
-        --fab-color: var(--tutorial-color, #333);
+        --fab-color: var(--work-color, #333);
       }
 
       @media (max-width: 960px) {
@@ -120,6 +164,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #card_content{
           position: static;
+        }
+        #information{
+          @apply --layout-vertical;
+          padding: 20px
+        }
+        .info_group{
+          padding: 10px;
         }
       }
       @media (max-width: 480px) {
@@ -130,10 +181,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #video_progress{
           height: 200px;
         }
-        #card_content{
-          padding: 20px;
-        }
         #publishedDate{
+          font-size: 13px;
+        }
+        #information{
+          padding: 10px
+        }
+        .info_chip{
           font-size: 13px;
         }
         #description {
@@ -146,9 +200,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #episode_number{
           font-size: 14px;
-        }
-        #episode_duration{
-          display: none;
         }
       }
     </style>
@@ -166,20 +217,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
 
-    <div id="title_header" class="layout horizontal center">
+    <div id="title_header">
       <template is="dom-if" if="[[dataLoaded]]">
-        <div>
-          <h1>[[tutorial.title]]</h1>
-          <div id="episode_number" class="paper-font-subhead">Episode [[tutorial.episodeNumber]]</div>
+        <h1>[[work.title]]</h1>
+        <div id="episode_number" class="paper-font-subhead">[[_computeCategories(work.categories)]]</div>
         </div>
-        <span class="flex"></span>
-        <div id="episode_duration">[[_computeDuration(tutorial.duration)]]</div>
       </template>
     </div>
     <div id="card">
       <template is="dom-if" if="[[!online]]">
         <div id="placeholder_card">
-          <div id="offline_tutorial" class="layout vertical center-center">
+          <div id="offline_work" class="layout vertical center-center">
             <iron-icon icon="alejost-icons:cloud-off"></iron-icon>
           </div>
         </div>
@@ -192,29 +240,81 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
 
         <template is="dom-if" if="[[dataLoaded]]" restamp="true">
-          <google-youtube
-            id="video"
-            fluid
-            video-id="[[tutorial.videoId]]"
-            showinfo="0"
-            fs="0"
-            modestbranding="1"
-            currenttime="{{videoCurrentTime}}"
-            duration="{{videoDuration}}"
-            rel="0">
-          </google-youtube>
+          <template is="dom-if" if="[[work.videoId]]" restamp="true">
+            <google-youtube
+              id="video"
+              fluid
+              video-id="[[work.videoId]]"
+              showinfo="0"
+              fs="0"
+              modestbranding="1"
+              currenttime="{{videoCurrentTime}}"
+              duration="{{videoDuration}}"
+              rel="0">
+            </google-youtube>
+          </template>
+
+          <template is="dom-if" if="[[!work.videoId]]">
+            <div id="placeholder_card">
+              <iron-image src="[[work.coverImage]]" preload fade sizing="cover"></iron-image>
+            </div>
+          </template>
 
           <alejost-share toast-open="[[toastOpen]]"></alejost-share>
 
           <!-- HACK: Hidden image for getting the main color -->
-          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[work.thumbnail]]" crossorigin="Anonymous" hidden>
         </template>
       </template>
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
-          <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
-          <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+          <div id="information">
+            <div class="info_group info_item flex-4 layout vertical">
+              <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(work.publishedDate)]]</div>
+              <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[work.shortDescription]]</div>
+              <span class="flex"></span>
+              <a href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
+                <paper-button raised id="action_button">
+                  [[work.button.text]]
+                  <iron-icon icon="alejost-icons:open-in-new"></iron-icon>
+                </paper-button>
+              </a>
+            </div>
+            <div class="info_group flex-3">
+              <div class="info_item">
+                <div class="info_item_title paper-font-body2">Client</div>
+                <div class="layout horizontal wrap">
+                  <div class="info_chip">[[work.client]]</div>
+                </div>
+              </div>
+              <div class="info_item">
+                <div class="info_item_title paper-font-body2">Tools used</div>
+                <div class="layout horizontal wrap">
+                  <template is="dom-repeat" items="[[work.toolsUsed]]" as="tool">
+                    <div class="info_chip">[[tool]]</div>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <div class="info_group flex-3">
+              <div class="info_item">
+                <div class="info_item_title paper-font-body2">Credits</div>
+                <div class="layout horizontal wrap">
+                  <template is="dom-repeat" items="[[work.credits]]" as="person">
+                    <div class="info_chip">[[person]]</div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <photo-gallery height='200'>
+            <template is="dom-repeat" items="[[work.images]]" as="image">
+              <div class="item" data-url$="[[image]]"></div>
+            </template>
+          </photo-gallery>
+
         </div>
       </template>
     </div>
@@ -245,7 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _dataChanged(data){
         this.dataLoaded = false;
         if (data.length > 0) {
-          this.tutorial = data[0];
+          this.work = data[0];
 
           this._updateMetadata();
 
@@ -257,8 +357,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       stopPlayback() {
-        if (this.online) {
-          // this.shadowRoot.querySelector('#video').pause();
+        if (this.online && this.work.videoId) {
+          this.shadowRoot.querySelector('#video').pause();
         }
       }
 
@@ -280,14 +380,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           //Change background color for the work-view
           this.updateStyles({
-            '--tutorial-color': '#333'
+            '--work-color': '#333'
           });
         } else if (active && this.dataLoaded) {
           this._updateMetadata();
 
           //Change background color for the work-view
           this.updateStyles({
-            '--tutorial-color': '#' + this.mainColor
+            '--work-color': '#' + this.mainColor
           });
         }
       }
@@ -296,24 +396,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.dispatchEvent(new CustomEvent('sherby-metadata', {
           detail: {
             "og:site_name": "Alejandro Sanclemente",
-            "title": this.tutorial.title + " | Alejandro Sanclemente",
-            "og:title": this.tutorial.title + " | Alejandro Sanclemente",
-            "description": this.tutorial.shortDescription,
-            "og:description": this.tutorial.shortDescription,
+            "title": this.work.title + " | Alejandro Sanclemente",
+            "og:title": this.work.title + " | Alejandro Sanclemente",
+            "description": this.work.shortDescription,
+            "og:description": this.work.shortDescription,
             "og:type": "article",
-            "og:image": this.tutorial.thumbnail,
+            "og:image": this.work.thumbnail,
             "og:url": window.location.href
           }
         }));
       }
 
-      _computeDuration(duration) {
-        let durationData = moment.duration(duration)._data;
-        return (durationData.hours ? durationData.hours + " h " : "") + durationData.minutes + " min";
-      }
-
       _computeTimeAgo(publishedDate) {
         return "Published " + moment(publishedDate).fromNow();
+      }
+
+      _computeCategories(categories){
+        return categories.join(" | ");
       }
 
       _getMainColor(e){
@@ -327,7 +426,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         //Change background color
         this.updateStyles({
-          '--tutorial-color': '#' + this.mainColor
+          '--work-color': '#' + this.mainColor
         });
       }
 
