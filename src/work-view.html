@@ -126,9 +126,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #description {
         color: var(--card-description-color);
       }
-      #action_button{
-        margin: 0;
+      #action_link{
+        line-height: 0;
+        width: 140px;
         margin-top: 20px;
+      }
+      #action_button{
+        width: 100%;
+        margin: 0;
         padding: 6px 16px;
         color: white;
         background-color: var(--work-color, #333);
@@ -140,6 +145,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 20px;
         margin-left: 6px;
         margin-bottom: 2px;
+      }
+
+      photo-gallery .item{
+        margin: 0;
+        background-color: var(--card-image-bg-color);
       }
 
       #loading_progress{
@@ -219,8 +229,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div id="title_header">
       <template is="dom-if" if="[[dataLoaded]]">
-        <h1>[[work.title]]</h1>
-        <div id="episode_number" class="paper-font-subhead">[[_computeCategories(work.categories)]]</div>
+        <div>
+          <h1>[[work.title]]</h1>
+          <div id="episode_number" class="paper-font-subhead">[[_computeCategories(work.categories)]]</div>
         </div>
       </template>
     </div>
@@ -268,13 +279,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
 
       <template is="dom-if" if="[[dataLoaded]]">
+
+        <photo-gallery height='200'>
+          <template is="dom-repeat" items="[[work.images]]" as="image">
+            <div class="item" data-url$="[[image]]"></div>
+          </template>
+        </photo-gallery>
+
         <div id="card_content">
           <div id="information">
             <div class="info_group info_item flex-4 layout vertical">
               <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(work.publishedDate)]]</div>
               <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[work.shortDescription]]</div>
               <span class="flex"></span>
-              <a href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
+              <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
                 <paper-button raised id="action_button">
                   [[work.button.text]]
                   <iron-icon icon="alejost-icons:open-in-new"></iron-icon>
@@ -308,14 +326,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </div>
             </div>
           </div>
-
-          <photo-gallery height='200'>
-            <template is="dom-repeat" items="[[work.images]]" as="image">
-              <div class="item" data-url$="[[image]]"></div>
-            </template>
-          </photo-gallery>
-
         </div>
+        
       </template>
     </div>
 
