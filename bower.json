@@ -30,7 +30,7 @@
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
     "paper-fab": "PolymerElements/paper-fab#^2.0.0",
     "sherby-metadata": "SherbyElements/sherby-metadata#^1.0.1",
-    "font-roboto": "PolymerElements/font-roboto-local#^1.0.0",
+    "font-roboto": "PolymerElements/font-roboto#^1.0.0",
     "photo-gallery": "supachailllpay/photo-gallery#^2.0.4"
   },
   "resolutions": {
