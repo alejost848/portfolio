@@ -24,11 +24,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 16px;
         height: 54px;
       }
-      #module_title{
-        color: var(--module-title-color);
-        font-weight: 300;
-        font-size: 20px;
-      }
       a{
         line-height: 0;
       }
@@ -42,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div id="module_header" class="layout horizontal center">
-      <h2 id="module_title" class="paper-font-headline">[[moduleTitle]]</h2>
+      <h2>[[moduleTitle]]</h2>
       <span class="flex"></span>
       <template is="dom-if" if="[[moduleHref]]">
         <a href="[[moduleHref]]" class="link">

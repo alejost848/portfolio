@@ -42,8 +42,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 180px;
         min-height: 168px;
         box-sizing: border-box;
-        color: #222;
-        background-color: var(--dialog-bg-color);
+        color: var(--card-description-color);
+        background-color: var(--card-bg-color);
         border-radius: 4px;
         overflow: hidden;
         margin: 0;
@@ -55,6 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       #title{
+        color: var(--card-title-color);
         padding: 8px !important;
         padding-left: 16px !important;
       }
@@ -71,12 +72,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #888;
         margin: 6px;
         margin-right: 10px;
-      }
-      .social_link > *{
-        transition: color 0.2s ease;
-      }
-      .social_link:hover > *{
-        color: #444;
       }
       .social_link div{
         font-size: 15px;

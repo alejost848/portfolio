@@ -50,9 +50,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Header*/
-      #header {
-        color: #fff;
-      }
       .app_toolbar{
         width: 100%;
         max-width: 1100px;
@@ -67,6 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #header_logo{
         width: 36px;
         height: 36px;
+        color: var(--page-title-color);
       }
       #header_tabs{
         width: 100%;
@@ -74,12 +72,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 100%;
         text-transform: uppercase;
         --paper-tabs-selection-bar-color: var(--app-accent-color);
-        --paper-tab-bar-color: rgba(255,255,255, 0.9);
         --paper-tab-content:{
-          color: white;
+          color: var(--page-title-color);
         }
         --paper-tab-content-unselected:{
-          color: rgba(255,255,255,0.7);
+          color: var(--page-title-color);
+          opacity: 0.6;
         }
       }
 

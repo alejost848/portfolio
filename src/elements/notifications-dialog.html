@@ -31,8 +31,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 330px;
         height: 440px;
         box-sizing: border-box;
-        color: #222;
-        background-color: var(--dialog-bg-color);
+        color: var(--card-description-color);
+        background-color: var(--card-bg-color);
         border-radius: 4px;
         overflow: hidden;
       }
@@ -43,12 +43,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #notifications_image{
         width: 100%;
         height: 200px;
-        background-color: #eee;
+        background-color: var(--card-image-bg-color);
       }
       #notifications_content{
         padding: 16px !important;
       }
       #notifications_content_header{
+        color: var(--card-title-color);
         margin-bottom: 24px;
       }
       #notifications_content paper-toggle-button{
@@ -110,7 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div id="notifications_content">
         <div id="notifications_content_header" class="layout horizontal center">
-          <div class="paper-font-headline">Notifications</div>
+          <div class="paper-font-title">Notifications</div>
           <span class="flex"></span>
           <paper-toggle-button on-tap="toggleSubscription" checked="{{subscribed}}"></paper-toggle-button>
         </div>
