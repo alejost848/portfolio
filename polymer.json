@@ -21,11 +21,7 @@
     "bower_components/webcomponentsjs/*.js",
     "firebase-messaging-sw.js",
     "bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror-worker.js",
-    "bower_components/app-storage/app-indexeddb-mirror/common-worker-scope.js",
-    "bower_components/font-roboto/fonts/roboto/Roboto-Light.ttf",
-    "bower_components/font-roboto/fonts/roboto/Roboto-Regular.ttf",
-    "bower_components/font-roboto/fonts/roboto/Roboto-Medium.ttf",
-    "bower_components/font-roboto/fonts/roboto/Roboto-Bold.ttf"
+    "bower_components/app-storage/app-indexeddb-mirror/common-worker-scope.js"
   ],
   "builds": [
     {
