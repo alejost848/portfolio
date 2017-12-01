@@ -30,14 +30,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-query
       app-name="alejost848"
-      path="/home/sliderItems"
-      data="{{firebaseSliderItems}}">
+      path="/home/slider"
+      data="{{firebaseSlider}}">
     </firebase-query>
 
     <app-indexeddb-mirror
-      key="sliderItems"
-      data="{{firebaseSliderItems}}"
-      persisted-data="{{sliderItems}}">
+      key="slider"
+      data="{{firebaseSlider}}"
+      persisted-data="{{slider}}">
     </app-indexeddb-mirror>
 
     <firebase-query
@@ -54,7 +54,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       persisted-data="{{tutorials}}">
     </app-indexeddb-mirror>
 
-    <alejost-slider data="[[sliderItems]]"></alejost-slider>
+    <alejost-slider data="[[slider]]"></alejost-slider>
 
     <alejost-module module-title="Latest tutorials" module-href="[[rootPath]]tutorials">
       <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
@@ -80,7 +80,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Array,
             observer: '_tutorialsChanged'
           },
-          sliderItems: Array
+          slider: Array
         };
       }
 
