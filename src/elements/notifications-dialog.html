@@ -76,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: none;
       }
 
-      @media (max-width: 960px) {
+      @media (max-width: 600px) {
         #notifications_dialog{
           top: 0 !important;
           left: 0 !important;
@@ -105,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       scroll-action="lock"
       position-target="[[positionTarget]]">
 
-      <iron-image id="notifications_image" src="https://source.unsplash.com/random/400x200" preload fade sizing="cover"></iron-image>
+      <iron-image id="notifications_image" src="[[rootPath]]images/notifications.gif" preload fade sizing="cover"></iron-image>
 
       <paper-icon-button id="notifications_close" icon="alejost-icons:close" on-tap="close"></paper-icon-button>
 
