@@ -133,9 +133,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #action_button{
         width: 100%;
-        margin: 0;
-        padding: 6px 16px;
-        color: white;
         background-color: var(--work-color, #333);
         transition: background-color 0.8s ease;
       }
@@ -293,7 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[work.shortDescription]]</div>
               <span class="flex"></span>
               <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
-                <paper-button raised id="action_button">
+                <paper-button raised id="action_button" class="raised_button">
                   [[work.button.text]]
                   <iron-icon icon="alejost-icons:open-in-new"></iron-icon>
                 </paper-button>

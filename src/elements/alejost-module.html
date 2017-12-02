@@ -27,13 +27,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       a{
         line-height: 0;
       }
-      #module_button{
-        margin-right: 0px;
-        padding: 6px 12px;
-        transition: background-color 0.3s;
-        background-color: var(--app-accent-color);
-        color: white;
-      }
     </style>
 
     <div id="module_header" class="layout horizontal center">
@@ -41,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <span class="flex"></span>
       <template is="dom-if" if="[[moduleHref]]">
         <a href="[[moduleHref]]" class="link">
-          <paper-button id="module_button" raised noink>View all</paper-button>
+          <paper-button class="raised_button" raised noink>View all</paper-button>
         </a>
       </template>
     </div>
