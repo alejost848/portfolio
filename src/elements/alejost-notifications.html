@@ -56,13 +56,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-document
       app-name="alejost848"
-      path="/users/[[user.uid]]/token"
+      path="/users/list/[[user.uid]]/token"
       data="[[token]]">
     </firebase-document>
 
     <firebase-document
       app-name="alejost848"
-      path="/users/[[user.uid]]/subscribed"
+      path="/users/list/[[user.uid]]/subscribed"
       data="[[firebaseSubscribed]]"
       on-data-changed="handleSubscription">
     </firebase-document>
@@ -95,7 +95,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       toggleSubscription(){
         if (this.userSubscribed) {
           this.firebaseSubscribed = false;
-          this.openToast("You won't receive any notifications", 4000);
+          this.openToast("You won't receive any new notifications", 4000);
           this.closeNotificationsDialog();
         } else {
           this.$.messaging.requestPermission().then(() => {
