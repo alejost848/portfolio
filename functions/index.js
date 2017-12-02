@@ -1,6 +1,9 @@
 const functions = require('firebase-functions');
 const slugify = require('slugify');
 const request = require("request");
+const admin = require('firebase-admin');
+
+admin.initializeApp(functions.config().firebase);
 
 exports.addTutorial = functions.database
   .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
@@ -27,29 +30,38 @@ exports.addTutorial = functions.database
   });
 
 exports.handleSubscription = functions.database
-  .ref('/users/{uid}/subscribed')
+  .ref('/users/list/{uid}/subscribed')
   .onWrite(event => {
     const uid = event.params.uid;
 
     // If we are deleting the user stop doing stuff
     if (!event.data.exists()) {
-      console.log(`The user ${uid} was removed`);
+      console.log(`User: ${uid} was removed`);
       return;
     }
 
     const subscribed = event.data.val();
 
     const root = event.data.ref.root;
-    root.child(`/users/${uid}/token`)
+    root.child(`/users/list/${uid}/token`)
       .once('value').then(snap => {
         const userToken = snap.val();
 
+        let userCountRef = admin.database().ref('users/subscriptions');
+
         let requestUrl;
         if (subscribed) {
-          // TODO: Add counter to Firebase database to know how many people have subscribed
           requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
+
+          userCountRef.transaction(userCount => {
+            return userCount + 1;
+          });
         } else {
           requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
+
+          userCountRef.transaction(userCount => {
+            return userCount - 1;
+          });
         }
 
         var options = {
@@ -68,7 +80,6 @@ exports.handleSubscription = functions.database
         request(options, function (error, response, body) {
           if (error) throw new Error(error);
           console.log("User: " + uid, "Subscribed: " + subscribed);
-          console.log("Response:", body);
         });
       });
   });
