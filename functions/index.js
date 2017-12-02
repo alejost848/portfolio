@@ -6,7 +6,7 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 exports.addTutorial = functions.database
-  .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
+  .ref('/tutorials/series/{seriesName}/videos/{tutorialKey}')
   .onCreate(event => {
     let tutorialInfo = event.data.val();
     let titleAndEpisode = tutorialInfo.title;
@@ -15,6 +15,11 @@ exports.addTutorial = functions.database
     tutorialInfo.episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
     tutorialInfo.slug = slugify(tutorialInfo.episodeNumber + "-" + tutorialInfo.title, {lower: true});
     tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
+
+    let tutorialsCountRef = admin.database().ref('tutorials/counter');
+    tutorialsCountRef.transaction(tutorialsCount => {
+      return tutorialsCount + 1;
+    });
 
     //Updates the information of the new tutorial in /tutorials
     return event.data.ref.update(tutorialInfo).then(() => {
