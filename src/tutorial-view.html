@@ -96,6 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #description {
         color: var(--card-description-color);
+        white-space: pre-wrap;
       }
 
       #loading_progress{
@@ -214,7 +215,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
           <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
-          <div id="description" class="paper-font-subhead module_subtitle" style="white-space: pre-wrap">[[tutorial.description]]</div>
+          <div id="description" class="paper-font-subhead">[[tutorial.description]]</div>
         </div>
       </template>
     </div>
