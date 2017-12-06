@@ -143,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       openToast(text, duration){
-        this.dispatchEvent(new CustomEvent('subscription-change', { detail: {text: text, duration: duration}, bubbles: true, composed: true }));
+        this.dispatchEvent(new CustomEvent('show-toast', { detail: {text: text, duration: duration}, bubbles: true, composed: true }));
       }
 
       _computeIcon(online, userSubscribed){
