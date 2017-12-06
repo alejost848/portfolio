@@ -34,7 +34,8 @@
     "photo-gallery": "supachailllpay/photo-gallery#^2.0.4",
     "paper-input": "PolymerElements/paper-input#^2.0.4",
     "iron-form": "PolymerElements/iron-form#^2.0.1",
-    "google-recaptcha": "Zecat/google-recaptcha#^0.2.2"
+    "google-recaptcha": "Zecat/google-recaptcha#^0.2.2",
+    "paper-spinner": "PolymerElements/paper-spinner#^2.0.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"
