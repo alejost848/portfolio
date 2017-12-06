@@ -207,7 +207,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <a class="link" href="[[rootPath]]about">About</a>
           </paper-tab>
         </paper-tabs>
-        <alejost-notifications online="[[online]]" on-subscription-change="_openToast"></alejost-notifications>
+        <alejost-notifications online="[[online]]" on-show-toast="_openToast"></alejost-notifications>
       </div>
     </div>
 
@@ -217,7 +217,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <works-view name="works"></works-view>
       <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}" toast-open="[[toastOpen]]"></tutorial-view>
       <work-view name="work" route="[[subroute]]" active="{{_workActive}}" toast-open="[[toastOpen]]"></work-view>
-      <about-view name="about"></about-view>
+      <about-view name="about" active="{{_aboutActive}}" on-show-toast="_openToast"></about-view>
       <error-view name="error"></error-view>
     </iron-pages>
 
@@ -295,56 +295,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _routePageChanged(page) {
-
-        //Change meta tags
-        let title;
-        switch (page) {
-          case "":
-            title = "Alejandro Sanclemente | Motion, Web and Interaction Designer";
-            break;
-          case "works":
-            title = "Works | Alejandro Sanclemente";
-            break;
-          case "tutorials":
-            title = "Tutorials | Alejandro Sanclemente";
-            break;
-          case "about":
-            title = "About | Alejandro Sanclemente";
-            break;
-          case "tutorial":
-            this.headerIcon = "logo";
-            this._tutorialActive = true;
-            break;
-          case "work":
-            this.headerIcon = "logo";
-            this._workActive = true;
-            break;
-          default:
-            title = "404 Not Found";
-        }
-
-        if(page != "tutorial" && page != "work"){
-          this.headerIcon = "logo-color";
-          this._tutorialActive = false;
-          this._workActive = false;
-          // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
-          setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('sherby-metadata', {
-              detail: {
-                "og:site_name": "Alejandro Sanclemente",
-                "title": title,
-                "og:title": title,
-                "description": "I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design and Progressive Web Apps Design / Development using Polymer and Firebase.",
-                "og:description": "I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design and Progressive Web Apps Design / Development using Polymer and Firebase.",
-                "og:type": "website",
-                "og:image": `${window.location.origin}/images/cover.png`,
-                "og:url": window.location.href
-              }
-            }));
-          }, 50);
-        }
-
         window.scrollTo(0, 0);
+
+        this._changeMetaTags(page);
 
         // If no page was found in the route data, page will be an empty string.
         // Default to 'home' in that case.
@@ -363,6 +316,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'error';
+      }
+
+      _changeMetaTags(page){
+        this._tutorialActive = false;
+        this._workActive = false;
+        this._aboutActive = false;
+
+        //Change meta tags
+        let title;
+        switch (page) {
+          case "":
+            title = "Alejandro Sanclemente | Motion, Web and Interaction Designer";
+            break;
+          case "works":
+            title = "Works | Alejandro Sanclemente";
+            break;
+          case "tutorials":
+            title = "Tutorials | Alejandro Sanclemente";
+            break;
+          case "about":
+            title = "About | Alejandro Sanclemente";
+            this._aboutActive = true;
+            break;
+          case "tutorial":
+            this.headerIcon = "logo";
+            this._tutorialActive = true;
+            break;
+          case "work":
+            this.headerIcon = "logo";
+            this._workActive = true;
+            break;
+          default:
+            title = "404 Not Found";
+        }
+
+        if(page != "tutorial" && page != "work"){
+          this.headerIcon = "logo-color";
+          // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('sherby-metadata', {
+              detail: {
+                "og:site_name": "Alejandro Sanclemente",
+                "title": title,
+                "og:title": title,
+                "description": "I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design and Progressive Web Apps Design / Development using Polymer and Firebase.",
+                "og:description": "I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design and Progressive Web Apps Design / Development using Polymer and Firebase.",
+                "og:type": "website",
+                "og:image": `${window.location.origin}/images/cover.png`,
+                "og:url": window.location.href
+              }
+            }));
+          }, 50);
+        }
       }
 
       _screenSizeChanged(e){
