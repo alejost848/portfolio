@@ -182,7 +182,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card layout horizontal">
           <div>Dark mode</div>
           <span class="flex"></span>
-          <paper-toggle-button on-tap="toggleSubscription" checked></paper-toggle-button>
+          <paper-toggle-button id="theme_toggle" on-tap="toggleTheme" checked></paper-toggle-button>
         </div>
       </div>
       <div class="card_group">
@@ -267,6 +267,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       openToast(text, duration){
         this.dispatchEvent(new CustomEvent('show-toast', { detail: {text: text, duration: duration}, bubbles: true, composed: true }));
+      }
+
+      toggleTheme(e){
+        let theme = (this.$.theme_toggle.checked) ? "light" : "dark";
+        window.dispatchEvent(new CustomEvent('theme-change', { detail: {theme: theme}, bubbles: true, composed: true }));
       }
     }
 

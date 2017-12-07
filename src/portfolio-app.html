@@ -43,6 +43,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
         background-color: var(--app-background-color);
         min-height: 100vh;
+        will-change: transform;
+
+        --app-background-color: #191919;
+        --app-gradient-left-color: #2196f3;
+        --app-gradient-right-color: #00e5ff;
+        --app-accent-color: var(--app-gradient-left-color);
+
+        /*Cards dark theme*/
+        --card-bg-color: #212121;
+        --card-image-bg-color: #1e1e1e;
+        --card-title-color: #f4f4f4;
+        --card-description-color: #aaaaaa;
+        --card-date-color: #606060;
+
+        --page-title-color: white;
+        --module-title-color: #eeeeee;
+        --bottom-nav-bg-color: white;
+        --bottom-nav-item-color: #777777;
       }
 
       /*Header*/
@@ -282,7 +300,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           online: {
             type: Boolean,
             observer: "_onlineStateChanged"
-          }
+          },
+          theme: String
         };
       }
 
@@ -314,6 +333,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
           });
         }
+        window.addEventListener('theme-change', this._themeChanged.bind(this));
       }
 
       _routePageChanged(page) {
@@ -441,6 +461,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.toast.hide();
         } else {
           this._openToast({detail: {text: "Offline. Some content may not be available.", duration: 0}});
+        }
+      }
+
+      _themeChanged(e){
+        let theme = e.detail.theme;
+        if(theme == "light"){
+          this.updateStyles({
+            '--app-background-color': '#eee',
+            '--app-gradient-left-color': '#2196f3',
+            '--app-gradient-right-color': '#00e5ff',
+            '--app-accent-color': '#2196f3',
+
+            /*Cards dark theme*/
+            '--card-bg-color': 'white',
+            '--card-image-bg-color': '#eee',
+            '--card-title-color': '#444',
+            '--card-description-color': '#888',
+            '--card-date-color': '#606060',
+
+            '--page-title-color': '#555',
+            '--module-title-color': '#666',
+            '--bottom-nav-bg-color': 'white',
+            '--bottom-nav-item-color': '#777777'
+          });
+        } else if(theme == "dark") {
+          this.updateStyles({
+            '--app-background-color': '#191919',
+            '--app-gradient-left-color': '#2196f3',
+            '--app-gradient-right-color': '#00e5ff',
+            '--app-accent-color': '#2196f3',
+
+            /*Cards dark theme*/
+            '--card-bg-color': '#212121',
+            '--card-image-bg-color': '#1e1e1e',
+            '--card-title-color': '#f4f4f4',
+            '--card-description-color': '#aaaaaa',
+            '--card-date-color': '#606060',
+
+            '--page-title-color': 'white',
+            '--module-title-color': '#eeeeee',
+            '--bottom-nav-bg-color': 'white',
+            '--bottom-nav-item-color': '#777777'
+          });
         }
       }
     }
