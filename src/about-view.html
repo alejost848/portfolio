@@ -146,7 +146,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <strong>hello@alejo.st</strong>
           </p>
           <iron-form id="form" on-iron-form-response="_recaptchaResponded">
-            <form method="post" action="https://us-central1-alejost848-afea9.cloudfunctions.net/handleFormSubmit">
+            <form method="post" action="/submitForm">
               <paper-input id="name_input" label="Name (optional)" name="name"></paper-input>
               <paper-input id="email_input" label="Email" name="email" type="email" required error-message="Enter a valid email address"></paper-input>
               <paper-input id="subject_input" label="Subject" name="subject" required error-message="Subject can't be empty"></paper-input>

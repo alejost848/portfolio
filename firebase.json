@@ -4,14 +4,14 @@
   },
   "hosting": {
     "public": "build/es6-unbundled",
-    "rewrites": [
-      {
-        "source": "**/!(*.*)",
-        "destination": "/index.html"
-      },
+    "rewrites": [      
       {
         "source": "/submitForm",
         "function": "handleFormSubmit"
+      },
+      {
+        "source": "**/!(*.*)",
+        "destination": "/index.html"
       }
     ]
   }
