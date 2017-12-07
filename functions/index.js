@@ -2,9 +2,13 @@ const functions = require('firebase-functions');
 const slugify = require('slugify');
 const request = require("request");
 const admin = require('firebase-admin');
+
+//Send email
+const fs = require('fs');
 const cors = require('cors')({ origin: true });
 const rp = require('request-promise');
 const nodemailer = require('nodemailer');
+const handlebars = require('handlebars');
 
 admin.initializeApp(functions.config().firebase);
 
@@ -104,8 +108,6 @@ exports.handleSubscription = functions.database
 
 exports.handleFormSubmit = functions.https.onRequest((req, res) => {
 
-  console.log("New email", req.body);
-
   let name = req.body.name;
   let email = req.body.email;
   let subject = req.body.subject;
@@ -126,14 +128,31 @@ exports.handleFormSubmit = functions.https.onRequest((req, res) => {
     }).then(result => {
       if (result.success) {
 
-        //Send email
-        const mailOptions = {
-          from: `${name} <${email}>`,
-          to: gmailEmail
-        };
-        mailOptions.subject = subject;
-        mailOptions.text = message;
-        mailTransport.sendMail(mailOptions);
+        //Read email template, replace variables with handlebars and send the email
+        fs.readFile(__dirname + '/email.html', 'utf8', (err, data) => {
+          if (err) {
+            throw err;
+          }
+
+          var template = handlebars.compile(data);
+          var replacements = {
+            name: name,
+            email: email,
+            subject: subject,
+            message: message
+          };
+          var htmlToSend = template(replacements);
+
+          var mailOptions = {
+            from: email,
+            to: gmailEmail,
+            subject: "New form submission in alejo.st",
+            html: htmlToSend
+          };
+          mailTransport.sendMail(mailOptions).then(() => {
+            console.log("New form submission", req.body);
+          });
+        });
 
         res.status(200).json({ message: "valid-token" });
       } else {
