@@ -43,7 +43,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
         background-color: var(--app-background-color);
         min-height: 100vh;
-        will-change: transform;
 
         --app-background-color: #191919;
         --app-gradient-left-color: #2196f3;
@@ -64,6 +63,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       /*Header*/
+      #header{
+        position: relative;
+        z-index: 1;
+      }
       .app_toolbar{
         width: 100%;
         max-width: 1100px;
@@ -468,7 +471,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         let theme = e.detail.theme;
         if(theme == "light"){
           this.updateStyles({
-            '--app-background-color': '#eee',
+            '--app-background-color': '#f2f2f2',
             '--app-gradient-left-color': '#2196f3',
             '--app-gradient-right-color': '#00e5ff',
             '--app-accent-color': '#2196f3',

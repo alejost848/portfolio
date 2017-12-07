@@ -44,7 +44,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
         background-color: var(--tutorial-color, #333);
-        z-index: -1;
       }
 
       #card{
@@ -72,6 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 48px;
       }
       #title_header{
+        position: relative;
         height: 72px;
         margin-bottom: 23px;
       }
@@ -110,8 +110,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: absolute;
         right: 24px;
         color: white;
-        margin-top: -28px;
-        z-index: 2;
+        margin-top: -78px;
+        z-index: 0;
         --fab-color: var(--tutorial-color, #333);
       }
 
@@ -205,8 +205,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             rel="0">
           </google-youtube>
 
-          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
-
           <!-- HACK: Hidden image for getting the main color -->
           <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
         </template>
@@ -214,6 +212,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
+
+          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
+
           <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
           <div id="description" class="paper-font-subhead">[[tutorial.description]]</div>
         </div>
