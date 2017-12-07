@@ -121,6 +121,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center-center;
       }
 
+      #toastAction {
+        font-weight: 500;
+        margin-left: 24px;
+        color: var(--app-accent-color);
+        text-decoration: none;
+        text-transform: uppercase;
+        float: right;
+      }
+
       @media (max-width: 1100px) {
         #condensed_toolbar{
           height: 10px;
@@ -242,7 +251,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-selector>
     </div>
 
-    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened"></paper-toast>
+    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened">
+      <a id="toastAction" on-tap="_handleToastAction" href="#"></a>
+    </paper-toast>
 
   </template>
 
@@ -286,7 +297,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             navigator.serviceWorker.getRegistration().then((registration) => {
               if (registration) {
                 registration.addEventListener('updatefound', () => {
-                  this._openToast({detail: {text: "New version available. Reload to update.", duration: 0}});
+                  this._openToast({
+                    detail: {
+                      text: "New version available",
+                      duration: 0,
+                      buttonText: 'Reload',
+                      buttonTapHandler: function() {
+                        window.location.reload();
+                      }
+                    }
+                  });
                 });
               }
             });
@@ -382,16 +402,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _openToast(e){
         //Hide previous toast if opened and show the new toast after waiting for the other to close
+        this._currentToast = e.detail;
+
         let waitTime = 0;
         if (this.$.toast.opened) {
           this.$.toast.hide();
           waitTime = 300;
         }
         setTimeout(() => {
-          this.toastText = e.detail.text;
-          this.toastDuration = e.detail.duration;
+          if (this._currentToast.hasOwnProperty('buttonText')) {
+            this.$.toastAction.removeAttribute('hidden');
+            this.$.toastAction.textContent = this._currentToast.buttonText;
+          } else {
+            this.$.toastAction.setAttribute('hidden', '');
+          }
+          this.toastText = this._currentToast.text;
+          this.toastDuration = this._currentToast.duration;
           this.$.toast.show();
         }, waitTime);
+      }
+
+      _handleToastAction() {
+        if (!this._currentToast || !this._currentToast.buttonTapHandler){
+          return;
+        }
+        this._currentToast.buttonTapHandler();
       }
 
       _toastOpened(e){
