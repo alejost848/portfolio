@@ -8,6 +8,10 @@
       {
         "source": "**/!(*.*)",
         "destination": "/index.html"
+      },
+      {
+        "source": "/submitForm",
+        "function": "handleFormSubmit"
       }
     ]
   }

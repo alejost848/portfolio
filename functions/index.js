@@ -2,8 +2,21 @@ const functions = require('firebase-functions');
 const slugify = require('slugify');
 const request = require("request");
 const admin = require('firebase-admin');
+const cors = require('cors')({ origin: true });
+const rp = require('request-promise');
+const nodemailer = require('nodemailer');
 
 admin.initializeApp(functions.config().firebase);
+
+const gmailEmail = functions.config().gmail.email;
+const gmailPassword = functions.config().gmail.password;
+const mailTransport = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: gmailEmail,
+    pass: gmailPassword
+  }
+});
 
 exports.addTutorial = functions.database
   .ref('/tutorials/series/{seriesName}/videos/{tutorialKey}')
@@ -82,9 +95,52 @@ exports.handleSubscription = functions.database
           },
           json: true
         };
-        request(options, function (error, response, body) {
+        request(options, function(error, response, body) {
           if (error) throw new Error(error);
           console.log("User: " + uid, "Subscribed: " + subscribed);
         });
       });
   });
+
+exports.handleFormSubmit = functions.https.onRequest((req, res) => {
+
+  console.log("New email", req.body);
+
+  let name = req.body.name;
+  let email = req.body.email;
+  let subject = req.body.subject;
+  let message = req.body.message;
+  let recaptcha_token = req.body.recaptcha_token;
+
+  //Add CORS middleware
+  cors(req, res, () => {
+    //Add request-promise to check recaptcha validation
+    rp({
+      uri: 'https://recaptcha.google.com/recaptcha/api/siteverify',
+      method: 'POST',
+      formData: {
+        secret: '6Lf6xzsUAAAAALKwXNboJqVkL9MncNm4-0p6y0Oh',
+        response: recaptcha_token
+      },
+      json: true
+    }).then(result => {
+      if (result.success) {
+
+        //Send email
+        const mailOptions = {
+          from: `${name} <${email}>`,
+          to: gmailEmail
+        };
+        mailOptions.subject = subject;
+        mailOptions.text = message;
+        mailTransport.sendMail(mailOptions);
+
+        res.status(200).json({ message: "valid-token" });
+      } else {
+        res.status(400).json({ message: "wrong-token" })
+      }
+    }).catch(reason => {
+      res.status(400).json({ message: "error", error: reason })
+    })
+  });
+});
