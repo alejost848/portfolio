@@ -107,6 +107,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      paper-toast{
+        --paper-toast-background-color: var(--app-accent-color);
+        margin: 0;
+      }
+
       paper-toggle-button{
         --paper-toggle-button-checked-bar-color:  var(--app-accent-color);
         --paper-toggle-button-checked-button-color: var(--app-accent-color);
@@ -120,10 +125,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 600px) {
         paper-toast{
+          left: 0 !important;
           width: 100%;
-          min-width: 0;
           border-radius: 0;
-          margin: 0;
         }
         paper-tooltip{
           display: none;
