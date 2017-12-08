@@ -45,9 +45,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: 100vh;
 
         --app-background-color: #191919;
-        --app-gradient-left-color: #2196f3;
-        --app-gradient-right-color: #00e5ff;
-        --app-accent-color: var(--app-gradient-left-color);
+        --app-accent-color: #2196f3;
+        --app-linear-gradient: linear-gradient(to right, var(--app-accent-color), #00e5ff);
 
         /*Cards dark theme*/
         --card-bg-color: #212121;
@@ -56,6 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --card-description-color: #aaaaaa;
         --card-date-color: #606060;
 
+        --header-color: white;
         --page-title-color: white;
         --module-title-color: #eeeeee;
         --bottom-nav-bg-color: white;
@@ -81,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #header_logo{
         width: 36px;
         height: 36px;
-        color: var(--page-title-color);
+        color: var(--header-color);
       }
       #header_tabs{
         width: 100%;
@@ -90,11 +90,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-transform: uppercase;
         --paper-tabs-selection-bar-color: var(--app-accent-color);
         --paper-tab-content:{
-          color: var(--page-title-color);
+          color: var(--header-color);
         }
         --paper-tab-content-unselected:{
-          color: var(--page-title-color);
-          opacity: 0.6;
+          color: var(--header-color);
+          opacity: 0.7;
         }
       }
 
@@ -387,10 +387,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           case "tutorial":
             this.headerIcon = "logo";
             this._tutorialActive = true;
+
+            //Set the header color white when viewing a tutorial or work
+            this.updateStyles({
+              '--header-color': 'white'
+            });
             break;
           case "work":
             this.headerIcon = "logo";
             this._workActive = true;
+
+            //Set the header color white when viewing a tutorial or work
+            this.updateStyles({
+              '--header-color': 'white'
+            });
             break;
           default:
             title = "404 Not Found";
@@ -413,6 +423,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }
             }));
           }, 50);
+
+          if (this.theme == "light") {
+            //Set the header color back when not in tutorial or work view and light theme is active
+            this.updateStyles({
+              '--header-color': '#555'
+            });
+          }
         }
       }
 
@@ -468,13 +485,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _themeChanged(e){
-        let theme = e.detail.theme;
-        if(theme == "light"){
+        this.theme = e.detail.theme;
+        if(this.theme == "light"){
           this.updateStyles({
             '--app-background-color': '#f2f2f2',
-            '--app-gradient-left-color': '#2196f3',
-            '--app-gradient-right-color': '#00e5ff',
-            '--app-accent-color': '#2196f3',
 
             /*Cards dark theme*/
             '--card-bg-color': 'white',
@@ -483,17 +497,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--card-description-color': '#888',
             '--card-date-color': '#606060',
 
+            '--header-color': '#555',
             '--page-title-color': '#555',
             '--module-title-color': '#666',
-            '--bottom-nav-bg-color': 'white',
-            '--bottom-nav-item-color': '#777777'
+            '--bottom-nav-bg-color': '#212121',
+            '--bottom-nav-item-color': '#555'
           });
-        } else if(theme == "dark") {
+        } else if(this.theme == "dark") {
           this.updateStyles({
             '--app-background-color': '#191919',
-            '--app-gradient-left-color': '#2196f3',
-            '--app-gradient-right-color': '#00e5ff',
-            '--app-accent-color': '#2196f3',
 
             /*Cards dark theme*/
             '--card-bg-color': '#212121',
@@ -502,6 +514,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--card-description-color': '#aaaaaa',
             '--card-date-color': '#606060',
 
+            '--header-color': 'white',
             '--page-title-color': 'white',
             '--module-title-color': '#eeeeee',
             '--bottom-nav-bg-color': 'white',
