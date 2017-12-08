@@ -25,43 +25,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="elements/alejost-share.html">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="single-view-shared-styles.html">
 
 <script async src="../bower_components/moment/min/moment.min.js"></script>
 <script async src="../bower_components/vibrant/dist/Vibrant.min.js"></script>
 
 <dom-module id="work-view">
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
-      }
-
-      #video_progress{
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 462px;
-        transition: background-color 0.8s ease;
-        --paper-progress-height: 100%;
-        --paper-progress-active-color: rgba(0, 0, 0, 0.05);
-        --paper-progress-container-color: transparent;
-        background-color: var(--work-color, #333);
-      }
-
-      #card{
-        position: relative;
-        background-color: var(--card-bg-color);
-        border-radius: 4px;
-        overflow: hidden;
-        @apply --shadow-elevation-4dp;
-      }
-      #placeholder_card{
-        position: relative;
-        width: 100%;
-        padding-top: 56.25%; /* 16:9 Aspect Ratio */
-        background-color: var(--card-image-bg-color);
-      }
+    <style include="shared-styles"></style>
+    <style include="single-view-shared-styles">
       #placeholder_card iron-image{
         position: absolute;
         top: 0;
@@ -81,29 +53,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 48px;
         height: 48px;
       }
-      #title_header{
-        position: relative;
-        height: 72px;
-        margin-bottom: 23px;
-      }
-      h1{
-        color: white;
-      }
-      #episode_number{
-        color: rgba(0, 0, 0, 0.5);
-        font-weight: 400;
-      }
-      google-youtube{
-        background-color: var(--card-image-bg-color);
-      }
-      #card_content{
-        position: relative;
-      }
       #information{
         @apply --layout-horizontal;
       }
       .info_group{
-        padding: 50px 30px;
+        /*padding: 50px 30px;*/
       }
       .info_item{
         margin-bottom: 12px;
@@ -124,25 +78,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 300;
         cursor: default;
       }
-      #publishedDate{
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 10px;
-        color: var(--card-date-color);
-      }
-      #description {
-        color: var(--card-description-color);
-        white-space: pre-wrap;
-      }
       #action_link{
         line-height: 0;
         margin-top: 20px;
       }
       #action_button{
-        background-color: var(--work-color, #333);
+        background-color: var(--progress-color, #333);
         transition: background-color 0.8s ease;
       }
-
       #action_button iron-icon{
         width: 20px;
         height: 20px;
@@ -155,29 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: var(--card-image-bg-color);
       }
 
-      #loading_progress{
-        width: 100%;
-        --paper-progress-container-color: transparent;
-        --paper-progress-active-color: var(--app-linear-gradient);
-        opacity: 0.5;
-      }
-
-      alejost-share{
-        position: absolute;
-        right: 24px;
-        color: white;
-        margin-top: -78px;
-        z-index: 0;
-        --fab-color: var(--work-color, #333);
-      }
-
       @media (max-width: 600px) {
-        #card{
-          position: static;
-        }
-        #card_content{
-          position: static;
-        }
         #information{
           @apply --layout-vertical;
           padding: 20px
@@ -186,14 +107,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           padding: 10px;
         }
       }
+
       @media (max-width: 480px) {
-        :host{
-          padding: 0px !important;
-          padding-bottom: 60px !important;
-        }
-        #video_progress{
-          height: 200px;
-        }
         #publishedDate{
           font-size: 13px;
         }
@@ -202,17 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         .info_chip{
           font-size: 13px;
-        }
-        #description {
-          font-size: 13px;
-          line-height: 18px;
-        }
-        #title_header{
-          padding: 0 10px;
-          margin-bottom: 0px;
-        }
-        #episode_number{
-          font-size: 14px;
         }
       }
     </style>
@@ -396,14 +300,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           //Change background color for the work-view
           this.updateStyles({
-            '--work-color': '#333'
+            '--progress-color': '#333'
           });
         } else if (active && this.dataLoaded) {
           this._updateMetadata();
 
           //Change background color for the work-view
           this.updateStyles({
-            '--work-color': '#' + this.mainColor
+            '--progress-color': '#' + this.mainColor
           });
         }
       }
@@ -442,7 +346,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         //Change background color
         this.updateStyles({
-          '--work-color': '#' + this.mainColor
+          '--progress-color': '#' + this.mainColor
         });
       }
 
