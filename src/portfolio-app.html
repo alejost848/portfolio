@@ -21,6 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/sherby-metadata/sherby-metadata.html">
 
 <link rel="import" href="elements/alejost-notifications.html">
@@ -40,10 +42,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style include="shared-styles">
       :host {
-        display: block;
-        background-color: var(--app-background-color);
-        min-height: 100vh;
-
         --app-background-color: #191919;
         --app-accent-color: #2196f3;
         --app-linear-gradient: linear-gradient(to right, var(--app-accent-color), #00e5ff);
@@ -60,6 +58,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --module-title-color: #eeeeee;
         --bottom-nav-bg-color: white;
         --bottom-nav-item-color: #777777;
+
+        display: block;
+        transition: background-color 0.2s cubic-bezier(0.4, 0.0, 1, 1);
+        background-color: var(--app-background-color);
+        min-height: 100vh;
       }
 
       /*Header*/
@@ -220,6 +223,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       messaging-sender-id="776617594441">
     </firebase-app>
 
+    <firebase-auth
+      id="auth"
+      app-name="alejost848"
+      user="{{user}}">
+    </firebase-auth>
+
+    <firebase-document
+      app-name="alejost848"
+      path="/users/list/[[user.uid]]/theme"
+      data="[[theme]]"
+      on-data-changed="_handleTheme">
+    </firebase-document>
+
     <!-- Main content -->
     <div id="header">
       <div id="condensed_toolbar" class="app_toolbar"></div>
@@ -249,7 +265,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <works-view name="works"></works-view>
       <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}" toast-open="[[toastOpen]]"></tutorial-view>
       <work-view name="work" route="[[subroute]]" active="{{_workActive}}" toast-open="[[toastOpen]]"></work-view>
-      <about-view name="about" active="{{_aboutActive}}" on-show-toast="_openToast"></about-view>
+      <about-view name="about" active="{{_aboutActive}}" theme="{{theme}}" theme-toggle="[[themeToggle]]" on-show-toast="_openToast"></about-view>
       <error-view name="error"></error-view>
     </iron-pages>
 
@@ -304,7 +320,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             observer: "_onlineStateChanged"
           },
-          theme: String
+          theme: {
+            type: String,
+            observer: "_themeChanged"
+          }
         };
       }
 
@@ -336,7 +355,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
           });
         }
-        window.addEventListener('theme-change', this._themeChanged.bind(this));
       }
 
       _routePageChanged(page) {
@@ -387,26 +405,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           case "tutorial":
             this.headerIcon = "logo";
             this._tutorialActive = true;
-
-            //Set the header color white when viewing a tutorial or work
-            this.updateStyles({
-              '--header-color': 'white'
-            });
             break;
           case "work":
             this.headerIcon = "logo";
             this._workActive = true;
-
-            //Set the header color white when viewing a tutorial or work
-            this.updateStyles({
-              '--header-color': 'white'
-            });
             break;
           default:
             title = "404 Not Found";
         }
 
         if(page != "tutorial" && page != "work"){
+          //Set the header color white when not viewing a tutorial or work
+          if (this.theme == "light") {
+            this.updateStyles({
+              '--header-color': '#555'
+            });
+          }
           this.headerIcon = "logo-color";
           // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
           setTimeout(() => {
@@ -423,13 +437,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }
             }));
           }, 50);
-
-          if (this.theme == "light") {
-            //Set the header color back when not in tutorial or work view and light theme is active
-            this.updateStyles({
-              '--header-color': '#555'
-            });
-          }
+        } else {
+          //Set the header color white when viewing a tutorial or work
+          this.updateStyles({
+            '--header-color': 'white'
+          });
         }
       }
 
@@ -484,9 +496,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      _themeChanged(e){
-        this.theme = e.detail.theme;
-        if(this.theme == "light"){
+      _handleTheme(e){
+        let theme = e.detail.value;
+        //If theme is not set in Firebase database use dark as default
+        if (Object.keys(theme).length === 0 && theme.constructor === Object) {
+          this.theme = "dark";
+        } else {
+          //If it is set, get it from the database
+          this.theme = e.detail.value;
+        }
+        this.themeToggle = (this.theme == "dark");
+        this.changeTheme(this.theme);
+      }
+
+      changeTheme(theme){
+        if(theme == "light"){
           this.updateStyles({
             '--app-background-color': '#f2f2f2',
 
@@ -497,13 +521,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--card-description-color': '#888',
             '--card-date-color': '#606060',
 
-            '--header-color': '#555',
             '--page-title-color': '#555',
             '--module-title-color': '#666',
             '--bottom-nav-bg-color': '#212121',
             '--bottom-nav-item-color': '#555'
           });
-        } else if(this.theme == "dark") {
+          if (this.page != "tutorial" && this.page != "work") {
+            this.updateStyles({
+              '--header-color': '#555'
+            });
+          }
+        } else if(theme == "dark") {
           this.updateStyles({
             '--app-background-color': '#191919',
 
@@ -521,6 +549,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--bottom-nav-item-color': '#777777'
           });
         }
+      }
+
+      _themeChanged(theme){
+        this.changeTheme(theme);
       }
     }
 
