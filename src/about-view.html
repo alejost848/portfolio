@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
@@ -60,9 +61,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       paper-input, paper-textarea{
         --paper-input-container-focus-color: var(--app-accent-color);
-        --paper-input-container-input-color: white;
+        --paper-input-container-input-color: var(--page-title-color);
         --paper-input-container-underline:{
-          border: 1px rgba(255, 255, 255, 0.05) solid;
+          border: 1px #555 solid;
+          opacity: 0.2;
         }
       }
       #message_input{
@@ -95,6 +97,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-spinner-color: #888;
         width: 20px;
         height: 20px;
+      }
+
+      .text{
+        color: var(--card-description-color);
+      }
+
+      #credits{
+        max-height: 84px;
+      }
+
+      paper-icon-button{
+        color: var(--header-color);
+        --paper-icon-button-ink-color: var(--header-color);
       }
 
       @media (max-width: 1100px) {
@@ -180,14 +195,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="cards_container">
       <div class="card_group">
         <div class="card layout horizontal">
-          <div>Dark mode</div>
+          <div class="text">Dark theme</div>
           <span class="flex"></span>
-          <paper-toggle-button id="theme_toggle" on-tap="toggleTheme" checked></paper-toggle-button>
+          <paper-toggle-button id="theme_toggle" on-tap="toggleTheme" checked="[[themeToggle]]"></paper-toggle-button>
         </div>
       </div>
       <div class="card_group">
-        <div class="card">
-          <div>©2017 Alejandro Sanclemente</div>
+        <div id="credits" class="card layout horizontal center">
+          <div class="text">©2017 Alejandro Sanclemente</div>
+          <span class="flex"></span>
+          <a href="https://youtube.com/alejost848" target="_blank" rel="noopener" class="link">
+            <paper-icon-button icon="alejost-icons:youtube"></paper-icon-button>
+          </a>
+          <a href="https://github.com/alejost848" target="_blank" rel="noopener" class="link">
+            <paper-icon-button icon="alejost-icons:github"></paper-icon-button>
+          </a>
+          <a href="https://twitter.com/alejost848" target="_blank" rel="noopener" class="link">
+            <paper-icon-button icon="alejost-icons:twitter"></paper-icon-button>
+          </a>
+          <a href="https://dribbble.com/alejost848" target="_blank" rel="noopener" class="link">
+            <paper-icon-button icon="alejost-icons:dribbble"></paper-icon-button>
+          </a>
         </div>
       </div>
     </div>
@@ -208,7 +236,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           sendingForm: {
             type: Boolean,
             value: false
-          }
+          },
+          theme: {
+            type: String,
+            reflectToAttribute: true,
+            notify: true,
+            observer: "_themeChanged"
+          },
+          themeToggle: Boolean
         };
       }
 
@@ -270,8 +305,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       toggleTheme(e){
-        let theme = (this.$.theme_toggle.checked) ? "light" : "dark";
-        window.dispatchEvent(new CustomEvent('theme-change', { detail: {theme: theme}, bubbles: true, composed: true }));
+        this.theme = (e.target.checked) ? "light" : "dark";
       }
     }
 
