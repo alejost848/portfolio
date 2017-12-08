@@ -119,7 +119,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <template is="dom-if" if="[[opened]]">
         <div id="title" class="layout horizontal center">
-          <div class="paper-font-title">Share</div>
+          <div class="dialog_title">Share</div>
           <span class="flex"></span>
           <paper-icon-button icon="alejost-icons:close" on-tap="closeDialog"></paper-icon-button>
         </div>
@@ -127,15 +127,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="buttons" class="layout vertical">
           <a href="https://www.facebook.com/sharer/sharer.php?u=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
             <iron-icon icon="alejost-icons:facebook"></iron-icon>
-            <div class="paper-font-body1">Facebook</div>
+            <div>Facebook</div>
           </a>
           <a href="https://twitter.com/intent/tweet?url=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
             <iron-icon icon="alejost-icons:twitter"></iron-icon>
-            <div class="paper-font-body1">Twitter</div>
+            <div>Twitter</div>
           </a>
           <a href="mailto:?body=[[shareUrl]]" target="_blank" rel="noopener" class="social_link link layout horizontal center">
             <iron-icon icon="alejost-icons:email"></iron-icon>
-            <div class="paper-font-body1">Email</div>
+            <div>Email</div>
           </a>
         </div>
       </template>

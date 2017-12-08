@@ -111,6 +111,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .info_item_title{
         color: var(--card-date-color);
         margin-bottom: 4px;
+        font-size: 14px;
+        font-weight: 500;
       }
       .info_chip{
         background-color: #1c1c1c;
@@ -123,6 +125,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         cursor: default;
       }
       #publishedDate{
+        font-size: 14px;
+        font-weight: 500;
         margin-bottom: 10px;
         color: var(--card-date-color);
       }
@@ -230,7 +234,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[dataLoaded]]">
         <div>
           <h1>[[work.title]]</h1>
-          <div id="episode_number" class="paper-font-subhead">[[_computeCategories(work.categories)]]</div>
+          <div id="episode_number">[[_computeCategories(work.categories)]]</div>
         </div>
       </template>
     </div>
@@ -289,8 +293,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div id="information">
             <div class="info_group info_item flex-4 layout vertical start">
-              <div id="publishedDate" class="paper-font-body2">[[_computeTimeAgo(work.publishedDate)]]</div>
-              <div id="description" class="paper-font-subhead">[[work.shortDescription]]</div>
+              <div id="publishedDate">[[_computeTimeAgo(work.publishedDate)]]</div>
+              <div id="description">[[work.shortDescription]]</div>
               <span class="flex"></span>
               <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
                 <paper-button raised id="action_button" class="raised_button">
@@ -301,13 +305,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div class="info_group flex-3">
               <div class="info_item">
-                <div class="info_item_title paper-font-body2">Client</div>
+                <div class="info_item_title">Client</div>
                 <div class="layout horizontal wrap">
                   <div class="info_chip">[[work.client]]</div>
                 </div>
               </div>
               <div class="info_item">
-                <div class="info_item_title paper-font-body2">Tools used</div>
+                <div class="info_item_title">Tools used</div>
                 <div class="layout horizontal wrap">
                   <template is="dom-repeat" items="[[work.toolsUsed]]" as="tool">
                     <div class="info_chip">[[tool]]</div>
@@ -317,7 +321,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div class="info_group flex-3">
               <div class="info_item">
-                <div class="info_item_title paper-font-body2">Credits</div>
+                <div class="info_item_title">Credits</div>
                 <div class="layout horizontal wrap">
                   <template is="dom-repeat" items="[[work.credits]]" as="person">
                     <div class="info_chip">[[person]]</div>
