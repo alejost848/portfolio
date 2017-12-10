@@ -174,14 +174,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <google-recaptcha
               id="recaptcha"
               invisible
-              badge="inline"
               lang="en"
               value="{{token}}"
               sitekey="6Lf6xzsUAAAAALEVsKzzO2rDcFyZgw3OomkmuAJ1"
               hidden="[[hideRecaptcha]]"
               on-google-recaptcha-response="_submitForm">
             </google-recaptcha>
-            <span class="flex"></span>
             <paper-button raised class="raised_button" on-tap="sendEmail" disabled="[[sendingForm]]">
               <paper-spinner-lite active alt="Validating form" hidden="[[!sendingForm]]"></paper-spinner-lite>
               <span id="sending_label" hidden="[[!sendingForm]]">Sending</span>
@@ -248,11 +246,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready(){
         super.ready();
-        this.addEventListener('iron-resize', this._windowResized);
-      }
-
-      _windowResized(){
-        this.$.recaptcha.container.refit();
       }
 
       sendEmail(){

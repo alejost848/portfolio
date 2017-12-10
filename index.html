@@ -92,12 +92,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .grecaptcha-badge {
         box-shadow: none !important;
-        transform: scale(0.8);
-        transform-origin: 0;
       }
       * {
   		  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     	}
+      @media (max-width: 600px) {
+        .grecaptcha-badge {
+          bottom: 60px !important;
+        }
+      }
     </style>
   </head>
   <body>
