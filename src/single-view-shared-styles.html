@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-progress-active-color: rgba(0, 0, 0, 0.05);
         --paper-progress-container-color: transparent;
         background-color: var(--progress-color, #333);
+        z-index: -1;
       }
 
       #card{
@@ -73,6 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #description {
         color: var(--card-description-color);
         white-space: pre-wrap;
+        font-size: 15px;
       }
 
       #loading_progress{
@@ -87,19 +89,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         right: 24px;
         color: white;
         margin-top: -78px;
-        z-index: 0;
         --fab-color: var(--progress-color, #333);
       }
-
       @media (max-width: 600px) {
-        #card{
-          position: static;
-        }
-        #card_content{
-          position: static;
-        }
-      }
-      @media (max-width: 480px) {
         :host{
           padding: 0px !important;
           padding-bottom: 60px !important;
