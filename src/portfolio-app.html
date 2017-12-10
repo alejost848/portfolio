@@ -520,7 +520,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--page-title-color': '#555',
             '--module-title-color': '#666',
             '--bottom-nav-bg-color': '#212121',
-            '--bottom-nav-item-color': '#555'
+            '--bottom-nav-item-color': '#888'
           });
           if (this.page != "tutorial" && this.page != "work") {
             this.updateStyles({
@@ -545,6 +545,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--bottom-nav-item-color': '#777777'
           });
         }
+        //Get a CSS property depending on whether the shady CSS polyfill is loaded:
+        let bgColor;
+        if (ShadyCSS) {
+          bgColor = ShadyCSS.getComputedStyleValue(this, '--app-background-color');
+        } else {
+          bgColor = getComputedStyle(this).getPropertyValue('--app-background-color');
+        }
+        document.body.style.backgroundColor = bgColor;
       }
 
       _themeChanged(theme){
