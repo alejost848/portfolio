@@ -4,7 +4,7 @@
   },
   "hosting": {
     "public": "build/es6-unbundled",
-    "rewrites": [      
+    "rewrites": [
       {
         "source": "/submitForm",
         "function": "handleFormSubmit"
