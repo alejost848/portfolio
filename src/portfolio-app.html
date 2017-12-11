@@ -331,6 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready(){
         super.ready();
+        //Show reload toast if there's a new version available
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
             navigator.serviceWorker.getRegistration().then((registration) => {
@@ -354,6 +355,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _routePageChanged(page) {
+        //Scroll to the top on every page change
         window.scrollTo(0, 0);
 
         this._changeMetaTags(page);
