@@ -1,5 +1,7 @@
 {
   "rules": {
+    ".read": "auth.uid === 'd9JhyoWr4LWRviqzQG7Sdzm0PZo2'",
+    ".write": "auth.uid === 'd9JhyoWr4LWRviqzQG7Sdzm0PZo2'",
     "home": {
       ".read": true,
       "latestTutorials": {
@@ -29,7 +31,7 @@
     },
     "works": {
       ".read": true,
-      "list":{        
+      "list":{
         ".indexOn": ["publishedDate", "slug"]
       }
     }
