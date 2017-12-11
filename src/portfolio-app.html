@@ -255,13 +255,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </div>
 
-    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="error" role="main">
+    <iron-pages selected="[[page]]" attr-for-selected="name" selected-attribute="active" fallback-selection="error" role="main">
       <home-view name="home"></home-view>
       <tutorials-view name="tutorials"></tutorials-view>
       <works-view name="works"></works-view>
-      <tutorial-view name="tutorial" route="[[subroute]]" active="{{_tutorialActive}}" toast-open="[[toastOpen]]"></tutorial-view>
-      <work-view name="work" route="[[subroute]]" active="{{_workActive}}" toast-open="[[toastOpen]]"></work-view>
-      <about-view name="about" active="{{_aboutActive}}" theme="{{theme}}" theme-toggle="[[themeToggle]]" on-show-toast="_openToast"></about-view>
+      <tutorial-view name="tutorial" route="[[subroute]]" toast-open="[[toastOpen]]"></tutorial-view>
+      <work-view name="work" route="[[subroute]]" toast-open="[[toastOpen]]"></work-view>
+      <about-view name="about" theme="{{theme}}" theme-toggle="[[themeToggle]]" on-show-toast="_openToast"></about-view>
       <error-view name="error"></error-view>
     </iron-pages>
 
@@ -378,10 +378,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _changeMetaTags(page){
-        this._tutorialActive = false;
-        this._workActive = false;
-        this._aboutActive = false;
-
         //Change meta tags
         let title;
         switch (page) {
@@ -396,15 +392,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             break;
           case "about":
             title = "About | Alejandro Sanclemente";
-            this._aboutActive = true;
             break;
           case "tutorial":
             this.headerIcon = "logo";
-            this._tutorialActive = true;
             break;
           case "work":
             this.headerIcon = "logo";
-            this._workActive = true;
             break;
           default:
             title = "404 Not Found";
