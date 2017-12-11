@@ -198,6 +198,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // HACK: Get the title only when the data from Firebase is not empty
         if (this.data && this.data.length > 0) {
           this._resumeCarousel();
+          if (this.slide > this.data.length - 1) {
+            this.slide = this.data.length - 1;
+          }
+
           this.slideTitle = this.data[this.slide].title;
         }
       }
@@ -207,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.carouselTimeout = setInterval(() => {
           this.progress++;
           if (this.progress == this.$.slider_progress.max) {
-            this.slide = this.slide === this.data.length - 1 ? 0 : (this.slide + 1);
+            this.slide = (this.slide === this.data.length - 1) ? 0 : (this.slide + 1);
             this.progress = 0;
           }
         }, 1000/60);
