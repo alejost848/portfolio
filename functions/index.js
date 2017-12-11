@@ -23,7 +23,7 @@ const mailTransport = nodemailer.createTransport({
 });
 
 exports.addTutorial = functions.database
-  .ref('/tutorials/series/{seriesName}/videos/{tutorialKey}')
+  .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
   .onCreate(event => {
     let tutorialInfo = event.data.val();
     let titleAndEpisode = tutorialInfo.title;
@@ -33,7 +33,7 @@ exports.addTutorial = functions.database
     tutorialInfo.slug = slugify(tutorialInfo.episodeNumber + "-" + tutorialInfo.title, {lower: true});
     tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
 
-    let tutorialsCountRef = admin.database().ref('tutorials/counter');
+    let tutorialsCountRef = admin.database().ref('dashboard/overview/tutorialCount');
     tutorialsCountRef.transaction(tutorialsCount => {
       return tutorialsCount + 1;
     });
@@ -52,7 +52,7 @@ exports.addTutorial = functions.database
   });
 
 exports.handleSubscription = functions.database
-  .ref('/users/list/{uid}/subscribed')
+  .ref('/users/{uid}/subscribed')
   .onWrite(event => {
     const uid = event.params.uid;
 
@@ -65,11 +65,11 @@ exports.handleSubscription = functions.database
     const subscribed = event.data.val();
 
     const root = event.data.ref.root;
-    root.child(`/users/list/${uid}/token`)
+    root.child(`/users/${uid}/token`)
       .once('value').then(snap => {
         const userToken = snap.val();
 
-        let userCountRef = admin.database().ref('users/subscriptions');
+        let userCountRef = admin.database().ref('dashboard/overview/subscriptions');
 
         let requestUrl;
         if (subscribed) {

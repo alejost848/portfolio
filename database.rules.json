@@ -13,27 +13,21 @@
     },
     "tutorials": {
       ".read": true,
-      "series": {
-        "$sid": {
-          "videos": {
-            ".indexOn": ["publishedDate", "slug"]
-          }
+      "$sid": {
+        "videos": {
+          ".indexOn": ["publishedDate", "slug"]
         }
       }
     },
     "users": {
-      "list": {
-        "$uid": {
-          ".read": "$uid === auth.uid",
-          ".write": "$uid === auth.uid"
-        }
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
       }
     },
     "works": {
       ".read": true,
-      "list":{
-        ".indexOn": ["publishedDate", "slug"]
-      }
+      ".indexOn": ["publishedDate", "slug"]
     }
   }
 }

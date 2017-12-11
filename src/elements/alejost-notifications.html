@@ -51,13 +51,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-document
       app-name="alejost848"
-      path="/users/list/[[user.uid]]/token"
+      path="/users/[[user.uid]]/token"
       data="[[token]]">
     </firebase-document>
 
     <firebase-document
       app-name="alejost848"
-      path="/users/list/[[user.uid]]/subscribed"
+      path="/users/[[user.uid]]/subscribed"
       data="[[firebaseSubscribed]]"
       on-data-changed="handleSubscription">
     </firebase-document>
