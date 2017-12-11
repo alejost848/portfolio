@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
@@ -25,7 +26,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
       }
+      iron-selector{
+        margin-top: 56px;
+        margin-bottom: 30px;
+        width: 100%;
+      }
+      .category_item{
+        background-color: var(--card-image-bg-color);
+        color: var(--card-description-color);
+        font-size: 15px;
+        border-radius: 30px;
+        padding: 4px 18px;
+        margin: 4px;
+        transition: background-color 0.1s cubic-bezier(0.4, 0.0, 1, 1);
+      }
+      .category_item.iron-selected{
+        font-weight: 500;
+        background-color: var(--app-accent-color);
+        color: white;
+      }
     </style>
+
+    <app-route route="{{route}}" pattern="/:category" data="{{routeData}}"></app-route>
 
     <firebase-query
       app-name="alejost848"
@@ -40,6 +62,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-indexeddb-mirror>
 
     <h1>Works</h1>
+
+    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" class="layout horizontal wrap">
+      <a name="all" class="link category_item" href="[[rootPath]]works">All</a>
+      <a name="animation" class="link category_item" href="[[rootPath]]works/animation">Animation</a>
+      <a name="ui-ux" class="link category_item" href="[[rootPath]]works/ui-ux">UI / UX</a>
+      <a name="web-development" class="link category_item" href="[[rootPath]]works/web-development">Web development</a>
+    </iron-selector>
 
     <template is="dom-repeat" items="[[works]]" as="work">
       <alejost-card href="[[rootPath]]work/[[work.slug]]" data="[[work]]"></alejost-card>

@@ -258,7 +258,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <iron-pages selected="[[page]]" attr-for-selected="name" selected-attribute="active" fallback-selection="error" role="main">
       <home-view name="home"></home-view>
       <tutorials-view name="tutorials"></tutorials-view>
-      <works-view name="works"></works-view>
+      <works-view name="works" route="[[subroute]]"></works-view>
       <tutorial-view name="tutorial" route="[[subroute]]" toast-open="[[toastOpen]]"></tutorial-view>
       <work-view name="work" route="[[subroute]]" toast-open="[[toastOpen]]"></work-view>
       <about-view name="about" theme="{{theme}}" theme-toggle="[[themeToggle]]" on-show-toast="_openToast"></about-view>
