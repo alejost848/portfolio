@@ -55,9 +55,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #information{
         @apply --layout-horizontal;
+        margin-bottom: 24px;
       }
-      .info_group{
-        /*padding: 50px 30px;*/
+      .info_group:nth-child(2){
+        padding: 0px 30px;
       }
       .info_item{
         margin-bottom: 12px;
@@ -69,14 +70,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: 500;
       }
       .info_chip{
-        background-color: #1c1c1c;
-        color: #c9c9c9;
+        background-color: var(--app-background-color);
+        color: var(--card-description-color);
         font-size: 15px;
         border-radius: 30px;
         padding: 2px 12px;
         margin: 2px;
-        font-weight: 300;
         cursor: default;
+        white-space: nowrap;
       }
       #action_link{
         line-height: 0;
@@ -94,26 +95,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       photo-gallery .item{
-        margin: 0;
         background-color: var(--card-image-bg-color);
+      }
+      .multimedia_group{
+        margin-top: 36px;
+      }
+      .multimedia_title{
+        margin-bottom: 16px;
+      }
+      .video_item{
+        width: calc(50% - 4px);
+        margin-bottom: 8px;
       }
 
       @media (max-width: 600px) {
         #information{
           @apply --layout-vertical;
-          padding: 20px
         }
-        .info_group{
-          padding: 10px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        #publishedDate{
-          font-size: 13px;
-        }
-        #information{
-          padding: 10px
+        .info_group:nth-child(2){
+          padding: 10px 0;
         }
         .info_chip{
           font-size: 13px;
@@ -134,7 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
 
-    <div id="title_header">
+    <div id="title_header" class="layout horizontal center">
       <template is="dom-if" if="[[dataLoaded]]">
         <div>
           <h1>[[work.title]]</h1>
@@ -164,8 +164,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               fluid
               video-id="[[work.videoId]]"
               showinfo="0"
-              fs="0"
-              modestbranding="1"
               currenttime="{{videoCurrentTime}}"
               duration="{{videoDuration}}"
               rel="0">
@@ -184,13 +182,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
 
       <template is="dom-if" if="[[dataLoaded]]">
-
-        <photo-gallery height='200'>
-          <template is="dom-repeat" items="[[work.images]]" as="image">
-            <div class="item" data-url$="[[image]]"></div>
-          </template>
-        </photo-gallery>
-
         <div id="card_content">
 
           <alejost-share toast-open="[[toastOpen]]"></alejost-share>
@@ -234,6 +225,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </div>
             </div>
           </div>
+
+          <div class="multimedia_group">
+            <div class="multimedia_title info_item_title">Images</div>
+            <photo-gallery height="150">
+              <template is="dom-repeat" items="[[work.images]]" as="image">
+                <div class="item" data-url$="[[image]]"></div>
+              </template>
+            </photo-gallery>
+          </div>
+
+          <div class="multimedia_group">
+            <div class="multimedia_title info_item_title">Videos</div>
+            <div class="layout horizontal wrap justified">
+              <template is="dom-repeat" items="[[work.videos]]" as="video">
+                <google-youtube
+                  class="video_item"
+                  fluid
+                  video-id="[[video]]"
+                  showinfo="0"
+                  rel="0">
+                </google-youtube>
+              </template>
+            </div>
+          </div>
+
         </div>
 
       </template>
