@@ -33,12 +33,7 @@ exports.addTutorial = functions.database
     tutorialInfo.slug = slugify(tutorialInfo.episodeNumber + "-" + tutorialInfo.title, {lower: true});
     tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
 
-    let tutorialsCountRef = admin.database().ref('dashboard/overview/tutorialCount');
-    tutorialsCountRef.transaction(tutorialsCount => {
-      return tutorialsCount + 1;
-    });
-
-    //Updates the information of the new tutorial in /tutorials
+    //Update the information of the new tutorial in /tutorials
     return event.data.ref.update(tutorialInfo).then(() => {
       //After that, it takes the oldest tutorial in home/latestTutorials and replaces it with the new one
       const root = event.data.ref.root;
@@ -48,6 +43,14 @@ exports.addTutorial = functions.database
         .once('child_added', (snapshot) => {
           return snapshot.ref.update(tutorialInfo);
         });
+    }).then(() => {
+      //Add +1 to the tutorial count
+      let tutorialsCountRef = admin.database().ref('dashboard/overview/tutorialCount');
+      return tutorialsCountRef.transaction(tutorialsCount => {
+        return tutorialsCount + 1;
+      }).then(() => {
+        null
+      });
     });
   });
 
