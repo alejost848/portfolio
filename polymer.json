@@ -25,8 +25,7 @@
   ],
   "builds": [
     {
-      "preset": "es6-unbundled",
-      "js": {"minify": false}
+      "preset": "es6-unbundled"
     }
   ],
   "lint": {
