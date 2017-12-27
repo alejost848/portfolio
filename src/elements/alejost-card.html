@@ -21,7 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-        margin: 5px 0;
+        margin: 5px;
         width: calc(25% - 10px);
         border-radius: 4px;
         background-color: var(--card-bg-color);
@@ -71,9 +71,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       @media (max-width: 960px) {
-        :host {
-          width: calc(25% - 5px);
-        }
         #card_title{
           font-size: 15px;
           line-height: 18px;
@@ -93,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 780px) {
         :host {
-          width: calc(50% - 5px);
+          width: calc(50% - 10px);
         }
 
         #card_content{
@@ -112,7 +109,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 480px) {
         :host {
-          width: calc(50% - 3px);
+          width: calc(50% - 6px);
+          margin: 3px;
         }
         iron-image{
           height: 130px;
