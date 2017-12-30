@@ -202,7 +202,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div class="info_item">
                 <div class="info_item_title">Client</div>
                 <div class="layout horizontal wrap">
-                  <div class="info_chip">[[work.client]]</div>
+                  <template is="dom-repeat" items="[[work.clients]]" as="client">                    
+                    <div class="info_chip">[[client]]</div>
+                  </template>
                 </div>
               </div>
               <div class="info_item">
