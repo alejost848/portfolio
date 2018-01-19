@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
 <link rel="import" href="../bower_components/photo-gallery/photo-gallery.html">
 
-<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="elements/alejost-share.html">
 
@@ -123,14 +123,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-route route="{{route}}" pattern="/:slug" data="{{routeData}}"></app-route>
 
-    <firebase-query
+    <firebase-document
       app-name="alejost848"
-      path="/works"
-      order-by-child="slug"
-      equal-to="[[routeData.slug]]"
+      path="/works/[[routeData.slug]]"
       data="{{data}}"
       online="{{online}}">
-    </firebase-query>
+    </firebase-document>
 
     <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
 
@@ -202,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div class="info_item">
                 <div class="info_item_title">Client</div>
                 <div class="layout horizontal wrap">
-                  <template is="dom-repeat" items="[[work.clients]]" as="client">                    
+                  <template is="dom-repeat" items="[[work.clients]]" as="client">
                     <div class="info_chip">[[client]]</div>
                   </template>
                 </div>
@@ -282,8 +280,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _dataChanged(data){
         this.dataLoaded = false;
-        if (data.length > 0) {
-          this.work = data[0];
+        if (Object.keys(data).length !== 0 && data.constructor === Object) {
+          this.work = data;
 
           this._updateMetadata();
 
@@ -350,7 +348,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _computeCategories(categories){
-        return categories.join(" | ");
+        return categories ? categories.join(" | ") : '';
       }
 
       _getMainColor(e){
