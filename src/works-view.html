@@ -70,9 +70,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <a name="web-development" class="link category_item" href="[[rootPath]]works/web-development">Web development</a>
     </iron-selector>
 
-    <div class="layout horizontal wrap">        
+    <div class="layout horizontal wrap">
       <template is="dom-repeat" items="[[works]]" as="work">
-        <alejost-card href="[[rootPath]]work/[[work.slug]]" data="[[work]]"></alejost-card>
+        <alejost-card href="[[rootPath]]work/[[work.$key]]" data="[[work]]"></alejost-card>
       </template>
     </div>
   </template>
