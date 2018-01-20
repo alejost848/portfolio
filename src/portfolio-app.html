@@ -548,6 +548,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           bgColor = getComputedStyle(this).getPropertyValue('--app-background-color');
         }
         document.body.style.backgroundColor = bgColor;
+
+        //Change browser theme color
+        let metaThemeColor = document.querySelector('meta[name=theme-color]');
+        metaThemeColor.setAttribute("content", bgColor);
       }
 
       _themeChanged(theme){
