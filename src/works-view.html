@@ -37,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-size: 15px;
         border-radius: 30px;
         padding: 4px 18px;
-        margin: 4px;
+        margin: 2px;
         transition: background-color 0.1s cubic-bezier(0.4, 0.0, 1, 1);
       }
       .category_item.iron-selected{
@@ -81,6 +81,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class WorksView extends Polymer.Element {
       static get is() { return 'works-view'; }
 
+      static get observers() {
+        return [
+          '_routeDataChanged(route.path)'
+        ];
+      }
+
       ready() {
         super.ready();
       }
@@ -89,6 +95,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return Object.keys(obj).map(function(key) {
           return obj[key];
         }).reverse();
+      }
+      _routeDataChanged() {
+        if (this.route.path == '') {
+          this.set('routeData.category', 'all');
+        }
       }
     }
 
