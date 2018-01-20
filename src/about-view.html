@@ -21,6 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/google-recaptcha/google-recaptcha.html">
 
+<script async src="../bower_components/moment/min/moment.min.js"></script>
+
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="about-view">
@@ -138,13 +140,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card layout vertical start">
           <h2>Alejandro Sanclemente</h2>
           <p>
-            I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design and Progressive Web Apps design / development using Polymer and Firebase.
+            I'm an Interactive Media Designer based in Colombia. I can provide 2D animations for Motion Design, Design / Development of Progressive Web Apps using Polymer and Firebase, among other things.
             <br>
             <br>
             Other topics of my interest are UX, the future of the web platform and space-related stuff.
             <br>
             <br>
-            I’m available for hiring.
+            I’m available for hiring. Check my portfolio and let's get in touch.
           </p>
           <paper-button noink class="flat_button">See resume</paper-button>
         </div>
@@ -201,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <div class="card_group">
         <div id="credits" class="card layout horizontal center">
-          <div class="text">©2017 Alejandro Sanclemente</div>
+          <div class="text">©[[actualYear]] Alejandro Sanclemente</div>
           <span class="flex"></span>
           <a href="https://youtube.com/alejost848" target="_blank" rel="noopener" class="link">
             <paper-icon-button icon="alejost-icons:youtube"></paper-icon-button>
@@ -247,6 +249,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready(){
         super.ready();
+        this.actualYear = moment().year();
       }
 
       sendEmail(){
