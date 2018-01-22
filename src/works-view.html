@@ -63,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <h1>Works</h1>
 
-    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" class="layout horizontal wrap">
+    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" on-iron-select="_updateItems" class="layout horizontal wrap">
       <a name="all" class="link category_item" href="[[rootPath]]works">All</a>
       <a name="animation" class="link category_item" href="[[rootPath]]works/animation">Animation</a>
       <a name="ui-ux" class="link category_item" href="[[rootPath]]works/ui-ux">UI / UX</a>
@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-selector>
 
     <div class="layout horizontal wrap">
-      <template is="dom-repeat" items="[[works]]" as="work">
+      <template id="dom_repeat" is="dom-repeat" items="[[works]]" as="work" filter="_filterByCategory">
         <alejost-card href="[[rootPath]]work/[[work.$key]]" data="[[work]]"></alejost-card>
       </template>
     </div>
@@ -80,6 +80,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     class WorksView extends Polymer.Element {
       static get is() { return 'works-view'; }
+
+      static get properties() {
+        return {
+          active: {
+            type: Boolean,
+            observer: '_activeChanged',
+          }
+        };
+      }
 
       static get observers() {
         return [
@@ -90,6 +99,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
       }
+
+      _activeChanged(active) {
+        if (active) {
+          this.$.dom_repeat.render();
+        }
+      }
+
       _toArray(obj) {
         // HACK: Convert Object from Firebase to Array and reverse it
         return Object.keys(obj).map(function(key) {
@@ -99,6 +115,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routeDataChanged() {
         if (this.route.path == '') {
           this.set('routeData.category', 'all');
+        }
+      }
+      _updateItems(){
+        setTimeout(() => {
+          this.$.dom_repeat.render();
+        }, 1);
+      }
+      _filterByCategory(item){
+        if (this.routeData && this.routeData.category != "all") {
+          return item.categories[this.routeData.category];
+        } else {
+          return true;
         }
       }
     }
