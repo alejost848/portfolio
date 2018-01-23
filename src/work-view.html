@@ -28,7 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="single-view-shared-styles.html">
 
 <script async src="../bower_components/moment/min/moment.min.js"></script>
-<script async src="../bower_components/vibrant/dist/Vibrant.min.js"></script>
 
 <dom-module id="work-view">
   <template>
@@ -69,15 +68,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-size: 14px;
         font-weight: 500;
       }
+      #categories_container{
+        margin-top: 6px;
+      }
       .info_chip{
-        background-color: var(--card-image-bg-color);
-        color: var(--card-description-color);
-        font-size: 15px;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        height: 32px;
+        line-height: 32px;
+        font-weight: 500;
+        font-size: 13px;
         border-radius: 30px;
-        padding: 2px 12px;
+        padding: 0 12px;
+        box-sizing: border-box;
         margin: 2px;
         cursor: default;
         white-space: nowrap;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+      }
+      .category_chip{
+        background-color: rgba(0, 0, 0, 0.05);
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        @apply --shadow-transition;
+      }
+      .category_chip:hover{
+        @apply --shadow-elevation-2dp;
       }
       #action_link{
         line-height: 0;
@@ -115,9 +132,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .info_group:nth-child(2){
           padding: 10px 0;
         }
-        .info_chip{
-          font-size: 13px;
-        }
       }
     </style>
 
@@ -136,7 +150,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[dataLoaded]]">
         <div>
           <h1>[[work.title]]</h1>
-          <div id="episode_number">[[_computeCategories(work.categories)]]</div>
+          <div id="categories_container" class="layout horizontal">
+            <template is="dom-repeat" items="[[_computeCategories(work.categories)]]" as="category">
+              <a href="[[rootPath]]works/[[category.key]]" class="link">
+                <div class="info_chip category_chip">[[category.value]]</div>
+              </a>
+            </template>
+          </div>
         </div>
       </template>
     </div>
@@ -173,9 +193,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <iron-image src="[[work.coverImage]]" preload fade sizing="cover"></iron-image>
             </div>
           </template>
-
-          <!-- HACK: Hidden image for getting the main color -->
-          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[work.thumbnail]]" crossorigin="Anonymous" hidden>
         </template>
       </template>
 
@@ -189,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div id="publishedDate">[[_computeTimeAgo(work.publishedDate)]]</div>
               <div id="description">[[work.shortDescription]]</div>
               <span class="flex"></span>
-              <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener">
+              <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener" hidden="[[!work.button]]">
                 <paper-button raised id="action_button" class="raised_button">
                   [[work.button.text]]
                   <iron-icon icon="alejost-icons:open-in-new"></iron-icon>
@@ -228,27 +245,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div class="multimedia_group">
             <div class="multimedia_title info_item_title">Images</div>
-            <photo-gallery height="150">
+            <photo-gallery height="300">
               <template is="dom-repeat" items="[[work.images]]" as="image">
-                <div class="item" data-url$="[[image]]"></div>
+                <div class="item" data-url$="[[image.downloadUrl]]"></div>
               </template>
             </photo-gallery>
           </div>
 
-          <div class="multimedia_group">
-            <div class="multimedia_title info_item_title">Videos</div>
-            <div class="layout horizontal wrap justified">
-              <template is="dom-repeat" items="[[work.videos]]" as="video">
-                <google-youtube
-                  class="video_item"
-                  fluid
-                  video-id="[[video]]"
-                  showinfo="0"
-                  rel="0">
-                </google-youtube>
-              </template>
+          <template is="dom-if" if="[[work.videos]]">
+            <div class="multimedia_group">
+              <div class="multimedia_title info_item_title">Videos</div>
+              <div class="layout horizontal wrap justified">
+                <template is="dom-repeat" items="[[work.videos]]" as="video">
+                  <google-youtube
+                    class="video_item"
+                    fluid
+                    video-id="[[video]]"
+                    showinfo="0"
+                    rel="0">
+                  </google-youtube>
+                </template>
+              </div>
             </div>
-          </div>
+          </template>          
 
         </div>
 
@@ -279,21 +298,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _dataChanged(data){
-        this.dataLoaded = false;
+        if (this.active) {
+          this.dataLoaded = false;
+        }
         if (Object.keys(data).length !== 0 && data.constructor === Object) {
           this.work = data;
+          this._setMainColor();
 
           this._updateMetadata();
 
-          // HACK: Wait a ms to set the dataLoaded to true and trigger the video restamp
+          // HACK: Wait 10 ms to set the dataLoaded to true and trigger the video restamp
           setTimeout(() => {
             this.dataLoaded = true;
-          },1);
+          }, 10);
         }
       }
 
       stopPlayback() {
-        if (this.online && this.work.videoId) {
+        if (this.online && this.work.videoId && this.shadowRoot.querySelector('#video')) {
           this.shadowRoot.querySelector('#video').pause();
         }
       }
@@ -323,7 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           //Change background color for the work-view
           this.updateStyles({
-            '--progress-color': '#' + this.mainColor
+            '--progress-color': this.work.mainColor
           });
         }
       }
@@ -348,21 +370,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _computeCategories(categories){
-        return categories ? categories.join(" | ") : '';
+        let newCategories = [];
+        for (var key in categories) {
+          if (categories.hasOwnProperty(key)) {
+            newCategories.push({key: key, value: categories[key]});
+          }
+        }
+        return newCategories;
       }
 
-      _getMainColor(e){
-        var vibrant = new Vibrant(e.target, 8, 5);
-        var swatches = vibrant.swatches();
-        this.mainColor = swatches["Vibrant"].getHex().substring(1);
-
+      _setMainColor(){
         //Change browser theme color
         let metaThemeColor = document.querySelector('meta[name=theme-color]');
-        metaThemeColor.setAttribute("content", '#' + this.mainColor);
+        metaThemeColor.setAttribute("content", this.work.mainColor);
 
         //Change background color
         this.updateStyles({
-          '--progress-color': '#' + this.mainColor
+          '--progress-color': this.work.mainColor
         });
       }
 
