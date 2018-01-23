@@ -187,7 +187,7 @@ exports.generateThumbnail = functions.storage.object('works/{workSlug}').onChang
   // Exit if this is triggered on a file that is not an image.
   if (!contentType.startsWith('image/')) {
     console.log('This is not an image.');
-    return;
+    return null;
   }
 
   // Get the file name.
@@ -195,20 +195,20 @@ exports.generateThumbnail = functions.storage.object('works/{workSlug}').onChang
   // Exit if the image is already a thumbnail.
   if (fileName.startsWith('thumb_')) {
     console.log('Already a Thumbnail.');
-    return;
+    return null;
   }
 
   // Exit if this is a move or deletion event.
   if (resourceState === 'not_exists') {
     console.log('This is a deletion event.');
-    return;
+    return null;
   }
 
   // Exit if file exists but is not new and is only being triggered
   // because of a metadata change.
   if (resourceState === 'exists' && metageneration > 1) {
     console.log('This is a metadata change event.');
-    return;
+    return null;
   }
 
   // Download file from bucket.
