@@ -140,7 +140,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <firebase-document
       app-name="alejost848"
       path="/works/[[routeData.slug]]"
-      data="{{data}}"
+      data="{{work}}"
       online="{{online}}">
     </firebase-document>
 
@@ -267,7 +267,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </template>
               </div>
             </div>
-          </template>          
+          </template>
 
         </div>
 
@@ -286,9 +286,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             observer: '_activeChanged',
           },
-          data: {
-            type: Array,
-            observer: '_dataChanged'
+          work: {
+            type: Object,
+            observer: '_workChanged'
           },
           toastOpen: {
             type: Boolean,
@@ -297,12 +297,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-      _dataChanged(data){
+      _workChanged(data){
         if (this.active) {
           this.dataLoaded = false;
         }
+        //Check if the data is not empty
         if (Object.keys(data).length !== 0 && data.constructor === Object) {
-          this.work = data;
           this._setMainColor();
 
           this._updateMetadata();
