@@ -298,19 +298,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _workChanged(data){
+        //Prevent execution when view is not active
         if (this.active) {
           this.dataLoaded = false;
-        }
-        //Check if the data is not empty
-        if (Object.keys(data).length !== 0 && data.constructor === Object) {
-          this._setMainColor();
 
-          this._updateMetadata();
+          //Check if the data is not empty
+          if (Object.keys(data).length !== 0 && data.constructor === Object) {
+            this._setMainColor();
+            this._updateMetadata();
 
-          // HACK: Wait 10 ms to set the dataLoaded to true and trigger the video restamp
-          setTimeout(() => {
             this.dataLoaded = true;
-          }, 10);
+          }
         }
       }
 
@@ -336,17 +334,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           metaThemeColor.setAttribute("content", bgColor);
 
-          //Change background color for the work-view
+          //Change background color for the tutorial-view
           this.updateStyles({
             '--progress-color': '#333'
           });
         } else if (active && this.dataLoaded) {
-          this._updateMetadata();
-
-          //Change background color for the work-view
-          this.updateStyles({
-            '--progress-color': this.work.mainColor
-          });
+          setTimeout(() => {
+            this._updateMetadata();
+            this._setMainColor();
+          }, 10);
         }
       }
 

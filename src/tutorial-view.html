@@ -104,7 +104,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </google-youtube>
 
           <!-- HACK: Hidden image for getting the main color -->
-          <img on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
+          <img id="vibrant_image" on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>
         </template>
       </template>
 
@@ -183,12 +183,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--progress-color': '#333'
           });
         } else if (active && this.dataLoaded) {
-          this._updateMetadata();
-
-          //Change background color for the tutorial-view
-          this.updateStyles({
-            '--progress-color': '#' + this.mainColor
-          });
+          setTimeout(() => {
+            this._updateMetadata();
+            this._getMainColor();
+          }, 10);
         }
       }
 
@@ -216,8 +214,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return "Published " + moment(publishedDate).fromNow();
       }
 
-      _getMainColor(e){
-        var vibrant = new Vibrant(e.target, 8, 5);
+      _getMainColor(){
+        var vibrant = new Vibrant(this.shadowRoot.querySelector('#vibrant_image'), 8, 5);
         var swatches = vibrant.swatches();
         this.mainColor = swatches["Vibrant"].getHex().substring(1);
 

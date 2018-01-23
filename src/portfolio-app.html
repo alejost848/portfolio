@@ -547,9 +547,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         document.body.style.backgroundColor = bgColor;
 
-        //Change browser theme color
-        let metaThemeColor = document.querySelector('meta[name=theme-color]');
-        metaThemeColor.setAttribute("content", bgColor);
+        //Change browser theme color when not in tutorial or work view
+        if (this.page != "tutorial" && this.page != "work") {
+          let metaThemeColor = document.querySelector('meta[name=theme-color]');
+          metaThemeColor.setAttribute("content", bgColor);
+        }
       }
 
       _themeChanged(theme){
