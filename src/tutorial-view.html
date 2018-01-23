@@ -215,18 +215,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _getMainColor(){
-        var vibrant = new Vibrant(this.shadowRoot.querySelector('#vibrant_image'), 8, 5);
-        var swatches = vibrant.swatches();
-        this.mainColor = swatches["Vibrant"].getHex().substring(1);
+        //Only change the color when the view is active, otherwise you could be in another view and the URL bar color could change
+        if (this.active) {
+          var vibrant = new Vibrant(this.shadowRoot.querySelector('#vibrant_image'), 8, 5);
+          var swatches = vibrant.swatches();
+          this.mainColor = swatches["Vibrant"].getHex().substring(1);
 
-        //Change browser theme color
-        let metaThemeColor = document.querySelector('meta[name=theme-color]');
-        metaThemeColor.setAttribute("content", '#' + this.mainColor);
+          //Change browser theme color
+          let metaThemeColor = document.querySelector('meta[name=theme-color]');
+          metaThemeColor.setAttribute("content", '#' + this.mainColor);
 
-        //Change background color
-        this.updateStyles({
-          '--progress-color': '#' + this.mainColor
-        });
+          //Change background color
+          this.updateStyles({
+            '--progress-color': '#' + this.mainColor
+          });
+        }
       }
 
       _toastOpened(isOpen){
