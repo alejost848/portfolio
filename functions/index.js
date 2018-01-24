@@ -173,7 +173,7 @@ exports.handleFormSubmit = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.generateThumbnail = functions.storage.object('works/{workSlug}').onChange(event => {
+exports.generateThumbnail = functions.storage.object().onChange(event => {
   const object = event.data; // The Storage object.
 
   console.log(object);
