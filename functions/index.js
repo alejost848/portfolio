@@ -11,7 +11,8 @@ const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
 
 //Firebase storage
-const gcs = require('@google-cloud/storage')();
+const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-credentials.json'});
+
 const spawn = require('child-process-promise').spawn;
 const path = require('path');
 const os = require('os');
@@ -68,7 +69,7 @@ exports.handleSubscription = functions.database
     // If we are deleting the user stop doing stuff
     if (!event.data.exists()) {
       console.log(`User: ${uid} was removed`);
-      return;
+      return null;
     }
 
     const subscribed = event.data.val();
@@ -189,43 +190,62 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
   // Get the directory name.
   const directoryName = path.dirname(filePath);
+  let workPath;
   // Exit if the image is not a cover.
   if (!directoryName.endsWith('/cover')) {
-    console.log('This is not a cover.');
+    console.log('Thumbnail not needed for other images.');
     return null;
+  } else {
+    //Get the work path if the image is a cover
+    workPath = directoryName.slice(0, -6);
   }
 
   // Get the file name.
   const fileName = path.basename(filePath);
   // Exit if the image is already a thumbnail.
   if (fileName.startsWith('thumb_')) {
-    console.log('Already a Thumbnail.');
+    console.log('Thumbnail already created.');
     return null;
   }
 
-  // Exit if this is a move or deletion event.
+  // Remove thumbnail if cover is deleted
   if (resourceState === 'not_exists') {
-    console.log('This is a deletion event.');
-    return null;
+    const bucket = gcs.bucket(fileBucket);
+    return bucket.deleteFiles({ prefix: directoryName }).then(() => console.log('Thumbnail deleted.'));
   }
 
   // Download file from bucket.
   const bucket = gcs.bucket(fileBucket);
   const tempFilePath = path.join(os.tmpdir(), fileName);
   const metadata = { contentType: contentType };
+  // We add a 'thumb_' prefix to thumbnails file name. That's where we'll upload the thumbnail.
+  const thumbFileName = `thumb_${fileName}`;
+  const thumbFilePath = path.join(path.dirname(filePath), thumbFileName);
+
   return bucket.file(filePath).download({
     destination: tempFilePath
   }).then(() => {
     console.log('Image downloaded locally to', tempFilePath);
     // Generate a thumbnail using ImageMagick.
-    return spawn('convert', [tempFilePath, '-thumbnail', '200x200>', tempFilePath]);
+    return spawn('convert', [tempFilePath, '-thumbnail', '320x180>', tempFilePath]);
   }).then(() => {
     console.log('Thumbnail created at', tempFilePath);
-    // We add a 'thumb_' prefix to thumbnails file name. That's where we'll upload the thumbnail.
-    const thumbFileName = `thumb_${fileName}`;
-    const thumbFilePath = path.join(path.dirname(filePath), thumbFileName);
     // Uploading the thumbnail.
     return bucket.upload(tempFilePath, { destination: thumbFilePath, metadata: metadata });
-  // Once the thumbnail has been uploaded delete the local file to free up disk space.
-  }).then(() => fs.unlinkSync(tempFilePath));
+  }).then(() => {
+    console.log('Thumbnail uploaded to bucket.');
+    // Once the thumbnail has been uploaded delete the local file to free up disk space.
+    fs.unlinkSync(tempFilePath);
+
+    // Get the Signed URLs for the thumbnail and original image.
+    const config = {
+      action: 'read',
+      expires: '03-01-2500'
+    };
+    return bucket.file(thumbFilePath).getSignedUrl(config);
+  }).then((signedUrls) => {
+    console.log('Download URL generated.', signedUrls[0]);
+    // Upload the information to the database
+    return admin.database().ref(workPath).update({ thumbnail: signedUrls[0] });
+  }).then(() => console.log('Thumbnail saved to the database.'));
 });
