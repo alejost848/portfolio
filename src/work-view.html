@@ -135,7 +135,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-route route="{{route}}" pattern="/:slug" data="{{routeData}}"></app-route>
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-route route="{{route}}" pattern="/work/:slug" data="{{routeData}}"></app-route>
 
     <firebase-document
       app-name="alejost848"
