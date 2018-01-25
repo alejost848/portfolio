@@ -63,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <h1>Works</h1>
 
-    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" on-iron-select="_updateItems" class="layout horizontal wrap">
+    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" activate-event="" class="layout horizontal wrap">
       <a name="all" class="link category_item" href="[[rootPath]]works">All</a>
       <a name="animation" class="link category_item" href="[[rootPath]]works/animation">Animation</a>
       <a name="ui-ux" class="link category_item" href="[[rootPath]]works/ui-ux">UI / UX</a>
@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-selector>
 
     <div class="layout horizontal wrap">
-      <template id="dom_repeat" is="dom-repeat" items="[[works]]" as="work" filter="_filterByCategory">
+      <template id="dom_repeat" is="dom-repeat" items="[[works]]" as="work" filter="[[_filter(routeData.category)]]">
         <alejost-card href="[[rootPath]]work/[[work.$key]]" data="[[work]]"></alejost-card>
       </template>
     </div>
@@ -112,22 +112,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return obj[key];
         }).reverse();
       }
+
       _routeDataChanged() {
         if (this.route.path == '') {
           this.set('routeData.category', 'all');
         }
       }
-      _updateItems(){
-        setTimeout(() => {
-          this.$.dom_repeat.render();
-        }, 1);
-      }
-      _filterByCategory(item){
-        if (this.routeData && this.routeData.category != "all") {
-          return item.categories[this.routeData.category];
-        } else {
-          return true;
-        }
+
+      _filter(category) {
+        return function(item) {
+          if (category == "all") return true;
+          return item.categories[category];
+        };
       }
     }
 
