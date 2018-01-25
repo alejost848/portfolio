@@ -81,15 +81,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class WorksView extends Polymer.Element {
       static get is() { return 'works-view'; }
 
-      static get properties() {
-        return {
-          active: {
-            type: Boolean,
-            observer: '_activeChanged',
-          }
-        };
-      }
-
       static get observers() {
         return [
           '_routeDataChanged(route.path)'
@@ -98,12 +89,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
-      }
-
-      _activeChanged(active) {
-        if (active) {
-          this.$.dom_repeat.render();
-        }
       }
 
       _toArray(obj) {
@@ -122,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _filter(category) {
         return function(item) {
           if (category == "all") return true;
-          return item.categories[category];
+          return item.categories.hasOwnProperty(category);
         };
       }
     }
