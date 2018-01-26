@@ -61,6 +61,34 @@ exports.addTutorial = functions.database
     });
   });
 
+  exports.addWork = functions.database
+    .ref('/works/{workSlug}')
+    .onWrite(event => {
+      // Exit when the work is deleted
+      if (!event.data.exists()) {
+        console.log(`Work "${event.params.workSlug}" deleted.`);
+        return null;
+      }
+
+      let work = event.data.val();
+
+      //On create
+      if (!event.data.previous.exists()) {
+        //Takes the oldest work in home/latestWorks and replaces it with the new one
+        const root = event.data.ref.root;
+        return root.child('home/latestWorks')
+          .orderByChild("publishedDate")
+          .limitToFirst(1)
+          .once('child_added', (snapshot) => {
+            return snapshot.ref.update(work);
+          });
+      }
+
+      //On edit
+      // TODO: Add stuff from the paper-chips to multiple arrays in the database for autocompletion
+      return null;
+    });
+
 
 exports.createThumbnailFromVideoId = functions.database
   .ref('/works/{workSlug}/videoId')
