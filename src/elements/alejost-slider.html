@@ -134,8 +134,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <sliding-pages active-index="{{slide}}">
       <template is="dom-repeat" items="[[data]]" as="slide">
         <div class="slide">
-          <a href="[[rootPath]][[slide.slug]]" class="link">
-            <iron-image src="[[rootPath]]images/slider/[[slide.image]]" preload fade sizing="cover"></iron-image>
+          <a href="[[rootPath]][[slide.type]]/[[slide.slug]]" class="link">
+            <iron-image src="[[slide.image]]" preload fade sizing="cover"></iron-image>
           </a>
         </div>
       </template>
