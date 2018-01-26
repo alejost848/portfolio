@@ -268,6 +268,6 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   }).then((signedUrls) => {
     console.log('Download URL generated.', signedUrls[0]);
     // Upload the information to the database
-    return admin.database().ref(workPath).update({ thumbnail: signedUrls[0] });
+    return admin.database().ref(workPath).update({ thumbnail: signedUrls[0], videoId: null });
   }).then(() => console.log('Thumbnail saved to the database.'));
 });
