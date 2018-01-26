@@ -225,10 +225,15 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return null;
   }
 
-  // Remove thumbnail if cover is deleted
+  // If cover is deleted, remove thumbnail too
   if (resourceState === 'not_exists') {
     const bucket = gcs.bucket(fileBucket);
-    return bucket.deleteFiles({ prefix: directoryName }).then(() => console.log('Thumbnail deleted.'));
+    return bucket.deleteFiles({ prefix: directoryName }).then(() => {
+      //Remove coverImage and thumbnail from database
+      return admin.database().ref(workPath).update({ coverImage: null, thumbnail: null }).then(() => {
+        console.log('Thumbnail deleted.');
+      });
+    });
   }
 
   // Download file from bucket.
