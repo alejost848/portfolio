@@ -33,11 +33,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       path="/home/slider"
       data="{{firebaseSlider}}">
     </firebase-query>
-
     <app-indexeddb-mirror
       key="slider"
       data="{{firebaseSlider}}"
       persisted-data="{{slider}}">
+    </app-indexeddb-mirror>
+
+    <firebase-query
+      app-name="alejost848"
+      path="/home/latestWorks"
+      order-by-child="publishedDate"
+      limit-to-last="4"
+      data="{{firebaseWorks}}">
+    </firebase-query>
+    <app-indexeddb-mirror
+      key="latestTutorials"
+      data="{{firebaseWorks}}"
+      persisted-data="{{works}}">
     </app-indexeddb-mirror>
 
     <firebase-query
@@ -47,7 +59,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       limit-to-last="4"
       data="{{firebaseTutorials}}">
     </firebase-query>
-
     <app-indexeddb-mirror
       key="latestTutorials"
       data="{{firebaseTutorials}}"
@@ -56,13 +67,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <alejost-slider data="[[slider]]"></alejost-slider>
 
-    <alejost-module module-title="Latest tutorials" module-href="[[rootPath]]tutorials">
-      <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-        <alejost-card href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" data="[[tutorial]]"></alejost-card>
+    <alejost-module module-title="Latest works" module-href="[[rootPath]]works">
+      <template is="dom-repeat" items="[[works]]" as="work">
+        <alejost-card href="[[rootPath]]work/[[work.slug]]" data="[[work]]"></alejost-card>
       </template>
     </alejost-module>
 
-    <alejost-module module-title="Latest works" module-href="[[rootPath]]works">
+    <alejost-module module-title="Latest tutorials" module-href="[[rootPath]]tutorials">
       <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
         <alejost-card href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" data="[[tutorial]]"></alejost-card>
       </template>
@@ -80,6 +91,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Array,
             observer: '_tutorialsChanged'
           },
+          works: {
+            type: Array,
+            observer: '_worksChanged'
+          },
           slider: Array
         };
       }
@@ -95,11 +110,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.tutorials.length == 0) {
           this.tutorials = new Array(4);
         }
+        if (this.works.length == 0) {
+          this.works = new Array(4);
+        }
       }
 
       _tutorialsChanged(tutorials){
         if (tutorials.length > 0) {
           this.tutorials = this.sortByKeyDescending(tutorials, "publishedDate");
+        }
+      }
+
+      _worksChanged(works){
+        if (works.length > 0) {
+          this.works = this.sortByKeyDescending(works, "publishedDate");
         }
       }
 
