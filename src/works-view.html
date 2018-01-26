@@ -81,6 +81,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class WorksView extends Polymer.Element {
       static get is() { return 'works-view'; }
 
+      static get properties() {
+        return {
+          works: {
+            type: Array,
+            observer: '_worksChanged'
+          }
+        };
+      }
+
       static get observers() {
         return [
           '_routeDataChanged(route.path)'
@@ -109,6 +118,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (category == "all") return true;
           return item.categories.hasOwnProperty(category);
         };
+      }
+
+      _worksChanged(works){
+        if (works.length > 0) {
+          this.works = this.sortByKeyDescending(works, "publishedDate");
+        }
+      }
+
+      sortByKeyDescending(array, key) {
+        return array.sort(function(a, b) {
+          var x = a[key]; var y = b[key];
+          return ((x < y) ? -1 : ((x > y) ? 1 : 0))*-1;
+        });
       }
     }
 
