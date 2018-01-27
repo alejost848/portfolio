@@ -46,7 +46,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-accent-color: #2196f3;
         --app-linear-gradient: linear-gradient(to right, var(--app-accent-color), #00e5ff);
 
-        /*Cards dark theme*/
+        /*Dark theme*/
         --card-bg-color: #212121;
         --card-image-bg-color: #1e1e1e;
         --card-title-color: #f4f4f4;
@@ -58,6 +58,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --module-title-color: #eeeeee;
         --bottom-nav-bg-color: white;
         --bottom-nav-item-color: #777777;
+
+        --chip-background-color: rgba(255, 255, 255, 0.05);
+        --chip-color: rgba(255, 255, 255, 0.8);
 
         display: block;
       }
@@ -513,7 +516,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--page-title-color': '#555',
             '--module-title-color': '#666',
             '--bottom-nav-bg-color': 'white',
-            '--bottom-nav-item-color': '#777'
+            '--bottom-nav-item-color': '#777',
+
+            '--chip-background-color': 'rgba(0, 0, 0, 0.07)',
+            '--chip-color': 'rgba(0, 0, 0, 0.6)'
           });
           if (this.page != "tutorial" && this.page != "work") {
             this.updateStyles({
@@ -535,7 +541,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--page-title-color': 'white',
             '--module-title-color': '#eeeeee',
             '--bottom-nav-bg-color': '#212121',
-            '--bottom-nav-item-color': '#aaa'
+            '--bottom-nav-item-color': '#aaa',
+
+            '--chip-background-color': 'rgba(255, 255, 255, 0.05)',
+            '--chip-color': 'rgba(255, 255, 255, 0.8)'
           });
         }
         //Get a CSS property depending on whether the shady CSS polyfill is loaded:

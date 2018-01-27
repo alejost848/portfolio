@@ -27,18 +27,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
       iron-selector{
-        margin-top: 56px;
+        margin-top: 54px;
         margin-bottom: 30px;
         width: 100%;
       }
       .category_item{
-        background-color: var(--card-image-bg-color);
-        color: var(--card-description-color);
+        background-color: var(--chip-background-color);
+        color: var(--chip-color);
+        height: 32px;
+        line-height: 32px;
         font-size: 15px;
         border-radius: 30px;
+        box-sizing: border-box;
         padding: 4px 18px;
         margin: 2px;
         transition: background-color 0.1s cubic-bezier(0.4, 0.0, 1, 1);
+        @apply --layout-vertical;
+        @apply --layout-center-center;
       }
       .category_item.iron-selected{
         font-weight: 500;
