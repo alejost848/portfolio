@@ -41,7 +41,8 @@ exports.addTutorial = functions.database
     tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
 
     //Update the information of the new tutorial in /tutorials
-    return event.data.ref.update(tutorialInfo).then(() => {
+    return event.data.ref.update(tutorialInfo)
+    .then(() => {
       //After that, it takes the oldest tutorial in home/latestTutorials and replaces it with the new one
       const root = event.data.ref.root;
       return root.child('home/latestTutorials')
@@ -56,7 +57,7 @@ exports.addTutorial = functions.database
       return tutorialsCountRef.transaction(tutorialsCount => {
         return tutorialsCount + 1;
       }).then(() => {
-        null
+        return null;
       });
     });
   });
@@ -274,11 +275,12 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   // If cover is deleted, remove thumbnail too
   if (resourceState === 'not_exists') {
     const bucket = gcs.bucket(fileBucket);
-    return bucket.deleteFiles({ prefix: directoryName }).then(() => {
+    return bucket.deleteFiles({ prefix: directoryName })
+    .then(() => {
       //Remove coverImage and thumbnail from database
-      return admin.database().ref(workPath).update({ coverImage: null, thumbnail: null }).then(() => {
-        console.log('Thumbnail deleted.');
-      });
+      return admin.database().ref(workPath).update({ coverImage: null, thumbnail: null });
+    }).then(() => {
+      console.log('Thumbnail deleted.');
     });
   }
 
