@@ -81,14 +81,32 @@ exports.addTutorial = functions.database
           .limitToFirst(1)
           .once('child_added', (snapshot) => {
             return snapshot.ref.update(work);
+          })
+          .then(() => {
+            //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+            return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
           });
       }
 
       //On edit
-      // TODO: Add stuff from the paper-chips to multiple arrays in the database for autocompletion
-      return null;
+      //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+      return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
     });
 
+function getUpdatedObject(work) {  
+  // HACK: Multi-path updates
+  var updateObject = {};
+  let items = ["categories", "clients", "credits", "toolsUsed"];
+  for (var i = 0; i < items.length; i++) {
+    let item = items[i];
+    for (var key in work[item]) {
+      if (work[item].hasOwnProperty(key)) {
+        updateObject[`${item}/${key}`] = work[item][key];
+      }
+    }
+  }
+  return updateObject;
+}
 
 exports.createThumbnailFromVideoId = functions.database
   .ref('/works/{workSlug}/videoId')
