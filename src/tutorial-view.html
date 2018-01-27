@@ -93,15 +93,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
 
         <template is="dom-if" if="[[dataLoaded]]" restamp="true">
-          <google-youtube
-            id="video"
-            fluid
-            video-id="[[tutorial.videoId]]"
-            showinfo="0"
-            currenttime="{{videoCurrentTime}}"
-            duration="{{videoDuration}}"
-            rel="0">
-          </google-youtube>
+          <template is="dom-if" if="[[active]]" restamp="true">
+            <google-youtube
+              id="video"
+              fluid
+              video-id="[[tutorial.videoId]]"
+              showinfo="0"
+              currenttime="{{videoCurrentTime}}"
+              duration="{{videoDuration}}"
+              rel="0">
+            </google-youtube>
+          </template>
 
           <!-- HACK: Hidden image for getting the main color -->
           <img id="vibrant_image" on-load="_getMainColor" src="https://cors-anywhere.herokuapp.com/[[tutorial.thumbnail]]" crossorigin="Anonymous" hidden>

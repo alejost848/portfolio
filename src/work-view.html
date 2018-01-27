@@ -174,15 +174,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <template is="dom-if" if="[[dataLoaded]]" restamp="true">
           <template is="dom-if" if="[[work.videoId]]" restamp="true">
-            <google-youtube
-              id="video"
-              fluid
-              video-id="[[work.videoId]]"
-              showinfo="0"
-              currenttime="{{videoCurrentTime}}"
-              duration="{{videoDuration}}"
-              rel="0">
-            </google-youtube>
+            <template is="dom-if" if="[[active]]" restamp="true">
+              <google-youtube
+                id="video"
+                fluid
+                video-id="[[work.videoId]]"
+                showinfo="0"
+                currenttime="{{videoCurrentTime}}"
+                duration="{{videoDuration}}"
+                rel="0">
+              </google-youtube>
+            </template>
           </template>
 
           <template is="dom-if" if="[[!work.videoId]]">
@@ -250,20 +252,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
 
           <template is="dom-if" if="[[work.videos]]">
-            <div class="multimedia_group">
-              <div class="multimedia_title info_item_title">Videos</div>
-              <div class="layout horizontal wrap justified">
-                <template is="dom-repeat" items="[[work.videos]]" as="video">
-                  <google-youtube
-                    class="video_item"
-                    fluid
-                    video-id="[[video]]"
-                    showinfo="0"
-                    rel="0">
-                  </google-youtube>
-                </template>
+            <template is="dom-if" if="[[active]]" restamp="true">
+              <div class="multimedia_group">
+                <div class="multimedia_title info_item_title">Videos</div>
+                <div class="layout horizontal wrap justified">
+                  <template is="dom-repeat" items="[[work.videos]]" as="video">
+                    <google-youtube
+                      class="video_item"
+                      fluid
+                      video-id="[[video]]"
+                      showinfo="0"
+                      rel="0">
+                    </google-youtube>
+                  </template>
+                </div>
               </div>
-            </div>
+            </template>
           </template>
 
         </div>
