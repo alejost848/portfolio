@@ -9,18 +9,129 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="error-view">
   <template>
+    <style include="shared-styles"></style>
     <style>
       :host {
         display: block;
+      }
 
-        padding: 10px 20px;
+      .circle{
+        position: absolute;
+        animation: circles_animation 3s ease-in-out infinite alternate;
+        animation-timing-function: cubic-bezier(.6, 0, .4, 1);
+        opacity: 0.2;
+        background-color: var(--chip-background-color);
+        border-radius: 50%;
+      }
+
+      #circles_container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        z-index: -1;
+        min-height: 600px;
+      }
+
+      #small {
+        animation-delay: 0s;
+        width: 300px;
+        height: 300px;
+      }
+      #medium {
+        animation-delay: 0.3s;
+        width: 600px;
+        height: 600px;
+      }
+      #large {
+        animation-delay: 0.6s;
+        width: 900px;
+        height: 900px;
+      }
+      #xlarge {
+        animation-delay: 0.9s;
+        width: 1200px;
+        height: 1200px;
+      }
+      #xxlarge {
+        animation-delay: 1.2s;
+        width: 1500px;
+        height: 1500px;
+      }
+      #xxxlarge {
+        animation-delay: 1.5s;
+        width: 1800px;
+        height: 1800px;
+      }
+      #xxxxlarge {
+        animation-delay: 1.8s;
+        width: 2100px;
+        height: 2100px;
+      }
+
+      #text_container{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        text-align: center;
+        height: 100vh;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        pointer-events: none;
+        color: var(--chip-color);
+        min-height: 600px;
+      }
+      #large_number{
+        font-size: 100px;
+        line-height: 100px;
+        font-weight: 500;
+      }
+      #info_text{
+        margin-top: 10px;
+        opacity: 0.75;
+      }
+      #start_button{
+        margin-top: 30px;
+        pointer-events: all;
+      }
+
+      @keyframes circles_animation {
+        0% {
+          transform: scale(1.0);
+        }
+        100% {
+          transform: scale(1.1);
+        }
       }
     </style>
 
-    Oops you hit a 404. <a href="[[rootPath]]">Head back to home.</a>
+    <div id="circles_container">
+  		<div id="small" class="circle"></div>
+  		<div id="medium" class="circle"></div>
+  		<div id="large" class="circle"></div>
+  		<div id="xlarge" class="circle"></div>
+  		<div id="xxlarge" class="circle"></div>
+  		<div id="xxxlarge" class="circle"></div>
+  		<div id="xxxxlarge" class="circle"></div>
+  	</div>
+
+    <div id="text_container">
+      <div id="large_number">404</div>
+      <div id="info_text">Sorry, we can't find the page you're looking for.</div>
+      <a href="[[rootPath]]" class="link">
+        <paper-button id="start_button" raised class="raised_button">Start here</paper-button>
+      </a>
+    </div>
+
   </template>
 
   <script>
