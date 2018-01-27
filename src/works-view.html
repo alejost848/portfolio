@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
 
 <link rel="import" href="elements/alejost-module.html">
@@ -54,6 +55,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <app-route route="{{route}}" pattern="/:category" data="{{routeData}}"></app-route>
 
+    <firebase-document
+      app-name="alejost848"
+      path="/dashboard/autocompleteSuggestions/categories"
+      data="{{categories}}">
+    </firebase-document>
+
     <firebase-query
       app-name="alejost848"
       path="/works"
@@ -68,12 +75,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <h1>Works</h1>
 
-    <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" activate-event="" class="layout horizontal wrap">
-      <a name="all" class="link category_item" href="[[rootPath]]works">All</a>
-      <a name="animation" class="link category_item" href="[[rootPath]]works/animation">Animation</a>
-      <a name="ui-ux" class="link category_item" href="[[rootPath]]works/ui-ux">UI / UX</a>
-      <a name="web-development" class="link category_item" href="[[rootPath]]works/web-development">Web development</a>
-    </iron-selector>
+    <template is="dom-if" if="[[!_isEmptyObject(categories)]]">      
+      <iron-selector selected="[[routeData.category]]" attr-for-selected="name" fallback-selection="all" role="navigation" activate-event="" class="layout horizontal wrap">
+        <a name="all" class="link category_item" href="[[rootPath]]works">All</a>
+        <template is="dom-repeat" items="[[_computeSuggestions(categories)]]" as="category">
+          <a name="[[category.value]]" class="link category_item" href="[[rootPath]]works/[[category.value]]">[[category.text]]</a>
+        </template>
+      </iron-selector>
+    </template>
 
     <div class="layout horizontal wrap">
       <template id="dom_repeat" is="dom-repeat" items="[[works]]" as="work" filter="[[_filter(routeData.category)]]">
@@ -136,6 +145,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var x = a[key]; var y = b[key];
           return ((x < y) ? -1 : ((x > y) ? 1 : 0))*-1;
         });
+      }
+
+      _computeSuggestions(suggestions){
+        if (suggestions && !this._isEmptyObject(suggestions)) {
+          return Object.keys(suggestions).map(function(key) {
+            return { text: suggestions[key], value: key };
+          });
+        }
+      }
+
+      _isEmptyObject(object){
+        if (Object.keys(object).length === 0 && object.constructor === Object) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
 
