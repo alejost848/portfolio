@@ -2,6 +2,11 @@
   "rules": {
     ".read": "auth.uid === 'd9JhyoWr4LWRviqzQG7Sdzm0PZo2'",
     ".write": "auth.uid === 'd9JhyoWr4LWRviqzQG7Sdzm0PZo2'",
+    "dashboard": {
+      "autocompleteSuggestions": {
+        ".read": true
+      }
+    },
     "home": {
       ".read": true,
       "latestTutorials": {
