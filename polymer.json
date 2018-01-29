@@ -9,8 +9,8 @@
     "src/work-view.html",
     "src/about-view.html",
     "src/error-view.html",
-    "bower_components/paper-dialog/paper-dialog.html",
-    "bower_components/paper-toggle-button/paper-toggle-button.html"
+    "src/elements/notifications-dialog.html",
+    "bower_components/paper-dialog/paper-dialog.html"
   ],
   "sources": [
     "src/**/*",
