@@ -39,6 +39,8 @@ exports.addTutorial = functions.database
     tutorialInfo.episodeNumber = ('0' + titleAndEpisode.split("#")[1]).slice(-2);
     tutorialInfo.slug = slugify(tutorialInfo.episodeNumber + "-" + tutorialInfo.title, {lower: true});
     tutorialInfo.shortDescription = tutorialInfo.description.split(".")[0] + ".";
+    //Add seriesSlug to every tutorial saved to fix latestTutorials need for hard-coding "after-effects"
+    tutorialInfo.seriesSlug = event.params.seriesName;
 
     //Update the information of the new tutorial in /tutorials
     return event.data.ref.update(tutorialInfo)
