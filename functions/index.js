@@ -73,28 +73,12 @@ exports.addTutorial = functions.database
 
       let work = event.data.val();
 
-      //On create
-      if (!event.data.previous.exists()) {
-        //Takes the oldest work in home/latestWorks and replaces it with the new one
-        const root = event.data.ref.root;
-        return root.child('home/latestWorks')
-          .orderByChild("publishedDate")
-          .limitToFirst(1)
-          .once('child_added', (snapshot) => {
-            return snapshot.ref.update(work);
-          })
-          .then(() => {
-            //Add new stuff from the paper-chips to the database for autocompleteSuggestions
-            return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
-          });
-      }
-
-      //On edit
+      //On edit or on create
       //Add new stuff from the paper-chips to the database for autocompleteSuggestions
       return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
     });
 
-function getUpdatedObject(work) {  
+function getUpdatedObject(work) {
   // HACK: Multi-path updates
   var updateObject = {};
   let items = ["categories", "clients", "credits", "toolsUsed"];

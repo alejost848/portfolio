@@ -41,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <firebase-query
       app-name="alejost848"
-      path="/home/latestWorks"
+      path="/works"
       order-by-child="publishedDate"
       limit-to-last="4"
       data="{{firebaseWorks}}">
@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <alejost-module module-title="Latest works" module-href="[[rootPath]]works">
       <template is="dom-repeat" items="[[works]]" as="work">
-        <alejost-card href="[[rootPath]]work/[[work.slug]]" data="[[work]]"></alejost-card>
+        <alejost-card href="[[rootPath]]work/[[work.$key]]" data="[[work]]"></alejost-card>
       </template>
     </alejost-module>
 

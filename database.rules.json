@@ -11,9 +11,6 @@
       ".read": true,
       "latestTutorials": {
         ".indexOn": "publishedDate"
-      },
-      "latestWorks": {
-        ".indexOn": "publishedDate"
       }
     },
     "tutorials": {
@@ -32,7 +29,7 @@
     },
     "works": {
       ".read": true,
-      ".indexOn": ["publishedDate", "slug"]
+      ".indexOn": ["publishedDate"]
     }
   }
 }
