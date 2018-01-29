@@ -67,16 +67,20 @@ exports.addTutorial = functions.database
   exports.addWork = functions.database
     .ref('/works/{workSlug}')
     .onWrite(event => {
-      // Exit when the work is deleted
+      // When the work is deleted
+      // Remove contents of storage folder to save space
       if (!event.data.exists()) {
-        console.log(`Work "${event.params.workSlug}" deleted.`);
-        return null;
+        let workSlug = event.params.workSlug;
+        const bucket = gcs.bucket("alejost848-afea9.appspot.com");
+        return bucket.deleteFiles({ prefix: `works/${workSlug}` })
+        .then(() => {
+          console.log(`Work "${workSlug}" deleted.`);
+        });
       }
-
-      let work = event.data.val();
 
       //On edit or on create
       //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+      let work = event.data.val();
       return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
     });
 
