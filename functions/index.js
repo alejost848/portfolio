@@ -309,3 +309,56 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return admin.database().ref(workPath).update({ thumbnail: signedUrls[0], videoId: null });
   }).then(() => console.log('Thumbnail saved to the database.'));
 });
+
+exports.host = functions.https.onRequest((req, res) => {
+
+  const userAgent = req.headers['user-agent'];
+  const path = req.path.split("/");
+
+  //If the userAgent is a bot then render the tags for it
+  if (userAgent.startsWith('facebookexternalhit/1.1') || userAgent === 'Facebot' || userAgent.startsWith('Twitterbot')){
+
+    const metaPlaceholder = '<meta name="functions-insert-dynamic-meta">';
+
+    let view = path[1];
+    //Get data from database to construct the meta tags
+    if (view == "work" || view == "tutorial") {
+      let slug = path[2];
+
+      admin.database().ref(`${view}s/${slug}`).once('value', (snapshot) => {
+        const item = snapshot.val();
+        let tags = {
+          "title": `${item.title} - Alejandro Sanclemente`,
+          "og:title": `${item.title} - Alejandro Sanclemente`,
+          "description": item.shortDescription,
+          "og:description": item.shortDescription,
+          "og:type": "article",
+          "og:image": item.videoId ? `https://i.ytimg.com/vi/${item.videoId}/maxresdefault.jpg` : item.coverImage.downloadUrl,
+          "og:url": `https://alejo.st${req.path}`
+        };
+        res.status(200).send(generateMetaTags(tags));
+      });
+    }
+  } else {
+    //If it's not a bot, send the index file untouched
+    res.status(200).send(fs.readFileSync('./hosting/index.html').toString());
+  }
+});
+
+function generateMetaTags(tags){
+  let tagsString = '';
+  for (var key in tags) {
+    if (tags.hasOwnProperty(key)) {
+      //Title is a special case
+      if (key == 'title') {
+        tagsString += `<title>${tags[key]}</title>`;
+      } else {
+        // Check if it's Open Graph or regular meta tags to correctly set the attribute
+        const attribute = key.substring(0, 3) === 'og:' ? 'property' : 'name';
+        let escapedString = tags[key].replace(/\"/g,'&quot;');
+        tagsString += `<meta ${attribute}="${key}" content="${escapedString}"/>`;
+      }
+    }
+  }
+	return tagsString;
+};
