@@ -1,12 +1,11 @@
 const functions = require('firebase-functions');
 const slugify = require('slugify');
-const request = require("request");
 const admin = require('firebase-admin');
 
 //Send email
 const fs = require('fs');
 const cors = require('cors')({ origin: true });
-const rp = require('request-promise');
+const requestPromise = require('request-promise');
 const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
 
@@ -168,7 +167,7 @@ exports.handleFormSubmit = functions.https.onRequest((req, res) => {
   //Add CORS middleware
   cors(req, res, () => {
     //Add request-promise to check recaptcha validation
-    rp({
+    requestPromise({
       uri: 'https://recaptcha.google.com/recaptcha/api/siteverify',
       method: 'POST',
       formData: {
