@@ -113,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
 
-          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
+          <alejost-share toast-open="[[toastOpen]]" share-url="[[shareUrl]]"></alejost-share>
 
           <div id="publishedDate">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
           <div id="description">[[tutorial.description]]</div>
@@ -190,6 +190,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this._getMainColor();
           }, 10);
         }
+        this.shareUrl = window.location.href;
       }
 
       _updateMetadata(){

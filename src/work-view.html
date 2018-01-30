@@ -198,7 +198,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[dataLoaded]]">
         <div id="card_content">
 
-          <alejost-share toast-open="[[toastOpen]]"></alejost-share>
+          <alejost-share toast-open="[[toastOpen]]" share-url="[[shareUrl]]"></alejost-share>
 
           <div id="information">
             <div class="info_group info_item flex-4 layout vertical start">
@@ -345,6 +345,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this._setMainColor();
           }, 10);
         }
+        this.shareUrl = window.location.href;
       }
 
       _updateMetadata(){
