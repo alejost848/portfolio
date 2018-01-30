@@ -119,6 +119,7 @@ exports.handleSubscription = functions.database
   .ref('/users/{uid}/subscribed')
   .onWrite(event => {
     const uid = event.params.uid;
+    const subscribed = event.data.val();
 
     // If we are deleting the user stop doing stuff
     if (!event.data.exists()) {
@@ -126,47 +127,33 @@ exports.handleSubscription = functions.database
       return null;
     }
 
-    const subscribed = event.data.val();
+    //Get the user token
+    return admin.database()
+      .ref(`/users/${uid}/token`)
+      .once('value')
+      .then(snapshot => {
+        //Subscribe or unsubscribe the user to /topics/all and then update subscriptions count
+        const userToken = snapshot.val();
+        const subscriptions = admin.database().ref('dashboard/overview/subscriptions');
 
-    const root = event.data.ref.root;
-    root.child(`/users/${uid}/token`)
-      .once('value').then(snap => {
-        const userToken = snap.val();
-
-        let userCountRef = admin.database().ref('dashboard/overview/subscriptions');
-
-        let requestUrl;
         if (subscribed) {
-          requestUrl = "https://iid.googleapis.com/iid/v1:batchAdd";
-
-          userCountRef.transaction(userCount => {
-            return userCount + 1;
+          return admin.messaging().subscribeToTopic(userToken, '/topics/all').then(response => {
+            console.log("Successfully subscribed to topic", response);
+            return subscriptions.transaction(number => {
+              return number + 1;
+            });
           });
         } else {
-          requestUrl = "https://iid.googleapis.com/iid/v1:batchRemove";
-
-          userCountRef.transaction(userCount => {
-            return userCount - 1;
+          return admin.messaging().unsubscribeFromTopic(userToken, '/topics/all').then(response => {
+            console.log("Successfully unsubscribed from topic", response);
+            return subscriptions.transaction(number => {
+              return number - 1;
+            });
           });
         }
-
-        var options = {
-          method: 'POST',
-          url: requestUrl,
-          headers: {
-            'content-type': 'application/json',
-            authorization: 'key=AAAAtNIEDkk:APA91bFpY2GxbM1gyStOUD4E3Dll_L4INgDolt7QkKleCNQzDbWNFj2oreTX9nJMzLPlsBXog3EimR_xudvCymx1zMB2xDEEo1FkQPSXO74Vrl8GvMB2Mafd0NapkFFW87VwkY_1zAxh'
-          },
-          body: {
-            to: '/topics/all',
-            registration_tokens: [userToken]
-          },
-          json: true
-        };
-        request(options, function(error, response, body) {
-          if (error) throw new Error(error);
-          console.log("User: " + uid, "Subscribed: " + subscribed);
-        });
+      }).catch(function(error) {
+        console.log("Error subscribing/unsubscribing from topic:", error);
+        return null;
       });
   });
 
