@@ -62,25 +62,25 @@ exports.addTutorial = functions.database
     });
   });
 
-  exports.addWork = functions.database
-    .ref('/works/{workSlug}')
-    .onWrite(event => {
-      // When the work is deleted
-      // Remove contents of storage folder to save space
-      if (!event.data.exists()) {
-        let workSlug = event.params.workSlug;
-        const bucket = gcs.bucket("alejost848-afea9.appspot.com");
-        return bucket.deleteFiles({ prefix: `works/${workSlug}` })
+exports.addWork = functions.database
+  .ref('/works/{workSlug}')
+  .onWrite(event => {
+    // When the work is deleted
+    // Remove contents of storage folder to save space
+    if (!event.data.exists()) {
+      let workSlug = event.params.workSlug;
+      const bucket = gcs.bucket("alejost848-afea9.appspot.com");
+      return bucket.deleteFiles({ prefix: `works/${workSlug}` })
         .then(() => {
           console.log(`Work "${workSlug}" deleted.`);
         });
-      }
+    }
 
-      //On edit or on create
-      //Add new stuff from the paper-chips to the database for autocompleteSuggestions
-      let work = event.data.val();
-      return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
-    });
+    //On edit or on create
+    //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+    let work = event.data.val();
+    return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+  });
 
 function getUpdatedObject(work) {
   // HACK: Multi-path updates
