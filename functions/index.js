@@ -227,20 +227,21 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
   const fileName = path.basename(filePath);
   // Exit if the image is already a thumbnail.
   if (fileName.startsWith('thumb_')) {
-    console.log('Thumbnail already created.');
+    if (resourceState === 'exists') {
+      console.log('There is already a thumbnail.');
+    } else {
+      console.log('Thumbnail was deleted. Nothing to do here.');
+    }
     return null;
   }
 
-  // If cover is deleted, remove thumbnail too
+  // If cover is deleted remove cover folder, effectively removing the thumbnail
   if (resourceState === 'not_exists') {
     const bucket = gcs.bucket(fileBucket);
     return bucket.deleteFiles({ prefix: directoryName })
-    .then(() => {
-      //Remove coverImage and thumbnail from database
-      return admin.database().ref(workPath).update({ coverImage: null, thumbnail: null });
-    }).then(() => {
-      console.log('Thumbnail deleted.');
-    });
+      .then(() => {
+        console.log('Cover folder deleted.');
+      });
   }
 
   // Download file from bucket.
@@ -274,9 +275,12 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return bucket.file(thumbFilePath).getSignedUrl(config);
   }).then((signedUrls) => {
     console.log('Download URL generated.', signedUrls[0]);
-    // Upload the information to the database
+    // Upload the information to the database clearing the videoId to avoid problems on work creation
     return admin.database().ref(workPath).update({ thumbnail: signedUrls[0], videoId: null });
-  }).then(() => console.log('Thumbnail saved to the database.'));
+  }).then(() => {
+    console.log('Thumbnail saved to the database.');
+    return null;
+  });
 });
 
 exports.host = functions.https.onRequest((req, res) => {
