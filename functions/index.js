@@ -312,20 +312,30 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
 
 exports.host = functions.https.onRequest((req, res) => {
 
-  const userAgent = req.headers['user-agent'];
+  const userAgent = req.headers['user-agent'].toLowerCase();
   const path = req.path.split("/");
 
+  const isBot = userAgent.includes('yahoou') ||
+		userAgent.includes('bingbot') ||
+		userAgent.includes('baiduspider') ||
+		userAgent.includes('yandex') ||
+		userAgent.includes('yeti') ||
+		userAgent.includes('yodaobot') ||
+		userAgent.includes('gigabot') ||
+		userAgent.includes('ia_archiver') ||
+		userAgent.includes('facebookexternalhit') ||
+		userAgent.includes('twitterbot') ||
+		userAgent.includes('slackbot') ||
+		userAgent.includes('developers\.google\.com') ? true : false;
+
   //If the userAgent is a bot then render the tags for it
-  if (userAgent.startsWith('facebookexternalhit/1.1') || userAgent === 'Facebot' || userAgent.startsWith('Twitterbot')){
-
-    const metaPlaceholder = '<meta name="functions-insert-dynamic-meta">';
-
+  if (isBot){
     let view = path[1];
     //Get data from database to construct the meta tags
-    if (view == "work" || view == "tutorial") {
+    if (view == "work") {
       let slug = path[2];
 
-      admin.database().ref(`${view}s/${slug}`).once('value', (snapshot) => {
+      admin.database().ref(`works/${slug}`).once('value', (snapshot) => {
         const item = snapshot.val();
         let tags = {
           "title": `${item.title} - Alejandro Sanclemente`,
@@ -338,6 +348,38 @@ exports.host = functions.https.onRequest((req, res) => {
         };
         res.status(200).send(generateMetaTags(tags));
       });
+    } else if (view == "tutorial") {
+      let seriesName = path[2];
+      let tutorialSlug = path[3];
+
+      admin.database().ref(`tutorials/${seriesName}/videos/`)
+        .orderByChild("slug")
+        .equalTo(tutorialSlug)
+        .once('child_added', (snapshot) => {
+          const item = snapshot.val();
+          let tags = {
+            "title": `${item.title} - Alejandro Sanclemente`,
+            "og:title": `${item.title} - Alejandro Sanclemente`,
+            "description": item.shortDescription,
+            "og:description": item.shortDescription,
+            "og:type": "article",
+            "og:image": item.videoId ? `https://i.ytimg.com/vi/${item.videoId}/maxresdefault.jpg` : item.coverImage.downloadUrl,
+            "og:url": `https://alejo.st${req.path}`
+          };
+          res.status(200).send(generateMetaTags(tags));
+        });
+    } else {
+      //All other views
+      let tags = {
+        "title": "Alejandro Sanclemente - Motion Design, PWAs and more",
+        "og:title": "Alejandro Sanclemente - Motion Design, PWAs and more",
+        "description": "Interactive Media Designer based in Colombia. Motion Design, Design / Development of Progressive Web Apps using Polymer and Firebase, among other things. Check my portfolio and let's get in touch.",
+        "og:description": "Interactive Media Designer based in Colombia. Motion Design, Design / Development of Progressive Web Apps using Polymer and Firebase, among other things. Check my portfolio and let's get in touch.",
+        "og:type": "website",
+        "og:image": "https://alejo.st/images/cover.png",
+        "og:url": `https://alejo.st${req.path}`
+      };
+      res.status(200).send(generateMetaTags(tags));
     }
   } else {
     //If it's not a bot, send the index file untouched
