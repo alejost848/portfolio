@@ -75,7 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <alejost-module module-title="Latest tutorials" module-href="[[rootPath]]tutorials">
       <template is="dom-repeat" items="[[tutorials]]" as="tutorial">
-        <alejost-card href="[[rootPath]]tutorial/after-effects/[[tutorial.slug]]" data="[[tutorial]]"></alejost-card>
+        <alejost-card href="[[rootPath]]tutorial/[[tutorial.seriesSlug]]/[[tutorial.slug]]" data="[[tutorial]]"></alejost-card>
       </template>
     </alejost-module>
 
