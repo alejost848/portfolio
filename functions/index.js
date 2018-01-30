@@ -97,22 +97,6 @@ function getUpdatedObject(work) {
   return updateObject;
 }
 
-exports.createThumbnailFromVideoId = functions.database
-  .ref('/works/{workSlug}/videoId')
-  .onWrite(event => {
-    // Exit when removing videoId
-    if (!event.data.exists()) {
-      return null;
-    }
-
-    let workSlug = event.params.workSlug;
-    let videoId = event.data.val();
-
-    //Creation or edition event
-    let thumbnail = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
-    return admin.database().ref(`works/${workSlug}`).update( { thumbnail: thumbnail } );
-  });
-
 exports.handleSubscription = functions.database
   .ref('/users/{uid}/subscribed')
   .onWrite(event => {
