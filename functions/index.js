@@ -54,10 +54,25 @@ exports.addTutorial = functions.database
         });
     }).then(() => {
       console.log(`Tutorial "${tutorialInfo.title}" was added to latestTutorials`);
-      //Update tutorial count
-      const tutorialCount = admin.database().ref('dashboard/overview/tutorialCount');
-      return tutorialCount.transaction(number => {
+
+      //Add 1 to tutorialCount
+      const tutorialCountPromise = admin.database().ref('dashboard/overview/tutorialCount').transaction(number => {
         return number + 1;
+      });
+
+      //Send notification
+      const payload = {
+        notification: {
+          title: `New tutorial: ${tutorialInfo.title}`,
+          body: tutorialInfo.shortDescription,
+          icon: "/images/manifest/icon-72x72.png",
+          click_action: `https://alejo.st/tutorial/${tutorialInfo.seriesSlug}/${tutorialInfo.slug}`
+        }
+      };
+      const sendNotificationPromise = admin.messaging().sendToTopic('/topics/all', payload);
+
+      return Promise.all([tutorialCountPromise, sendNotificationPromise]).then(function(values) {
+        console.log(`Notification sent for "${tutorialInfo.title}".`);
       });
     });
   });
@@ -103,7 +118,7 @@ exports.addWork = functions.database
       const sendNotificationPromise = admin.messaging().sendToTopic('/topics/all', payload);
 
       return Promise.all([autocompletePromise, workCountPromise, sendNotificationPromise]).then(function(values) {
-        console.log(`Work "${workSlug}" created.`);
+        console.log(`Notification sent for "${workSlug}".`);
       });
     }
 
