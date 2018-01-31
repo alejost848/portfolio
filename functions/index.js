@@ -60,19 +60,18 @@ exports.addTutorial = functions.database
         return number + 1;
       });
 
-      //Send notification
-      const payload = {
-        notification: {
-          title: `New tutorial: ${tutorialInfo.title}`,
-          body: tutorialInfo.shortDescription,
-          icon: "/images/manifest/icon-72x72.png",
-          click_action: `https://alejo.st/tutorial/${tutorialInfo.seriesSlug}/${tutorialInfo.slug}`
-        }
+      //Add notification
+      const notification = {
+        title: `New tutorial: ${tutorialInfo.title}`,
+        body: tutorialInfo.shortDescription,
+        icon: "/images/manifest/icon-72x72.png",
+        click_action: `https://alejo.st/tutorial/${tutorialInfo.seriesSlug}/${tutorialInfo.slug}`,
+        publishedDate: admin.database.ServerValue.TIMESTAMP
       };
-      const sendNotificationPromise = admin.messaging().sendToTopic('/topics/all', payload);
+      const notificationPromise = admin.database().ref('dashboard/notifications').push(notification);
 
-      return Promise.all([tutorialCountPromise, sendNotificationPromise]).then(function(values) {
-        console.log(`Notification sent for "${tutorialInfo.title}".`);
+      return Promise.all([tutorialCountPromise, notificationPromise]).then(function(values) {
+        console.log(`Notification added for "${tutorialInfo.title}".`);
       });
     });
   });
@@ -106,19 +105,18 @@ exports.addWork = functions.database
         return number + 1;
       });
 
-      //Send notification
-      const payload = {
-        notification: {
-          title: `New work: ${work.title}`,
-          body: work.shortDescription,
-          icon: "/images/manifest/icon-72x72.png",
-    	    click_action: `https://alejo.st/work/${workSlug}`
-        }
+      //Add notification
+      const notification = {
+        title: `New work: ${work.title}`,
+        body: work.shortDescription,
+        icon: "/images/manifest/icon-72x72.png",
+  	    click_action: `https://alejo.st/work/${workSlug}`,
+        publishedDate: admin.database.ServerValue.TIMESTAMP
       };
-      const sendNotificationPromise = admin.messaging().sendToTopic('/topics/all', payload);
+      const notificationPromise = admin.database().ref('dashboard/notifications').push(notification);
 
-      return Promise.all([autocompletePromise, workCountPromise, sendNotificationPromise]).then(function(values) {
-        console.log(`Notification sent for "${workSlug}".`);
+      return Promise.all([autocompletePromise, workCountPromise, notificationPromise]).then(function(values) {
+        console.log(`Notification added for "${workSlug}".`);
       });
     }
 
@@ -144,6 +142,24 @@ function getUpdatedObject(work) {
   }
   return updateObject;
 }
+
+exports.sendNotification = functions.database
+  .ref('/dashboard/notifications/{key}')
+  .onCreate(event => {
+    const notification = event.data.val();
+    const payload = {
+      notification: {
+        title: notification.title,
+        body: notification.body,
+        icon: notification.icon,
+        click_action: notification.click_action
+      }
+    };
+    return admin.messaging().sendToTopic('/topics/all', payload)
+      .then(() => {
+        console.log(`Notification sent: "${notification.title}".`);
+      });
+  });
 
 exports.handleSubscription = functions.database
   .ref('/users/{uid}/subscribed')
