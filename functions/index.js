@@ -65,21 +65,54 @@ exports.addTutorial = functions.database
 exports.addWork = functions.database
   .ref('/works/{workSlug}')
   .onWrite(event => {
-    // When the work is deleted
-    // Remove contents of storage folder to save space
+    const workSlug = event.params.workSlug;
+
+    // On delete
     if (!event.data.exists()) {
-      let workSlug = event.params.workSlug;
+      // Remove contents of storage folder to save space
       const bucket = gcs.bucket("alejost848-afea9.appspot.com");
       return bucket.deleteFiles({ prefix: `works/${workSlug}` })
         .then(() => {
           console.log(`Work "${workSlug}" deleted.`);
+          //Remove 1 from workCount
+          return admin.database().ref('dashboard/overview/workCount').transaction(number => {
+            return number - 1;
+          });
         });
     }
 
-    //On edit or on create
-    //Add new stuff from the paper-chips to the database for autocompleteSuggestions
-    let work = event.data.val();
-    return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+    // On create
+    if (!event.data.previous.exists()) {
+      //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+      const work = event.data.val();
+      const autocompletePromise = admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+      //Add 1 to workCount
+      const workCountPromise = admin.database().ref('dashboard/overview/workCount').transaction(number => {
+        return number + 1;
+      });
+
+      //Send notification
+      const payload = {
+        notification: {
+          title: `New work: ${work.title}`,
+          body: work.shortDescription,
+          icon: "/images/manifest/icon-72x72.png",
+    	    click_action: `https://alejo.st/work/${workSlug}`
+        }
+      };
+      const sendNotificationPromise = admin.messaging().sendToTopic('/topics/all', payload);
+
+      return Promise.all([autocompletePromise, workCountPromise, sendNotificationPromise]).then(function(values) {
+        console.log(`Work "${workSlug}" created.`);
+      });
+    }
+
+    //On edit
+    if (event.data.previous.exists()) {
+      //Add new stuff from the paper-chips to the database for autocompleteSuggestions
+      const work = event.data.val();
+      return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+    }
   });
 
 function getUpdatedObject(work) {
