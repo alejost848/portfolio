@@ -117,7 +117,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       handleMessage(e){
         if (e.detail.value) {
-          console.log('message received:', e.detail.value.notification);
+          const notification = e.detail.value.notification;
+          this.openToast(
+            notification.title,
+            0,
+            'Watch',
+            function() {
+              window.location = notification.click_action;
+            }
+          );
         }
       }
 
@@ -137,8 +145,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.notifications_dialog.close();
       }
 
-      openToast(text, duration){
-        this.dispatchEvent(new CustomEvent('show-toast', { detail: {text: text, duration: duration}, bubbles: true, composed: true }));
+      openToast(text, duration, buttonText, buttonTapHandler){
+        this.dispatchEvent(new CustomEvent('show-toast', { detail: {text: text, duration: duration, buttonText: buttonText, buttonTapHandler: buttonTapHandler}, bubbles: true, composed: true }));
       }
 
       _computeIcon(online, userSubscribed){
