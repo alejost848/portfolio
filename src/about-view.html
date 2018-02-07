@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       #message_input{
         --paper-input-container-input:{
-          max-height: 72px;
+          max-height: 120px;
           box-shadow: none;
         }
       }
@@ -114,12 +114,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-icon-button-ink-color: var(--header-color);
       }
 
-      @media (max-width: 1100px) {
+      @media (max-width: 900px) {
         .cards_container{
           @apply --layout-vertical;
         }
         .card_group{
           width: 100%;
+        }
+      }
+      @media (max-width: 600px) {
+        .card{
+          padding: 20px;
+        }
+        p{
+          font-size: 14px;
+          line-height: 20px;
+        }
+        .text{
+          font-size: 14px;
+          text-align: center;
+        }
+        #credits{
+          @apply --layout-vertical;
+          @apply --layout-center;
+          padding: 10px;
+        }
+        #credits .text{
+          display: none;
         }
       }
     </style>
@@ -157,17 +178,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <p>
             Need more information or a quote?
             <br>
-            Use the form below or send me an email at:
             <br>
+            Fill in the form below:
             <br>
-            <strong>hello@alejo.st</strong>
           </p>
           <iron-form id="form" on-iron-form-response="_recaptchaResponded">
             <form method="post" action="/submitForm">
               <paper-input id="name_input" label="Name (optional)" name="name"></paper-input>
               <paper-input id="email_input" label="Email" name="email" type="email" required error-message="Enter a valid email address"></paper-input>
               <paper-input id="subject_input" label="Subject" name="subject" required error-message="Subject can't be empty"></paper-input>
-              <paper-textarea id="message_input" name="message" label="Message" rows="3" required error-message="Message can't be empty"></paper-textarea>
+              <paper-textarea id="message_input" name="message" label="Message" rows="5" required error-message="Message can't be empty"></paper-textarea>
               <input name="recaptcha_token" value="[[token]]" hidden>
             </form>
           </iron-form>
@@ -205,18 +225,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div id="credits" class="card layout horizontal center">
           <div class="text">©[[actualYear]] Alejandro Sanclemente</div>
           <span class="flex"></span>
-          <a href="https://youtube.com/alejost848" target="_blank" rel="noopener" class="link">
-            <paper-icon-button icon="alejost-icons:youtube"></paper-icon-button>
-          </a>
-          <a href="https://github.com/alejost848" target="_blank" rel="noopener" class="link">
-            <paper-icon-button icon="alejost-icons:github"></paper-icon-button>
-          </a>
-          <a href="https://twitter.com/alejost848" target="_blank" rel="noopener" class="link">
-            <paper-icon-button icon="alejost-icons:twitter"></paper-icon-button>
-          </a>
-          <a href="https://dribbble.com/alejost848" target="_blank" rel="noopener" class="link">
-            <paper-icon-button icon="alejost-icons:dribbble"></paper-icon-button>
-          </a>
+          <div class="layout horizontal center">
+            <a href="https://youtube.com/alejost848" target="_blank" rel="noopener" class="link">
+              <paper-icon-button icon="alejost-icons:youtube"></paper-icon-button>
+            </a>
+            <a href="https://github.com/alejost848" target="_blank" rel="noopener" class="link">
+              <paper-icon-button icon="alejost-icons:github"></paper-icon-button>
+            </a>
+            <a href="https://twitter.com/alejost848" target="_blank" rel="noopener" class="link">
+              <paper-icon-button icon="alejost-icons:twitter"></paper-icon-button>
+            </a>
+            <a href="https://dribbble.com/alejost848" target="_blank" rel="noopener" class="link">
+              <paper-icon-button icon="alejost-icons:dribbble"></paper-icon-button>
+            </a>
+          </div>
         </div>
       </div>
     </div>
