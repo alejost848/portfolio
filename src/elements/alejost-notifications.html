@@ -15,7 +15,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 
-<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-messaging.html">
 
@@ -34,12 +33,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-icon-button-ink-color: var(--header-color);
       }
     </style>
-
-    <firebase-auth
-      id="auth"
-      app-name="alejost848"
-      user="{{user}}">
-    </firebase-auth>
 
     <firebase-messaging
       id="messaging"
@@ -81,10 +74,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class AlejostNotifications extends Polymer.Element {
       static get is() { return 'alejost-notifications'; }
 
+      static get properties() {
+        return {
+          online: Boolean,
+          user: Object
+        };
+      }
+
       ready() {
         super.ready();
-
-        this.$.auth.signInAnonymously();
       }
 
       toggleSubscription(){

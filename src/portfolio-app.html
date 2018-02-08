@@ -249,7 +249,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <a class="link" href="[[rootPath]]about">About</a>
           </paper-tab>
         </paper-tabs>
-        <alejost-notifications online="[[online]]" on-show-toast="_openToast"></alejost-notifications>
+        <alejost-notifications online="[[online]]" user="[[user]]" on-show-toast="_openToast"></alejost-notifications>
       </div>
     </div>
 
@@ -329,6 +329,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready(){
         super.ready();
+        this.$.auth.signInAnonymously();
         //Show reload toast if there's a new version available
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
