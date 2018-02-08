@@ -88,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       toggleSubscription(){
-        if (this.userSubscribed) {
+        if (!this.userSubscribed) {
           this.firebaseSubscribed = false;
           this.openToast("You won't receive any new notifications", 4000);
           this.closeNotificationsDialog();
@@ -99,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.closeNotificationsDialog();
           }, (error) => {
             this.userSubscribed = false;
-            this.openToast("To subscribe, allow notifications and reload the site", 4000);
+            this.openToast("To subscribe, allow notifications in your browser", 4000);
             this.$.toast.show();
           });
         }
