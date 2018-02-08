@@ -53,6 +53,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: var(--card-title-color);
         margin-bottom: 24px;
       }
+      #dialog_title{
+        font-size: 20px;
+        font-weight: 500;
+      }
       #notifications_content ul{
         padding-left: 20px;
       }
@@ -106,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div id="notifications_content">
         <div id="notifications_content_header" class="layout horizontal center">
-          <div class="dialog_title">Notifications</div>
+          <div id="dialog_title">Notifications</div>
           <span class="flex"></span>
           <paper-toggle-button on-tap="toggleSubscription" checked="{{subscribed}}"></paper-toggle-button>
         </div>

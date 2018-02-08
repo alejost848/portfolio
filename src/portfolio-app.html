@@ -145,6 +145,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center-center;
       }
 
+      paper-toast{
+        --paper-toast-background-color: var(--toast-bg-color);
+        --paper-toast-color: var(--toast-color);
+        margin: 24px;
+      }
+
       #toastAction {
         font-weight: 500;
         padding: 0;
@@ -184,6 +190,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #bottom_nav{
           display: block;
+        }
+        paper-toast{
+          min-width: 0;
+          margin: 0;
+          margin-bottom: 56px;
+          width: 100%;
+          border-radius: 0;
         }
       }
     </style>

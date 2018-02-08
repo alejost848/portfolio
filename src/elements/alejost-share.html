@@ -58,6 +58,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 8px !important;
         padding-left: 16px !important;
       }
+      #dialog_title{
+        font-size: 20px;
+        font-weight: 500;
+      }
 
       #buttons{
         padding: 16px !important;
@@ -108,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <template is="dom-if" if="[[opened]]">
         <div id="title" class="layout horizontal center">
-          <div class="dialog_title">Share</div>
+          <div id="dialog_title">Share</div>
           <span class="flex"></span>
           <paper-icon-button icon="alejost-icons:close" on-tap="closeDialog"></paper-icon-button>
         </div>
