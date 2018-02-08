@@ -75,10 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           box-shadow: none;
         }
       }
-      .raised_button{
-        height: 36px;
-      }
-      .raised_button[disabled]{
+      paper-button[disabled]{
         background-color: #ccc;
       }
       #sending_label{
@@ -203,7 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               hidden="[[hideRecaptcha]]"
               on-google-recaptcha-response="_submitForm">
             </google-recaptcha>
-            <paper-button raised class="raised_button" on-tap="sendEmail" disabled="[[sendingForm]]">
+            <paper-button raised on-tap="sendEmail" disabled="[[sendingForm]]">
               <paper-spinner-lite active alt="Validating form" hidden="[[!sendingForm]]"></paper-spinner-lite>
               <span id="sending_label" hidden="[[!sendingForm]]">Sending</span>
               <span hidden="[[sendingForm]]">Send</span>
