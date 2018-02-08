@@ -15,6 +15,7 @@ const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-cred
 const spawn = require('child-process-promise').spawn;
 const path = require('path');
 const os = require('os');
+const mkdirp = require('mkdirp-promise');
 
 admin.initializeApp(functions.config().firebase);
 
@@ -105,6 +106,9 @@ exports.addWork = functions.database
         return number + 1;
       });
 
+      // Compress cover and generate thumbnail
+      const coverImagePromise = handleCoverImage(workSlug, work);
+
       //Add notification
       const notification = {
         title: `New work: ${work.title}`,
@@ -115,8 +119,8 @@ exports.addWork = functions.database
       };
       const notificationPromise = admin.database().ref('dashboard/notifications').push(notification);
 
-      return Promise.all([autocompletePromise, workCountPromise, notificationPromise]).then(function(values) {
-        console.log(`Notification added for "${workSlug}".`);
+      return Promise.all([autocompletePromise, workCountPromise, notificationPromise, coverImagePromise]).then(function(values) {
+        console.log(`"${workSlug}" processing completed.`);
       });
     }
 
@@ -124,9 +128,96 @@ exports.addWork = functions.database
     if (event.data.previous.exists()) {
       //Add new stuff from the paper-chips to the database for autocompleteSuggestions
       const work = event.data.val();
-      return admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+      const autocompletePromise = admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
+
+      // Compress cover and generate thumbnail
+      const coverImagePromise = handleCoverImage(workSlug, work);
+
+      return Promise.all([autocompletePromise, coverImagePromise]).then(function(values) {
+        console.log(`"${workSlug}" is ready to see.`);
+      });
     }
   });
+
+function handleCoverImage(workSlug, work) {
+  const JPEG_EXTENSION = '.jpg';
+
+  const bucket = gcs.bucket("alejost848-afea9.appspot.com");
+
+  const coverPath = work.coverImage.path;
+  const coverDirectory = path.dirname(coverPath);
+  const coverNameOnly = path.basename(coverPath, path.extname(coverPath));
+
+  // Exit if the image is already compressed
+  if (coverNameOnly.startsWith('compressed_')) {
+    return null;
+  }
+
+  const compressedCoverPath = path.normalize(path.format({dir: coverDirectory, name: `compressed_${coverNameOnly}`, ext: JPEG_EXTENSION})); // Compressed image path
+  const thumbnailPath = path.join(coverDirectory, `thumb_${coverNameOnly}${JPEG_EXTENSION}`); // Thumbnail image path
+
+  const tempCoverPath = path.join(os.tmpdir(), coverPath); // Temporary local file
+  const tempLocalDir = path.dirname(tempCoverPath);
+  const tempCompressedCoverPath = path.join(os.tmpdir(), compressedCoverPath); // Temporary JPEG file
+  const tempThumbnailPath = path.join(os.tmpdir(), thumbnailPath); // Temporary JPEG file
+
+  // Create the temp directory where the storage file will be downloaded.
+  return mkdirp(tempLocalDir).then(() => {
+    // Download file from bucket.
+    return bucket.file(coverPath).download({ destination: tempCoverPath });
+  }).then(() => {
+    console.log('Image downloaded locally to', tempCoverPath);
+    // Convert image to JPEG with lower quality to reduce file size
+    return spawn('convert', [tempCoverPath, '-strip', '-quality', '80', tempCompressedCoverPath]);
+  }).then(() => {
+    console.log('Compressed image created at', tempCoverPath);
+    // Upload the compressed image
+    return bucket.upload(tempCompressedCoverPath, { destination: compressedCoverPath });
+  }).then(() => {
+    console.log('Compressed image uploaded to bucket.');
+    // Generate the thumbnail
+    return spawn('convert', [tempCoverPath, '-thumbnail', '320x180>', tempThumbnailPath]);
+  }).then(() => {
+    console.log('Thumbnail created at', tempThumbnailPath);
+    // Upload the thumbnail.
+    return bucket.upload(tempThumbnailPath, { destination: thumbnailPath });
+  }).then(() => {
+    console.log('Thumbnail uploaded to bucket.');
+    // Remove original cover image from bucket
+    return bucket.file(coverPath).delete();
+  }).then(() => {
+    console.log('Original cover removed from bucket.');
+
+    // Delete the local files to free up disk space.
+    fs.unlinkSync(tempCoverPath);
+    fs.unlinkSync(tempCompressedCoverPath);
+    fs.unlinkSync(tempThumbnailPath);
+
+    // Get the Signed URLs for the compressed cover and thumbnail.
+    const config = {
+      action: 'read',
+      expires: '03-01-2500'
+    };
+
+    const getCompressedCoverUrl = bucket.file(compressedCoverPath).getSignedUrl(config);
+    const getThumbnailUrl = bucket.file(thumbnailPath).getSignedUrl(config);
+
+    return Promise.all([getCompressedCoverUrl, getThumbnailUrl]);
+  }).then((signedUrls) => {
+    console.log('Download URLs generated.', signedUrls[0][0], signedUrls[1][0]);
+    // Upload the information to the database
+    return admin.database().ref(`/works/${workSlug}`).update({
+      coverImage: {
+        downloadUrl: signedUrls[0][0],
+        path: compressedCoverPath
+      },
+      thumbnail: signedUrls[1][0]
+    });
+  }).then(() => {
+    console.log('Images saved to the database.');
+    return null;
+  });
+}
 
 function getUpdatedObject(work) {
   // HACK: Multi-path updates
@@ -261,11 +352,15 @@ exports.handleFormSubmit = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.generateThumbnail = functions.storage.object().onChange(event => {
+exports.handleImages = functions.storage.object().onChange(event => {
   const object = event.data; // The Storage object.
 
   const fileBucket = object.bucket; // The Storage bucket that contains the file.
+  const bucket = gcs.bucket(fileBucket);
   const filePath = object.name; // File path in the bucket.
+  const directoryName = path.dirname(filePath); // Get the directory name.
+  const fileName = path.basename(filePath); // Get the file name.
+
   const contentType = object.contentType; // File content type.
   const resourceState = object.resourceState; // The resourceState is 'exists' or 'not_exists' (for file/folder deletions).
 
@@ -275,76 +370,26 @@ exports.generateThumbnail = functions.storage.object().onChange(event => {
     return null;
   }
 
-  // Get the directory name.
-  const directoryName = path.dirname(filePath);
-  let workPath;
   // Exit if the image is not a cover.
   if (!directoryName.endsWith('/cover')) {
-    console.log('Thumbnail not needed for other images.');
-    return null;
-  } else {
-    //Get the work path if the image is a cover
-    workPath = directoryName.slice(0, -6);
-  }
-
-  // Get the file name.
-  const fileName = path.basename(filePath);
-  // Exit if the image is already a thumbnail.
-  if (fileName.startsWith('thumb_')) {
-    if (resourceState === 'exists') {
-      console.log('There is already a thumbnail.');
-    } else {
-      console.log('Thumbnail was deleted. Nothing to do here.');
-    }
+    // TODO: Do something for other images, here or in the addWork function
+    console.log('This is a normal image.');
     return null;
   }
 
-  // If cover is deleted remove cover folder, effectively removing the thumbnail
+  // If the compressed image is deleted, delete the thumbnail too by removing the cover folder
   if (resourceState === 'not_exists') {
-    const bucket = gcs.bucket(fileBucket);
-    return bucket.deleteFiles({ prefix: directoryName })
-      .then(() => {
-        console.log('Cover folder deleted.');
-      });
+    if (fileName.startsWith('compressed_')) {
+      return bucket.deleteFiles({ prefix: directoryName })
+        .then(() => {
+          console.log('Cover folder deleted.');
+        });
+    }
   }
 
-  // Download file from bucket.
-  const bucket = gcs.bucket(fileBucket);
-  const tempFilePath = path.join(os.tmpdir(), fileName);
-  const metadata = { contentType: contentType };
-  // We add a 'thumb_' prefix to thumbnails file name. That's where we'll upload the thumbnail.
-  const thumbFileName = `thumb_${fileName}`;
-  const thumbFilePath = path.join(path.dirname(filePath), thumbFileName);
-
-  return bucket.file(filePath).download({
-    destination: tempFilePath
-  }).then(() => {
-    console.log('Image downloaded locally to', tempFilePath);
-    // Generate a thumbnail using ImageMagick.
-    return spawn('convert', [tempFilePath, '-thumbnail', '320x180>', tempFilePath]);
-  }).then(() => {
-    console.log('Thumbnail created at', tempFilePath);
-    // Uploading the thumbnail.
-    return bucket.upload(tempFilePath, { destination: thumbFilePath, metadata: metadata });
-  }).then(() => {
-    console.log('Thumbnail uploaded to bucket.');
-    // Once the thumbnail has been uploaded delete the local file to free up disk space.
-    fs.unlinkSync(tempFilePath);
-
-    // Get the Signed URLs for the thumbnail and original image.
-    const config = {
-      action: 'read',
-      expires: '03-01-2500'
-    };
-    return bucket.file(thumbFilePath).getSignedUrl(config);
-  }).then((signedUrls) => {
-    console.log('Download URL generated.', signedUrls[0]);
-    // Upload the information to the database clearing the videoId to avoid problems on work creation
-    return admin.database().ref(workPath).update({ thumbnail: signedUrls[0], videoId: null });
-  }).then(() => {
-    console.log('Thumbnail saved to the database.');
-    return null;
-  });
+  // Return null for cover related stuff
+  console.log("Nothing to do here.");
+  return null;
 });
 
 exports.host = functions.https.onRequest((req, res) => {
