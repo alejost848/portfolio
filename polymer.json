@@ -10,7 +10,8 @@
     "src/about-view.html",
     "src/error-view.html",
     "src/elements/notifications-dialog.html",
-    "bower_components/paper-dialog/paper-dialog.html"
+    "bower_components/paper-dialog/paper-dialog.html",
+    "bower_components/paper-toast/paper-toast.html"
   ],
   "sources": [
     "src/**/*",
