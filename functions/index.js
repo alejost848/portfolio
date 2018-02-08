@@ -453,10 +453,10 @@ exports.host = functions.https.onRequest((req, res) => {
     } else {
       //All other views
       let tags = {
-        "title": "Alejandro Sanclemente - Motion Design, PWAs and more",
-        "og:title": "Alejandro Sanclemente - Motion Design, PWAs and more",
-        "description": "Interactive Media Designer based in Colombia. Motion Design, Design / Development of Progressive Web Apps using Polymer and Firebase, among other things. Check my portfolio and let's get in touch.",
-        "og:description": "Interactive Media Designer based in Colombia. Motion Design, Design / Development of Progressive Web Apps using Polymer and Firebase, among other things. Check my portfolio and let's get in touch.",
+        "title": "Alejandro Sanclemente - Motion Designer and Progressive Web Apps Developer",
+        "og:title": "Alejandro Sanclemente - Motion Designer and Progressive Web Apps Developer",
+        "description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
+        "og:description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
         "og:type": "website",
         "og:image": "https://alejo.st/images/cover.png",
         "og:url": `https://alejo.st${req.path}`
