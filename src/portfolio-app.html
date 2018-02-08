@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-app.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
@@ -442,31 +443,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _openToast(e){
-        Polymer.importHref(
-          this.resolveUrl('/bower_components/paper-toast/paper-toast.html'),
-          () => {
-            //Hide previous toast if opened and show the new toast after waiting for the other to close
-            this._currentToast = e.detail;
+        //Hide previous toast if opened and show the new toast after waiting for the other to close
+        this._currentToast = e.detail;
 
-            let waitTime = 0;
-            if (this.$.toast.opened) {
-              this.$.toast.hide();
-              waitTime = 300;
-            }
-            setTimeout(() => {
-              if (this._currentToast.buttonText != undefined) {
-                this.$.toastAction.removeAttribute('hidden');
-                this.$.toastAction.textContent = this._currentToast.buttonText;
-              } else {
-                this.$.toastAction.setAttribute('hidden', '');
-              }
-              this.toastText = this._currentToast.text;
-              this.toastDuration = this._currentToast.duration;
-              this.$.toast.show();
-            }, waitTime);
-          },
-          null,
-          true);
+        let waitTime = 0;
+        if (this.$.toast.opened) {
+          this.$.toast.hide();
+          waitTime = 300;
+        }
+        setTimeout(() => {
+          if (this._currentToast.buttonText != undefined) {
+            this.$.toastAction.removeAttribute('hidden');
+            this.$.toastAction.textContent = this._currentToast.buttonText;
+          } else {
+            this.$.toastAction.setAttribute('hidden', '');
+          }
+          this.toastText = this._currentToast.text;
+          this.toastDuration = this._currentToast.duration;
+          this.$.toast.show();
+        }, waitTime);
       }
 
       _handleToastAction() {
@@ -483,9 +478,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _onlineStateChanged(online){
         if (online) {
-          if (this.$.toast.opened) {
-            this.$.toast.hide();
-          }
+          this.$.toast.hide();
         } else {
           this._openToast({detail: {text: "Offline. Some content may not be available.", duration: 0}});
         }
