@@ -62,6 +62,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --chip-background-color: rgba(255, 255, 255, 0.05);
         --chip-color: rgba(255, 255, 255, 0.8);
 
+        --toast-bg-color: #323232;
+        --toast-color: #f4f4f4;
+
         display: block;
       }
 
@@ -146,8 +149,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       #toastAction {
         font-weight: 500;
-        margin-left: 24px;
-        color: rgba(0, 0, 0, 0.5);
+        padding: 0;
+        margin: 0;
+        color: var(--app-accent-color);
         text-decoration: none;
         text-transform: uppercase;
         float: right;
@@ -287,8 +291,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-selector>
     </div>
 
-    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened" horizontal-align="center">
-      <a id="toastAction" on-tap="_handleToastAction" href="#"></a>
+    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened">
+      <paper-button id="toastAction" noink on-tap="_handleToastAction"></paper-button>
     </paper-toast>
 
   </template>
@@ -455,7 +459,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           waitTime = 300;
         }
         setTimeout(() => {
-          if (this._currentToast.hasOwnProperty('buttonText')) {
+          if (this._currentToast.buttonText != undefined) {
             this.$.toastAction.removeAttribute('hidden');
             this.$.toastAction.textContent = this._currentToast.buttonText;
           } else {
@@ -518,7 +522,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--bottom-nav-item-color': '#777',
 
             '--chip-background-color': 'rgba(0, 0, 0, 0.07)',
-            '--chip-color': 'rgba(0, 0, 0, 0.6)'
+            '--chip-color': 'rgba(0, 0, 0, 0.6)',
+
+            '--toast-bg-color': '#323232',
+            '--toast-color': '#f4f4f4'
           });
           if (this.page != "tutorial" && this.page != "work") {
             this.updateStyles({
@@ -543,7 +550,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '--bottom-nav-item-color': '#aaa',
 
             '--chip-background-color': 'rgba(255, 255, 255, 0.05)',
-            '--chip-color': 'rgba(255, 255, 255, 0.8)'
+            '--chip-color': 'rgba(255, 255, 255, 0.8)',
+
+            '--toast-bg-color': '#f4f4f4',
+            '--toast-color': '#212121'
           });
         }
         //Get a CSS property depending on whether the shady CSS polyfill is loaded:

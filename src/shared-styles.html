@@ -82,8 +82,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       paper-toast{
-        --paper-toast-background-color: var(--app-accent-color);
-        margin: 0;
+        --paper-toast-background-color: var(--toast-bg-color);
+        --paper-toast-color: var(--toast-color);
+        margin: 24px;
       }
 
       paper-toggle-button{
@@ -99,7 +100,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       @media (max-width: 600px) {
         paper-toast{
-          left: 0 !important;
+          min-width: 0;
+          margin: 0;
           width: 100%;
           border-radius: 0;
         }
