@@ -24,6 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/sherby-metadata/sherby-metadata.html">
 
 <link rel="import" href="elements/alejost-notifications.html">
+<link rel="import" href="elements/alejost-toast.html">
 
 <link rel="import" href="alejost-icons.html">
 <link rel="import" href="shared-styles.html">
@@ -145,22 +146,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply --layout-center-center;
       }
 
-      paper-toast{
-        --paper-toast-background-color: var(--toast-bg-color);
-        --paper-toast-color: var(--toast-color);
-        margin: 24px;
-      }
-
-      #toastAction {
-        font-weight: 500;
-        padding: 0;
-        margin: 0;
-        color: var(--app-accent-color);
-        text-decoration: none;
-        text-transform: uppercase;
-        float: right;
-      }
-
       @media (max-width: 1100px) {
         #condensed_toolbar{
           height: 10px;
@@ -190,13 +175,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         #bottom_nav{
           display: block;
-        }
-        paper-toast{
-          min-width: 0;
-          margin: 0;
-          margin-bottom: 56px;
-          width: 100%;
-          border-radius: 0;
         }
       }
     </style>
@@ -256,7 +234,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <a class="link" href="[[rootPath]]about">About</a>
           </paper-tab>
         </paper-tabs>
-        <alejost-notifications online="[[online]]" user="[[user]]" on-show-toast="_openToast"></alejost-notifications>
+        <alejost-notifications user="[[user]]"></alejost-notifications>
       </div>
     </div>
 
@@ -266,7 +244,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <works-view name="works" route="[[subroute]]"></works-view>
       <tutorial-view name="tutorial" route="[[subroute]]" toast-open="[[toastOpen]]"></tutorial-view>
       <work-view name="work" toast-open="[[toastOpen]]"></work-view>
-      <about-view name="about" theme="{{theme}}" theme-toggle="[[themeToggle]]" on-show-toast="_openToast"></about-view>
+      <about-view name="about" theme="{{theme}}" theme-toggle="[[themeToggle]]"></about-view>
       <error-view name="error"></error-view>
     </iron-pages>
 
@@ -291,9 +269,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </iron-selector>
     </div>
 
-    <paper-toast id="toast" text="[[toastText]]" duration="[[toastDuration]]" on-opened-changed="_toastOpened">
-      <paper-button id="toastAction" noink on-tap="_handleToastAction"></paper-button>
-    </paper-toast>
+    <alejost-toast opened="{{toastOpen}}"></alejost-toast>
 
   </template>
 
@@ -317,10 +293,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
-          online: {
-            type: Boolean,
-            observer: "_onlineStateChanged"
-          },
           theme: {
             type: String,
             observer: "_themeChanged"
@@ -337,27 +309,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready(){
         super.ready();
         this.$.auth.signInAnonymously();
-        //Show reload toast if there's a new version available
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.getRegistration().then((registration) => {
-              if (registration) {
-                registration.addEventListener('updatefound', () => {
-                  this._openToast({
-                    detail: {
-                      text: "New version available",
-                      duration: 0,
-                      buttonText: 'Reload',
-                      buttonTapHandler: function() {
-                        window.location.reload();
-                      }
-                    }
-                  });
-                });
-              }
-            });
-          });
-        }
       }
 
       _routePageChanged(page) {
@@ -438,55 +389,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.updateStyles({
             '--header-color': 'white'
           });
-        }
-      }
-
-      _openToast(e){
-        Polymer.importHref(
-          this.resolveUrl('/bower_components/paper-toast/paper-toast.html'),
-          () => {
-            //Hide previous toast if opened and show the new toast after waiting for the other to close
-            this._currentToast = e.detail;
-            let waitTime = 0;
-            if (this.$.toast.opened) {
-              this.$.toast.hide();
-              waitTime = 300;
-            }
-            setTimeout(() => {
-              if (this._currentToast.buttonText != undefined) {
-                this.$.toastAction.removeAttribute('hidden');
-                this.$.toastAction.textContent = this._currentToast.buttonText;
-              } else {
-                this.$.toastAction.setAttribute('hidden', '');
-              }
-              this.toastText = this._currentToast.text;
-              this.toastDuration = this._currentToast.duration;
-              this.$.toast.show();
-            }, waitTime);
-          },
-          null,
-          true);
-      }
-
-      _handleToastAction() {
-        if (!this._currentToast || !this._currentToast.buttonTapHandler){
-          return;
-        }
-        this._currentToast.buttonTapHandler();
-      }
-
-      _toastOpened(e){
-        let isOpen = e.detail.value;
-        this.toastOpen = isOpen;
-      }
-
-      _onlineStateChanged(online){
-        if (online) {
-          if (this.$.toast.opened) {
-            this.$.toast.hide();
-          }
-        } else {
-          this._openToast({detail: {text: "Offline. Some content may not be available.", duration: 0}});
         }
       }
 

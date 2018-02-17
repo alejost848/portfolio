@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class AlejostNotifications extends Polymer.Element {
+    class AlejostNotifications extends Polymer.mixinBehaviors([Polymer.AppNetworkStatusBehavior], Polymer.Element) {
       static get is() { return 'alejost-notifications'; }
 
       static get properties() {
@@ -144,7 +144,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       openToast(text, duration, buttonText, buttonTapHandler){
-        this.dispatchEvent(new CustomEvent('show-toast', { detail: {text: text, duration: duration, buttonText: buttonText, buttonTapHandler: buttonTapHandler}, bubbles: true, composed: true }));
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: {
+            text: text,
+            duration: duration,
+            buttonText: buttonText,
+            buttonTapHandler: buttonTapHandler
+          },
+          bubbles: true,
+          composed: true
+        }));        
       }
 
       _computeIcon(online, userSubscribed){

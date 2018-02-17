@@ -1,0 +1,162 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="alejost-toast">
+  <template>
+    <style include="shared-styles">
+      paper-toast{
+        --paper-toast-background-color: var(--toast-bg-color);
+        --paper-toast-color: var(--toast-color);
+        margin: 24px;
+      }
+
+      #toastAction {
+        font-weight: 500;
+        padding: 0;
+        margin: 0;
+        color: var(--app-accent-color);
+        text-decoration: none;
+        text-transform: uppercase;
+        float: right;
+      }
+
+      @media (max-width: 600px) {
+        paper-toast{
+          min-width: 0;
+          margin: 0;
+          margin-bottom: 56px;
+          width: 100%;
+          border-radius: 0;
+        }
+      }
+    </style>
+
+    <paper-toast id="toast" text="[[text]]" duration="[[duration]]" opened="{{opened}}">
+      <paper-button id="toastAction" noink on-tap="_handleToastAction"></paper-button>
+    </paper-toast>
+
+  </template>
+
+  <script>
+    class AlejostToast extends Polymer.mixinBehaviors([Polymer.AppNetworkStatusBehavior], Polymer.Element) {
+      static get is() { return 'alejost-toast'; }
+
+      static get properties() {
+        return {
+          offlineText:{
+            type: String,
+            value: "Offline. Some content may not be available."
+          },
+          newVersionText:{
+            type: String,
+            value: "New version available"
+          },
+          buttonText:{
+            type: String,
+            value: "Reload"
+          },
+          opened: {
+            type: Boolean,
+            reflectToAttribute: true,
+            notify: true
+          },
+          online: {
+            type: Boolean,
+            observer: "_onlineStateChanged"
+          }
+        };
+      }
+
+      ready(){
+        super.ready();
+        //Show reload toast if there's a new version available
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.getRegistration().then((registration) => {
+              if (registration) {
+                registration.addEventListener('updatefound', () => {
+                  this._openToast({
+                    detail: {
+                      text: this.newVersionText,
+                      duration: 0,
+                      buttonText: this.buttonText,
+                      buttonTapHandler: function() {
+                        window.location.reload();
+                      }
+                    }
+                  });
+                });
+              }
+            });
+          });
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          window.addEventListener('show-toast', this._openToast.bind(this));
+        });
+      }
+
+      _openToast(e){
+        Polymer.importHref(
+          this.resolveUrl('/bower_components/paper-toast/paper-toast.html'),
+          () => {
+            //Hide previous toast if opened and show the new toast after waiting for the other to close
+            this._currentToast = e.detail;
+            let waitTime = 0;
+            if (this.$.toast.opened) {
+              this.$.toast.hide();
+              waitTime = 300;
+            }
+            setTimeout(() => {
+              if (this._currentToast.buttonText != undefined) {
+                this.$.toastAction.removeAttribute('hidden');
+                this.$.toastAction.textContent = this._currentToast.buttonText;
+              } else {
+                this.$.toastAction.setAttribute('hidden', '');
+              }
+              this.text = this._currentToast.text;
+              this.duration = this._currentToast.duration;
+              this.$.toast.show();
+            }, waitTime);
+          },
+          null,
+          true);
+      }
+
+      _handleToastAction() {
+        if (!this._currentToast || !this._currentToast.buttonTapHandler){
+          return;
+        }
+        this._currentToast.buttonTapHandler();
+      }
+
+      _onlineStateChanged(online){
+        if (online) {
+          if (this.$.toast.opened) {
+            this.$.toast.hide();
+          }
+        } else {
+          this._openToast({detail: {text: this.offlineText, duration: 0}});
+        }
+      }
+    }
+
+    window.customElements.define(AlejostToast.is, AlejostToast);
+  </script>
+</dom-module>
