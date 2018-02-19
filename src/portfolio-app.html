@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../bower_components/sherby-metadata/sherby-metadata.html">
+<link rel="import" href="../bower_components/iron-ga/iron-ga.html">
 
 <link rel="import" href="elements/alejost-notifications.html">
 <link rel="import" href="elements/alejost-toast.html">
@@ -180,6 +181,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <sherby-metadata data="[[metadata]]"></sherby-metadata>
+
+    <iron-ga code="UA-17479526-10" user-id="[[user.uid]]"></iron-ga>
 
     <app-location
       route="{{route}}"
