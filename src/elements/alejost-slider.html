@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template is="dom-if" if="[[slideTitle]]">
       <iron-selector id="carousel_dots" selected="[[slide]]" activate-event="" class="layout horizontal center">
         <template is="dom-repeat" items="[[data]]">
-          <div class="carousel_dot" on-tap="_stopCarousel"></div>
+          <div class="carousel_dot"></div>
         </template>
       </iron-selector>
 
@@ -225,10 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, 1000/60);
       }
       _stopCarousel(){
-        // HACK: Use setTimeout to ensure that the function executes after _slideChanged when clicking the carousel dots
-        setTimeout(() => {
-          clearInterval(this.carouselTimeout);
-        }, 1);
+        clearInterval(this.carouselTimeout);
       }
       _previousSlide(){
         this.slide = this.slide === 0 ? this.data.length - 1 : (this.slide - 1);
