@@ -154,6 +154,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       toggleSubscription(){
         this.dispatchEvent(new CustomEvent('toggle-subscription', { bubbles: true, composed: true }));
+
+        this.dispatchEvent(new CustomEvent('track-event', {
+          composed: true,
+          bubbles: true,
+          detail: {
+            category: 'interactions',
+            action: 'toggle_subscription',
+            label: this.subscribed
+          }
+        }));
       }
     }
 

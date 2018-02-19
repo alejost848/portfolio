@@ -330,6 +330,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       toggleTheme(e){
         this.theme = (e.target.checked) ? "dark" : "light";
+
+        this.dispatchEvent(new CustomEvent('track-event', {
+          composed: true,
+          bubbles: true,
+          detail: {
+            category: 'interactions',
+            action: 'change_theme',
+            label: this.theme
+          }
+        }));
       }
     }
 

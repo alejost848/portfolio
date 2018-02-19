@@ -323,6 +323,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // If no page was found in the route data, page will be an empty string.
         // Default to 'home' in that case.
         this.page = page || 'home';
+
+        // Analytics: track page change
+        this.dispatchEvent(new CustomEvent('track-page', {
+          composed: true,
+          bubbles: true,
+          detail: {
+            path: window.location.pathname
+          }
+        }));
       }
 
       _pageChanged(page) {
