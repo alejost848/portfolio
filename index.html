@@ -55,16 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta property="og:image" content="images/cover.png"/>
 
     <script>
-      window.Polymer = {rootPath: '/'};
-
-      // Load and register pre-caching Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('service-worker.js', {
-            scope: Polymer.rootPath,
-          });
-        });
-      }
+      window.Polymer = {rootPath: '/'};      
     </script>
 
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->

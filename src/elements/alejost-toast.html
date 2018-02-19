@@ -55,6 +55,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
+          installedText:{
+            type: String,
+            value: "Caching complete! Future visits will work offline."
+          },
           offlineText:{
             type: String,
             value: "Offline. Some content may not be available."
@@ -81,12 +85,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready(){
         super.ready();
-        //Show reload toast if there's a new version available
+
+        // Register service worker and handle installation and updates
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.getRegistration().then((registration) => {
-              if (registration) {
-                registration.addEventListener('updatefound', () => {
+            navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+              registration.onupdatefound = () => {
+                // The updatefound event implies that registration.installing is set; see
+                // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-container-updatefound-event
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = () => {
+                  switch (installingWorker.state) {
+                    case 'installed':
+                      if (!navigator.serviceWorker.controller) {
+                        // Service worker installed
+                        this._openToast({
+                          detail: {
+                            text: this.installedText,
+                            duration: 4000
+                          }
+                        });
+                      }
+                      break;
+                    case 'redundant':
+                      throw Error('The installing service worker became redundant.');
+                  }
+                };
+              };
+            }).catch((e) => {
+              console.error('Service worker registration failed:', e);
+            });
+
+            // Check to see if the service worker controlling the page at initial load
+            // has become redundant, since this implies there's a new service worker with fresh content.
+            if (navigator.serviceWorker.controller) {
+              navigator.serviceWorker.controller.onstatechange = (event) => {
+                if (event.target.state === 'redundant') {
+                  // Show reload toast if there's a new version available
                   this._openToast({
                     detail: {
                       text: this.newVersionText,
@@ -97,9 +132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       }
                     }
                   });
-                });
-              }
-            });
+                }
+              };
+            }
           });
         }
       }
