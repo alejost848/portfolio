@@ -377,8 +377,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       _computeItems(items){
         if (items) {
-          return Object.values(items);
+          return this.objectValues(items);
         }
+      }
+
+      objectValues(obj) {
+        let res = [];
+        for (let i in obj) {
+          if (obj.hasOwnProperty(i)) {
+            res.push(obj[i]);
+          }
+        }
+        return res;
       }
 
       _setMainColor(){
