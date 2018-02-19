@@ -180,7 +180,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <sherby-metadata data="[[data]]"></sherby-metadata>
+    <sherby-metadata data="[[metadata]]"></sherby-metadata>
 
     <app-location
       route="{{route}}"
@@ -371,20 +371,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             });
           }
           this.headerIcon = "logo-color";
-          // HACK: Wait for sherby-metadata to load when visiting /works or any other endpoint
-          setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('sherby-metadata', {
-              detail: {
-                "title": title,
-                "og:title": title,
-                "description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
-                "og:description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
-                "og:type": "website",
-                "og:image": `${window.location.origin}/images/cover.png`,
-                "og:url": window.location.href
-              }
-            }));
-          }, 50);
+
+          this.metadata = {
+            "title": title,
+            "og:title": title,
+            "description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
+            "og:description": "Interactive Media Designer based in Tuluá, Colombia. I specialize in motion design, UX design and development of Progressive Web Apps using Polymer and Firebase.",
+            "og:type": "website",
+            "og:image": `${window.location.origin}/images/cover.png`,
+            "og:url": window.location.href
+          };
+          
         } else {
           //Set the header color white when viewing a tutorial or work
           this.updateStyles({
