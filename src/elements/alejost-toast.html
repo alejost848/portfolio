@@ -43,7 +43,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <paper-toast id="toast" text="[[text]]" duration="[[duration]]" opened="{{opened}}">
+    <paper-toast id="toast" text="[[text]]" duration="[[duration]]" class="layout horizontal center" opened="{{opened}}">
+      <span class="flex"></span>
       <paper-button id="toastAction" noink on-tap="_handleToastAction"></paper-button>
     </paper-toast>
 
