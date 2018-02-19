@@ -11,12 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
-<link rel="import" href="../../bower_components/sliding-pages/sliding-pages.html">
+<link rel="import" href="../../bower_components/skeleton-carousel/skeleton-carousel.html">
 
 <link rel="import" href="../shared-styles.html">
 
@@ -36,103 +34,92 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host(:hover){
         @apply --shadow-elevation-12dp;
       }
-      sliding-pages{
+
+      skeleton-carousel {
         height: 100%;
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFoAQMAAAD9/NgSAAAABlBMVEUAAAB6enqZAV0XAAAAAnRSTlMAQABPjKgAAAB7SURBVHja7dihDYAwFEXRTxCMxWh0NEZCoighoQ4BqaCBcwa48okXAAAAAAAAAAAAAPBRfZ4Fq4MnQcH7xhJcBAUFBQUFBQUFBQUFGwluMeW8doKCgoKXwXbnq/0jSPAPwVIMQcEnhqOXBGuLKQQBAAAAAAAAAAAA4DU7cSaZApXAklQAAAAASUVORK5CYII=");
         background-repeat: no-repeat;
         background-position: center center;
+
+        --skeleton-carousel-min-height: 200px;
+        --skeleton-carousel-dot-color: white;
+        --skeleton-carousel-nav-color: white;
+
+        --skeleton-carousel-controls: {
+          position: absolute;
+          width: 100%;
+          box-sizing: border-box;
+          bottom: 0;
+          padding: 14px 20px;
+          background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+          color: white;
+          --paper-icon-button-ink-color: white;
+        }
+        --skeleton-carousel-transition: {
+          transition: all 0.4s ease;
+        }
+        --skeleton-carousel-dot: {
+          --paper-icon-button-ink-color: white;
+          width: 24px;
+          height: 24px;
+          padding: 3px;
+        }
       }
-      .slide {
-        overflow: hidden;
-        border-radius: 4px;
-        padding: 0;
-        background-color: var(--card-image-bg-color);
-        z-index: 0;
-      }
-      .slide a {
+      .slide_link{
         width: 100%;
-        height: 100%;
-      }
-      .slide iron-image{
-        width: 100%;
-        height: 100%;
         background-color: var(--card-image-bg-color);
-        opacity: 0.85;
       }
-      #carousel_title{
+      iron-image {
+        background-color: var(--card-image-bg-color);
+        height: 100%;
+        opacity: 0.8;
+      }
+      .slide_title{
         position: absolute;
-        bottom: 0;
-        text-shadow: rgba(0, 0, 0, 0.6) 0px 0px 10px;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
-        padding: 20px;
-        box-sizing: border-box;
-        color: white;
+        bottom: 48px;
+        margin: 0;
+        text-align: center;
         width: 100%;
-      }
-      #carousel_title div{
+        text-shadow: rgba(0, 0, 0, 0.6) 0px 0px 10px;
         font-size: 20px;
+        color: white;
+        box-sizing: border-box;
       }
-      #carousel_title paper-icon-button{
-        --paper-icon-button-ink-color: white;
-        border-radius: 50%;
-        transition: background-color 0.3s;
-      }
+
       #slider_progress{
         position: absolute;
         bottom: 0;
         width: 100%;
         pointer-events: none;
-        --paper-progress-container-color: transparent;
-        --paper-progress-active-color: var(--app-linear-gradient);
-        opacity: 0.5;
+        --paper-progress-container-color: var(--card-image-bg-color);
+        --paper-progress-active-color: var(--app-accent-color);
       }
-      #carousel_dots{
-        background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
-        position: absolute;
-        top: 0;
-        padding: 20px;
-        width: 100%;
-        height: 60px;
-        box-sizing: border-box;
-        pointer-events: none;
-      }
-      .carousel_dot{
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.25);
-        transition: background-color 0.5s;
-      }
-      .carousel_dot + .carousel_dot{
-        margin-left: 6px;
-      }
-      .carousel_dot.iron-selected{
-        background-color: rgba(255,255,255,0.9);
-      }
+
       @media (max-width: 780px) {
         :host{
           height: 340px;
         }
-        #carousel_title div{
+      }
+      @media (max-width: 600px) {
+        .slide_title{
           font-size: 16px;
         }
-        #carousel_dots{
-          padding: 10px 20px;
-          height: 50px;
+        skeleton-carousel{
+          --skeleton-carousel-controls: {
+            position: absolute;
+            width: 100%;
+            box-sizing: border-box;
+            bottom: 0;
+            padding: 14px 10px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+            color: white;
+            --paper-icon-button-ink-color: white;
+          }
         }
       }
       @media (max-width: 480px) {
         :host{
-          height: 240px;
-        }
-        #carousel_title{
-          padding: 10px 20px;
-          padding-right: 10px;
-        }
-        .carousel_dot{
-          width: 11px;
-          height: 11px;
+          height: 220px;
         }
       }
       @media (max-width: 310px) {
@@ -142,30 +129,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <sliding-pages active-index="{{slide}}">
+    <skeleton-carousel dots nav loop duration="6000" selected="{{slide}}">
       <template is="dom-repeat" items="[[data]]" as="slide">
-        <div class="slide">
-          <a href="[[rootPath]][[slide.type]]/[[slide.slug]]" class="link">
-            <iron-image src="[[slide.image]]" preload fade sizing="cover"></iron-image>
-          </a>
-        </div>
+        <a href="[[rootPath]][[slide.type]]/[[slide.slug]]" class="link slide_link">
+          <iron-image
+            data-src$="[[slide.image]]"
+            preload
+            fade
+            sizing="cover">
+          </iron-image>
+          <div class="slide_title">[[slide.title]]</div>
+        </a>
       </template>
-    </sliding-pages>
-
-    <template is="dom-if" if="[[slideTitle]]">
-      <iron-selector id="carousel_dots" selected="[[slide]]" activate-event="" class="layout horizontal center">
-        <template is="dom-repeat" items="[[data]]">
-          <div class="carousel_dot"></div>
-        </template>
-      </iron-selector>
-
-      <div id="carousel_title" class="layout horizontal center">
-        <div>[[slideTitle]]</div>
-        <span class="flex"></span>
-        <paper-icon-button icon="alejost-icons:chevron-left" on-tap="_previousSlide"></paper-icon-button>
-        <paper-icon-button icon="alejost-icons:chevron-right" on-tap="_nextSlide"></paper-icon-button>
-      </div>
-    </template>
+    </skeleton-carousel>
 
     <!-- Maximum value in frames (seconds = frames/60) -->
     <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
@@ -196,21 +172,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _dataChanged(data){
-        this.slide = 0;
-        // HACK: Call _slideChanged so the title gets changed accordingly
         this._slideChanged();
       }
 
       _slideChanged(){
         this.progress = 0;
-        // HACK: Get the title only when the data from Firebase is not empty
         if (this.data && this.data.length > 0) {
           this._resumeCarousel();
-          if (this.slide > this.data.length - 1) {
-            this.slide = this.data.length - 1;
-          }
-
-          this.slideTitle = this.data[this.slide].title;
         }
       }
       _resumeCarousel(){
@@ -226,14 +194,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       _stopCarousel(){
         clearInterval(this.carouselTimeout);
-      }
-      _previousSlide(){
-        this.slide = this.slide === 0 ? this.data.length - 1 : (this.slide - 1);
-        this._stopCarousel();
-      }
-      _nextSlide(){
-        this.slide = this.slide === this.data.length - 1 ? 0 : (this.slide + 1);
-        this._stopCarousel();
       }
     }
 
