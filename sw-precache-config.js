@@ -15,6 +15,7 @@ module.exports = {
     'bower_components/**/*.{html,js,css,ttf}',
     'bower_components/webcomponentsjs/webcomponents-loader.js',
     'src/**',
+    'images/*',
     'manifest.json',
   ],
   runtimeCaching: [
@@ -24,6 +25,16 @@ module.exports = {
       options: {
         cache: {
           name: 'webcomponentsjs-polyfills-cache',
+        },
+      },
+    },
+    {
+      urlPattern: /.*\.(png|jpg|gif|svg)/i,
+      handler: 'fastest',
+      options: {
+        cache: {
+          name: 'images-cache',
+          maxEntries: 200
         },
       },
     },
