@@ -172,7 +172,7 @@ function handleCoverImage(workSlug, work) {
   }).then(() => {
     console.log('Compressed image created at', tempCoverPath);
     // Upload the compressed image
-    return bucket.upload(tempCompressedCoverPath, { destination: compressedCoverPath, metadata: { cacheControl: 'public, max-age=604800' } });
+    return bucket.upload(tempCompressedCoverPath, { destination: compressedCoverPath, metadata: { cacheControl: 'public, max-age=691200' } });
   }).then(() => {
     console.log('Compressed image uploaded to bucket.');
     // Generate the thumbnail
@@ -180,7 +180,7 @@ function handleCoverImage(workSlug, work) {
   }).then(() => {
     console.log('Thumbnail created at', tempThumbnailPath);
     // Upload the thumbnail.
-    return bucket.upload(tempThumbnailPath, { destination: thumbnailPath, metadata: { cacheControl: 'public, max-age=604800' } });
+    return bucket.upload(tempThumbnailPath, { destination: thumbnailPath, metadata: { cacheControl: 'public, max-age=691200' } });
   }).then(() => {
     console.log('Thumbnail uploaded to bucket.');
     // Remove original cover image from bucket
