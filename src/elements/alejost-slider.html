@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
@@ -42,7 +43,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-position: center center;
 
         --skeleton-carousel-min-height: 200px;
-        --skeleton-carousel-dot-color: white;
         --skeleton-carousel-nav-color: white;
 
         --skeleton-carousel-controls: {
@@ -50,21 +50,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           width: 100%;
           box-sizing: border-box;
           bottom: 0;
-          padding: 14px 20px;
           background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+          height: 50px;
           color: white;
           --paper-icon-button-ink-color: white;
         }
         --skeleton-carousel-transition: {
           transition: all 0.4s ease;
         }
-        --skeleton-carousel-dot: {
-          --paper-icon-button-ink-color: white;
-          width: 24px;
-          height: 24px;
-          padding: 3px;
+        --skeleton-carousel-nav-prev:{
+          position: absolute;
+          left: 20px;
+          bottom: 20px;
+        }
+        --skeleton-carousel-nav-next:{
+          position: absolute;
+          right: 20px;
+          bottom: 20px;
         }
       }
+
+      #carousel_dots{
+        position: absolute;
+        top: 0;
+        padding: 20px;
+        width: 100%;
+        height: 60px;
+        box-sizing: border-box;
+        pointer-events: none;
+      }
+      .carousel_dot{
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.15);
+        transition: background-color 0.5s;
+      }
+      .carousel_dot + .carousel_dot{
+        margin-left: 6px;
+      }
+      .carousel_dot.iron-selected{
+        background-color: rgba(255,255,255,0.9);
+      }
+
       .slide_link{
         width: 100%;
         background-color: var(--card-image-bg-color);
@@ -76,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .slide_title{
         position: absolute;
-        bottom: 48px;
+        bottom: 26px;
         margin: 0;
         text-align: center;
         width: 100%;
@@ -99,27 +128,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host{
           height: 340px;
         }
+        #carousel_dots{
+          padding: 10px 20px;
+          height: 50px;
+        }
       }
       @media (max-width: 600px) {
         .slide_title{
           font-size: 16px;
+          bottom: 22px;
         }
-        skeleton-carousel{
-          --skeleton-carousel-controls: {
+        skeleton-carousel {
+          --skeleton-carousel-nav-prev:{
             position: absolute;
-            width: 100%;
-            box-sizing: border-box;
-            bottom: 0;
-            padding: 14px 10px;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-            color: white;
-            --paper-icon-button-ink-color: white;
+            left: 14px;
+            bottom: 14px;
+          }
+          --skeleton-carousel-nav-next:{
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
           }
         }
       }
       @media (max-width: 480px) {
         :host{
           height: 220px;
+        }
+        .carousel_dot{
+          width: 9px;
+          height: 9px;
         }
       }
       @media (max-width: 310px) {
@@ -129,7 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <skeleton-carousel dots nav loop duration="6000" selected="{{slide}}">
+    <skeleton-carousel nav loop duration="6000" selected="{{slide}}">
       <template is="dom-repeat" items="[[data]]" as="slide">
         <a href="[[rootPath]][[slide.type]]/[[slide.slug]]" class="link slide_link">
           <iron-image
@@ -138,10 +176,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             fade
             sizing="cover">
           </iron-image>
-          <div class="slide_title">[[slide.title]]</div>
+          <div class="slide_title layout vertical center">[[slide.title]]</div>
         </a>
       </template>
     </skeleton-carousel>
+
+    <iron-selector id="carousel_dots" selected="[[slide]]" activate-event="" class="layout horizontal center-center">
+      <template is="dom-repeat" items="[[data]]">
+        <div class="carousel_dot"></div>
+      </template>
+    </iron-selector>
 
     <!-- Maximum value in frames (seconds = frames/60) -->
     <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
