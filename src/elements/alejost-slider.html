@@ -11,7 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
@@ -70,30 +69,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      #carousel_dots{
-        position: absolute;
-        top: 0;
-        padding: 20px;
-        width: 100%;
-        height: 60px;
-        box-sizing: border-box;
-        pointer-events: none;
-      }
-      .carousel_dot{
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.15);
-        transition: background-color 0.5s;
-      }
-      .carousel_dot + .carousel_dot{
-        margin-left: 6px;
-      }
-      .carousel_dot.iron-selected{
-        background-color: rgba(255,255,255,0.9);
-      }
-
       .slide_link{
         width: 100%;
         background-color: var(--card-image-bg-color);
@@ -128,10 +103,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host{
           height: 340px;
         }
-        #carousel_dots{
-          padding: 10px 20px;
-          height: 50px;
-        }
       }
       @media (max-width: 600px) {
         .slide_title{
@@ -155,10 +126,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host{
           height: 220px;
         }
-        .carousel_dot{
-          width: 9px;
-          height: 9px;
-        }
       }
       @media (max-width: 310px) {
         :host{
@@ -180,12 +147,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </a>
       </template>
     </skeleton-carousel>
-
-    <iron-selector id="carousel_dots" selected="[[slide]]" activate-event="" class="layout horizontal center-center">
-      <template is="dom-repeat" items="[[data]]">
-        <div class="carousel_dot"></div>
-      </template>
-    </iron-selector>
 
     <!-- Maximum value in frames (seconds = frames/60) -->
     <paper-progress id="slider_progress" value="[[progress]]" max="480"></paper-progress>
