@@ -244,9 +244,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div class="multimedia_group">
             <div class="multimedia_title info_item_title">Images</div>
-            <photo-gallery height="300">
+            <photo-gallery height="280">
               <template is="dom-repeat" items="[[work.images]]" as="image">
-                <div class="item" data-url$="[[image.downloadUrl]]"></div>
+                <div class="item" data-url$="[[image.downloadUrl]]&aspect-ratio=[[_generateAspectRatio()]]"></div>
               </template>
             </photo-gallery>
           </div>
@@ -404,6 +404,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _toastOpened(isOpen){
         this.toastOpen = isOpen;
+      }
+
+      _generateAspectRatio(){
+        return (Math.random() * (1.78 - 1.2) + 1.2).toFixed(2);
       }
     }
 
