@@ -98,8 +98,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 installingWorker.onstatechange = () => {
                   switch (installingWorker.state) {
                     case 'installed':
-                      if (!navigator.serviceWorker.controller) {
-                        // Service worker installed
+                      if (navigator.serviceWorker.controller) {
+                        console.log('New version available');
+                        this._openToast({
+                          detail: {
+                            text: this.newVersionText,
+                            duration: 0,
+                            buttonText: this.buttonText,
+                            buttonTapHandler: function() {
+                              window.location.reload();
+                            }
+                          }
+                        });
+                      } else {
+                        console.log('Service worker installed');
                         this._openToast({
                           detail: {
                             text: this.installedText,
@@ -116,26 +128,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }).catch((e) => {
               console.error('Service worker registration failed:', e);
             });
-
-            // Check to see if the service worker controlling the page at initial load
-            // has become redundant, since this implies there's a new service worker with fresh content.
-            if (navigator.serviceWorker.controller) {
-              navigator.serviceWorker.controller.onstatechange = (event) => {
-                if (event.target.state === 'redundant') {
-                  // Show reload toast if there's a new version available
-                  this._openToast({
-                    detail: {
-                      text: this.newVersionText,
-                      duration: 0,
-                      buttonText: this.buttonText,
-                      buttonTapHandler: function() {
-                        window.location.reload();
-                      }
-                    }
-                  });
-                }
-              };
-            }
           });
         }
       }
