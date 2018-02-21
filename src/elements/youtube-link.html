@@ -1,0 +1,56 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="youtube-link">
+  <template>
+    <style include="shared-styles">
+      :host {
+        white-space: normal;
+        color: var(--progress-color);
+        cursor: pointer;
+      }
+    </style>
+
+    [[time]]
+  </template>
+
+  <script>
+    class YoutubeLink extends Polymer.Element {
+      static get is() { return 'youtube-link'; }
+
+      static get properties() {
+        return {
+          time: String
+        };
+      }
+
+      ready(){
+        super.ready();
+        this.addEventListener('click', this._onTap);
+      }
+
+      _onTap(){
+        window.dispatchEvent(new CustomEvent('link-clicked', {
+          detail: {
+            time: this.time
+          },
+          bubbles: true,
+          composed: true
+        }));
+      }
+    }
+
+    window.customElements.define(YoutubeLink.is, YoutubeLink);
+  </script>
+</dom-module>

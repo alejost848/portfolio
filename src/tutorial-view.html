@@ -18,14 +18,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/google-youtube/google-youtube.html">
 
 <link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/juicy-html/juicy-html.html">
 
 <link rel="import" href="elements/alejost-share.html">
+<link rel="import" href="elements/youtube-link.html">
 
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="single-view-shared-styles.html">
 
 <script async src="../bower_components/moment/min/moment.min.js"></script>
 <script async src="../bower_components/vibrant/dist/Vibrant.min.js"></script>
+<script async src='../bower_components/autolink/autolink-min.js'></script>
 
 <dom-module id="tutorial-view">
   <template>
@@ -45,6 +48,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #episode_duration{
         color: rgba(0, 0, 0, 0.5);
         font-size: 18px;
+      }
+
+      .visible_link{
+        color: var(--progress-color);
+        text-decoration: none;
       }
 
       @media (max-width: 600px) {
@@ -116,7 +124,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <alejost-share toast-open="[[toastOpen]]" share-url="[[shareUrl]]"></alejost-share>
 
           <div id="publishedDate">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
-          <div id="description">[[tutorial.description]]</div>
+          <juicy-html html="[[_computeDescription(tutorial.description)]]"></juicy-html>
         </div>
       </template>
     </div>
@@ -142,6 +150,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             observer: '_toastOpened'
           }
         };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('link-clicked', this._seekTo.bind(this));
       }
 
       _dataChanged(data){
@@ -214,6 +227,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _computeTimeAgo(publishedDate) {
         return "Published " + moment(publishedDate).fromNow();
+      }
+
+      _computeDescription(description){
+        var pattern = /([0-9][0-9]:[0-9][0-9](:[0-9][0-9]|))/g;
+        description = description.replace(pattern, '<youtube-link time="$1"></youtube-link>');
+
+        var tempDiv = document.createElement('div');
+        tempDiv.id = "description";
+        tempDiv.innerHTML = description.autoLink({ class: "visible_link", target: "_blank", rel: "noopener" });
+        return tempDiv.outerHTML;
+      }
+
+      _seekTo(e){
+        let timestamp = e.detail.time;
+        let seconds = this._convertToSeconds(timestamp);
+        this.shadowRoot.querySelector('#video').seekTo(seconds);
+      }
+      _convertToSeconds(str) {
+        var p = str.split(':');
+        var s = 0, m = 1;
+
+        while (p.length > 0) {
+          s += m * parseInt(p.pop(), 10);
+          m *= 60;
+        }
+        return s;
       }
 
       _getMainColor(){
