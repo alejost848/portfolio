@@ -144,6 +144,11 @@ function handleCoverImage(workSlug, work) {
 
   const bucket = gcs.bucket("alejost848-afea9.appspot.com");
 
+  // Exit if there's no cover image
+  if (!work.coverImage) {
+    return null;
+  }
+
   const coverPath = work.coverImage.path;
   const coverDirectory = path.dirname(coverPath);
   const coverNameOnly = path.basename(coverPath, path.extname(coverPath));
