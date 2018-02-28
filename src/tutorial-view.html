@@ -123,7 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <alejost-share toast-open="[[toastOpen]]" share-url="[[shareUrl]]"></alejost-share>
 
-          <div id="publishedDate">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
+          <div id="publishedDate" title="[[_computeFullTimeAgo(tutorial.publishedDate)]]">[[_computeTimeAgo(tutorial.publishedDate)]]</div>
           <juicy-html html="[[_computeDescription(tutorial.description)]]"></juicy-html>
         </div>
       </template>
@@ -227,6 +227,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _computeTimeAgo(publishedDate) {
         return "Published " + moment(publishedDate).fromNow();
+      }
+
+      _computeFullTimeAgo(publishedDate) {
+        return moment(publishedDate).format("MMMM DD, YYYY");
       }
 
       _computeDescription(description){

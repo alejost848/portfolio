@@ -202,7 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div id="information">
             <div class="info_group info_item flex-4 layout vertical start">
-              <div id="publishedDate">[[_computeTimeAgo(work.publishedDate)]]</div>
+              <div id="publishedDate" title="[[_computeFullTimeAgo(work.publishedDate)]]">[[_computeTimeAgo(work.publishedDate)]]</div>
               <div id="description">[[work.shortDescription]]</div>
               <span class="flex"></span>
               <a id="action_link" href="[[work.button.url]]" target="_blank" class="link" rel="noopener" hidden="[[!work.button]]">
@@ -364,6 +364,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _computeTimeAgo(publishedDate) {
         return "Published " + moment(publishedDate).fromNow();
+      }
+
+      _computeFullTimeAgo(publishedDate) {
+        return moment(publishedDate).format("MMMM DD, YYYY");
       }
 
       _computeCategories(categories){
