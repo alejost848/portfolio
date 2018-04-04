@@ -141,7 +141,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       online="{{online}}">
     </firebase-document>
 
-    <paper-progress id="video_progress" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
+    <paper-progress id="video_progress" class="transiting" value="{{videoCurrentTime}}" max="{{videoDuration}}"></paper-progress>
 
     <div id="title_header" class="layout horizontal center">
       <template is="dom-if" if="[[dataLoaded]]">
