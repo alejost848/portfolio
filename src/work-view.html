@@ -363,6 +363,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _computeTimeAgo(publishedDate) {
+        if (Math.abs(moment().diff(publishedDate)) < 86400000) { // 1 day
+          return "Published today";
+        }
         return "Published " + moment(publishedDate).fromNow();
       }
 
