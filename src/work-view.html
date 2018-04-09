@@ -242,14 +242,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
           </div>
 
-          <div class="multimedia_group">
-            <div class="multimedia_title info_item_title">Images</div>
-            <photo-gallery height="280">
-              <template is="dom-repeat" items="[[work.images]]" as="image">
-                <div class="item" data-url$="[[image.downloadUrl]]&aspect-ratio=[[_generateAspectRatio()]]"></div>
-              </template>
-            </photo-gallery>
-          </div>
+          <template is="dom-if" if="[[work.images]]">
+            <div class="multimedia_group">
+              <div class="multimedia_title info_item_title">Images</div>
+              <photo-gallery height="280">
+                <template is="dom-repeat" items="[[work.images]]" as="image">
+                  <div class="item" data-url$="[[image.downloadUrl]]&aspect-ratio=[[_generateAspectRatio()]]"></div>
+                </template>
+              </photo-gallery>
+            </div>
+          </template>
 
           <template is="dom-if" if="[[work.videos]]">
             <template is="dom-if" if="[[active]]" restamp="true">
