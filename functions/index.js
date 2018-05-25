@@ -17,7 +17,7 @@ const path = require('path');
 const os = require('os');
 const mkdirp = require('mkdirp-promise');
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 const gmailEmail = functions.config().gmail.email;
 const gmailPassword = functions.config().gmail.password;
@@ -31,8 +31,8 @@ const mailTransport = nodemailer.createTransport({
 
 exports.addTutorial = functions.database
   .ref('/tutorials/{seriesName}/videos/{tutorialKey}')
-  .onCreate(event => {
-    let tutorialInfo = event.data.val();
+  .onCreate((snap, context) => {
+    let tutorialInfo = snap.val();
     let titleAndEpisode = tutorialInfo.title;
 
     tutorialInfo.title = titleAndEpisode.split(" | ")[0];
@@ -42,11 +42,11 @@ exports.addTutorial = functions.database
     tutorialInfo.seriesSlug = event.params.seriesName;
 
     //Update the information of the new tutorial in /tutorials
-    return event.data.ref.update(tutorialInfo)
+    return snap.ref.update(tutorialInfo)
     .then(() => {
       console.log(`Tutorial "${tutorialInfo.title}" was created`);
       //After that, it takes the oldest tutorial in home/latestTutorials and replaces it with the new one
-      const root = event.data.ref.root;
+      const root = snap.ref.root;
       return root.child('home/latestTutorials')
         .orderByChild("publishedDate")
         .limitToFirst(1)
@@ -79,11 +79,11 @@ exports.addTutorial = functions.database
 
 exports.addWork = functions.database
   .ref('/works/{workSlug}')
-  .onWrite(event => {
-    const workSlug = event.params.workSlug;
+  .onWrite((change, context) => {
+    const workSlug = context.params.workSlug;
 
     // On delete
-    if (!event.data.exists()) {
+    if (!change.after.exists()) {
       // Remove contents of storage folder to save space
       const bucket = gcs.bucket("alejost848-afea9.appspot.com");
       return bucket.deleteFiles({ prefix: `works/${workSlug}` })
@@ -97,9 +97,9 @@ exports.addWork = functions.database
     }
 
     // On create
-    if (!event.data.previous.exists()) {
+    if (!change.before.exists()) {
       //Add new stuff from the paper-chips to the database for autocompleteSuggestions
-      const work = event.data.val();
+      const work = change.after.val();
       const autocompletePromise = admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
       //Add 1 to workCount
       const workCountPromise = admin.database().ref('dashboard/overview/workCount').transaction(number => {
@@ -125,9 +125,9 @@ exports.addWork = functions.database
     }
 
     //On edit
-    if (event.data.previous.exists()) {
+    if (change.before.exists()) {
       //Add new stuff from the paper-chips to the database for autocompleteSuggestions
-      const work = event.data.val();
+      const work = change.after.val();
       const autocompletePromise = admin.database().ref('dashboard/autocompleteSuggestions').update(getUpdatedObject(work));
 
       // Compress cover and generate thumbnail
@@ -241,8 +241,8 @@ function getUpdatedObject(work) {
 
 exports.sendNotification = functions.database
   .ref('/dashboard/notifications/{key}')
-  .onCreate(event => {
-    const notification = event.data.val();
+  .onCreate((snap, context) => {
+    const notification = snap.val();
     const payload = {
       notification: {
         title: notification.title,
@@ -259,12 +259,12 @@ exports.sendNotification = functions.database
 
 exports.handleSubscription = functions.database
   .ref('/users/{uid}/subscribed')
-  .onWrite(event => {
-    const uid = event.params.uid;
-    const subscribed = event.data.val();
+  .onWrite((change, context) => {
+    const uid = context.params.uid;
+    const subscribed = change.after.val();
 
     // If we are deleting the user stop doing stuff
-    if (!event.data.exists()) {
+    if (!change.after.exists()) {
       console.log(`User: ${uid} was removed`);
       return null;
     }
@@ -357,8 +357,7 @@ exports.handleFormSubmit = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.handleImages = functions.storage.object().onChange(event => {
-  const object = event.data; // The Storage object.
+exports.handleImages2 = functions.storage.object().onFinalize((object, context) => {
 
   const fileBucket = object.bucket; // The Storage bucket that contains the file.
   const bucket = gcs.bucket(fileBucket);
@@ -382,19 +381,26 @@ exports.handleImages = functions.storage.object().onChange(event => {
     return null;
   }
 
-  // If the compressed image is deleted, delete the thumbnail too by removing the cover folder
-  if (resourceState === 'not_exists') {
-    if (fileName.startsWith('compressed_')) {
-      return bucket.deleteFiles({ prefix: directoryName })
-        .then(() => {
-          console.log('Cover folder deleted.');
-        });
-    }
-  }
-
   // Return null for cover related stuff
   console.log("Nothing to do here.");
   return null;
+});
+
+exports.handleImagesDeletion = functions.storage.object().onDelete((object, context) => {
+
+  const fileBucket = object.bucket; // The Storage bucket that contains the file.
+  const bucket = gcs.bucket(fileBucket);
+  const filePath = object.name; // File path in the bucket.
+  const directoryName = path.dirname(filePath); // Get the directory name.
+  const fileName = path.basename(filePath); // Get the file name.
+
+  // If the compressed image is deleted, delete the thumbnail too by removing the cover folder
+  if (fileName.startsWith('compressed_')) {
+    return bucket.deleteFiles({ prefix: directoryName })
+      .then(() => {
+        console.log('Cover folder deleted.');
+      });
+  }
 });
 
 exports.host = functions.https.onRequest((req, res) => {
