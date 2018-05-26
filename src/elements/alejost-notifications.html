@@ -41,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </firebase-messaging>
 
     <firebase-document
+      id="token_location"
       app-name="alejost848"
       path="/users/[[user.uid]]/token"
       data="[[token]]">
@@ -78,6 +79,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           user: Object,
           theme: String
         };
+      }
+
+      static get observers() {
+        return [
+          '_tokenChanged(token, user)'
+        ];
       }
 
       ready() {
@@ -118,11 +125,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.openToast(
             notification.title,
             6000,
-            'Watch',
+            'Go',
             function() {
               window.location = notification.click_action;
             }
           );
+        }
+      }
+
+      _tokenChanged(user, token){
+        if (user && token) {
+          this.$.token_location.ref.set(this.token);
         }
       }
 

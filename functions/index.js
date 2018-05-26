@@ -258,10 +258,9 @@ exports.sendNotification = functions.database
   });
 
 exports.handleSubscription = functions.database
-  .ref('/users/{uid}/subscribed')
+  .ref('/users/{uid}')
   .onWrite((change, context) => {
     const uid = context.params.uid;
-    const subscribed = change.after.val();
 
     // If we are deleting the user stop doing stuff
     if (!change.after.exists()) {
@@ -269,34 +268,46 @@ exports.handleSubscription = functions.database
       return null;
     }
 
-    //Get the user token
-    return admin.database()
-      .ref(`/users/${uid}/token`)
-      .once('value')
-      .then(snapshot => {
-        //Subscribe or unsubscribe the user to /topics/all and then update subscriptions count
-        const userToken = snapshot.val();
-        const subscriptions = admin.database().ref('dashboard/overview/subscriptions');
+    const userToken = change.after.val().token;
+    const subscribed = change.after.val().subscribed;
 
-        if (subscribed) {
-          return admin.messaging().subscribeToTopic(userToken, '/topics/all').then(response => {
-            console.log("Successfully subscribed to topic", response);
-            return subscriptions.transaction(number => {
-              return number + 1;
-            });
-          });
+    //If token or subscribed values are not present stop
+    if (userToken == null || subscribed == null) {
+      return null;
+    }
+
+    const subscriptions = admin.database().ref('dashboard/overview/subscriptions');
+
+    if (subscribed) {
+      return admin.messaging().subscribeToTopic(userToken, '/topics/all').then(response => {
+        if (response.errors.length > 0) {
+          console.log("Errors subscribing to topic", response.errors);
         } else {
-          return admin.messaging().unsubscribeFromTopic(userToken, '/topics/all').then(response => {
-            console.log("Successfully unsubscribed from topic", response);
-            return subscriptions.transaction(number => {
-              return number - 1;
-            });
+          console.log("Successfully subscribed to topic", response);
+          return subscriptions.transaction(number => {
+            return number + 1;
           });
         }
       }).catch(function(error) {
-        console.log("Error subscribing/unsubscribing from topic:", error);
+        console.log("Error subscribing to topic:", error);
         return null;
       });
+    } else {
+      return admin.messaging().unsubscribeFromTopic(userToken, '/topics/all').then(response => {
+        if (response.errors.length > 0) {
+          console.log("Errors unsubscribing from topic", response.errors);
+        } else {
+          console.log("Successfully unsubscribed from topic", response);
+          return subscriptions.transaction(number => {
+            return number - 1;
+          });
+        }
+      }).catch(function(error) {
+        console.log("Error unsubscribing from topic:", error);
+        return null;
+      });
+    }
+
   });
 
 exports.handleFormSubmit = functions.https.onRequest((req, res) => {
