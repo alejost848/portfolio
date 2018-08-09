@@ -26,8 +26,16 @@
   ],
   "builds": [
     {
-      "preset": "es6-unbundled",
-      "name": "default"
+      "name": "default",
+      "js": {
+        "minify": false,
+        "compile": true
+      },
+      "css": {"minify": true},
+      "html": {"minify": true},
+      "bundle": true,
+      "addServiceWorker": true,
+      "addPushManifest": false
     }
   ],
   "lint": {
