@@ -189,7 +189,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <template is="dom-if" if="[[!work.videoId]]">
             <div id="placeholder_card">
-              <iron-image src="[[work.coverImage.downloadUrl]]" preload fade sizing="cover"></iron-image>
+              <iron-image src="[[work.coverImage.downloadUrl]]" preload fade sizing="cover" alt="Cover image for [[work.title]]"></iron-image>
             </div>
           </template>
         </template>
@@ -247,7 +247,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div class="multimedia_title info_item_title">Images</div>
               <photo-gallery height="280">
                 <template is="dom-repeat" items="[[work.images]]" as="image">
-                  <div class="item" data-url$="[[image.downloadUrl]]&aspect-ratio=[[_generateAspectRatio()]]"></div>
+                  <div class="item" data-url$="[[image.downloadUrl]]&aspect-ratio=[[_generateAspectRatio()]]" title="Image [[index]] for [[work.title]]"></div>
                 </template>
               </photo-gallery>
             </div>
