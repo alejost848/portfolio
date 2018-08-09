@@ -60,7 +60,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         icon="alejost-icons:[[_computeIcon(online, userSubscribed)]]"
         disabled="[[!online]]"
         on-tap="openNotificationsDialog"
-        hidden="[[!pushSupported]]">
+        hidden="[[!pushSupported]]"
+        alt="Open notifications dialog">
       </paper-icon-button>
       <paper-tooltip fit-to-visible-bounds animation-delay="100">[[_computeTooltip(online, userSubscribed)]]</paper-tooltip>
     </div>
