@@ -5,7 +5,7 @@
     "@google-cloud/storage": "^1.7.0",
     "child-process-promise": "^2.2.1",
     "cors": "^2.8.5",
-    "firebase-admin": "^5.12.1",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.14.1",
     "handlebars": "^4.7.7",
     "mkdirp-promise": "^5.0.1",
