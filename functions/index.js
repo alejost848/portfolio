@@ -10,7 +10,9 @@ const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
 
 //Firebase storage
-const gcs = require('@google-cloud/storage')({keyFilename: 'service-account-credentials.json'});
+// const gcs = require('@google-cloud/storage')({ keyFilename: 'service-account-credentials.json' });
+const gcs = require('@google-cloud/storage');
+gcs.keyFilename = 'service-account-credentials.json';
 
 const spawn = require('child-process-promise').spawn;
 const path = require('path');
